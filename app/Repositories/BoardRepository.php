@@ -16,7 +16,7 @@ class BoardRepository extends BaseRepository implements BoardRepositoryInterface
         $this->board = $board;
     }
 
-    public function paginated($start, $length, $sortColumn, $sortDirection, $searchValue, $countOnly = false)
+    public function paginated($columns, $start, $length, $sortColumn, $sortDirection, $searchValue, $countOnly = false)
     {
         $query = $this->board->select('*');
 
@@ -53,16 +53,16 @@ class BoardRepository extends BaseRepository implements BoardRepositoryInterface
 
         $query->skip($start)->take($length);
         $boards = $query->get();
-        $boards = $this->collectionModifier($boards, $start);
+        $boards = $this->collectionModifier($columns, $boards, $start);
         return $boards;
     }
 
-    public function collectionModifier($boards, $start)
+    public function collectionModifier($columns, $boards, $start)
     {
-        return $boards->map(function ($board, $key) use ($start) {
+        return $boards->map(function ($board, $key) use ($columns, $start) {
             $board->serial = $start + 1 + $key;
             $board->actions = view('admin.boards.actions', compact('board'))->render();
-            $board->setHidden(['id', 'created_at', 'updated_at']);
+            $board->setVisible($columns);
             return $board;
         });
     }

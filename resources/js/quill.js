@@ -20,12 +20,13 @@ import "quill/dist/quill.snow.css";
 //     theme: "snow",
 // });
 
-const quill1 = new Quill("#content", {
-    theme: "snow",
-});
-$(".modal").on("shown.coreui.modal", function () {
-    quill1.root.innerHTML = $("#hiddenContent").val();
-    quill1.on("text-change", function (delta, oldDelta, source) {
-        $("#hiddenContent").val(quill1.root.innerHTML);
+const editors = document.querySelectorAll(".editor");
+editors?.forEach((editor) => {
+    const quill = new Quill(`#${editor.id}`, { theme: "snow" });
+    $(".modal").on("shown.coreui.modal", function () {
+        quill.root.innerHTML = $(`#hidden_${editor.id}`).val();
+        quill.on("text-change", function (delta, oldDelta, source) {
+            $(`#hidden_${editor.id}`).val(quill.root.innerHTML);
+        });
     });
 });

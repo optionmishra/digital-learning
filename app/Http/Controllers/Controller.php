@@ -28,9 +28,10 @@ abstract class Controller
         $sortColumn = request()->get('order')[0]['name'] ?? 'id';
         $sortDirection = request()->get('order')[0]['dir'] ?? 'asc';
         $searchValue = request()->get('search')['value'];
+        $columns = array_map(fn($column) => $column['data'], request()->get('columns'));
 
-        $count = $repository->paginated($start, $length, $sortColumn, $sortDirection, $searchValue, true);
-        $data = $repository->paginated($start, $length, $sortColumn, $sortDirection, $searchValue);
+        $count = $repository->paginated($columns, $start, $length, $sortColumn, $sortDirection, $searchValue, true);
+        $data = $repository->paginated($columns, $start, $length, $sortColumn, $sortDirection, $searchValue);
 
         return $data = array(
             "draw"            => intval(request()->input('draw')),
@@ -94,5 +95,41 @@ abstract class Controller
         }
 
         return 'other';
+    }
+
+
+    /**
+     * success response method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendAPIResponse($result, $message)
+    {
+        $response = [
+            'success' => true,
+            'data'    => $result,
+            'message' => $message,
+        ];
+
+        return response()->json($response, 200);
+    }
+
+    /**
+     * return error response.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendAPIError($error, $errorMessages = [], $code = 404)
+    {
+        $response = [
+            'success' => false,
+            'message' => $error,
+        ];
+
+        if (!empty($errorMessages)) {
+            $response['data'] = $errorMessages;
+        }
+
+        return response()->json($response, $code);
     }
 }

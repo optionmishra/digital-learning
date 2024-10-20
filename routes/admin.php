@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BoardController;
 use App\Http\Controllers\Admin\AuthorController;
@@ -10,7 +11,6 @@ use App\Http\Controllers\Admin\DashboardController;
 
 Route::group(['middleware' => ['auth']], function () {
   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-  Route::resource('users', UserController::class);
 
   // Boards
   Route::resource('boards', BoardController::class);
@@ -27,4 +27,8 @@ Route::group(['middleware' => ['auth']], function () {
   // Authors
   Route::resource('authors', AuthorController::class);
   Route::get('/authors-data', [AuthorController::class, 'dataTable'])->name('authors.datatable');
+
+  // Books
+  Route::resource('books', BookController::class);
+  Route::get('/books-data', [BookController::class, 'dataTable'])->name('books.datatable');
 });

@@ -26,8 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const confirmDemoteBtn = document.getElementById("confirmDemoteBtn");
     if (confirmDemoteBtn) {
         confirmDemoteBtn.addEventListener("click", () => {
-            console.log("h");
-
             deleteRow();
         });
     }
@@ -38,15 +36,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
         })
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(response.statusText);
+                }
+            })
             .then((data) => {
                 if (data.error == true) {
                     toastr.error(data.message, "Admin Panel");
                 } else {
                     toastr.success(data.message, "Admin Panel");
+                    $(".dataTable").DataTable().draw();
                 }
+            })
+            .catch((error) => {
+                toastr.error("Something went wrong!", "Admin Panel");
+                console.error("Error:", error);
             });
-        deleteBtn.parentElement.parentElement.parentElement.remove();
     }
 
     // Update
@@ -57,14 +65,22 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!el) return;
         e.preventDefault();
         const updateRoute = el.dataset.updateRoute;
+
         let rowData;
         if (el.dataset.rowData) {
             rowData = JSON.parse(el.dataset.rowData);
         }
+
         let selectOptionsData;
         if (el.dataset.selectOptions) {
             selectOptionsData = JSON.parse(el.dataset.selectOptions);
         }
+
+        let rowSelected;
+        if (el.dataset.rowSelected) {
+            rowSelected = JSON.parse(el.dataset.rowSelected);
+        }
+
         let restrictedPermissionsData;
         if (el.dataset.restrictedPermissions) {
             restrictedPermissionsData = JSON.parse(
@@ -79,29 +95,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 el.value = rowData[index];
             }
         );
-        Array.from(document.querySelectorAll(".selectOptions")).forEach(
+        Array.from(document.querySelectorAll(".updateSelectedValue")).forEach(
             (el, index) => {
-                // Remove existing options
-                while (el.firstChild) {
-                    el.removeChild(el.firstChild);
-                }
-                // Add new options
-                if (selectOptionsData[index].length > 0) {
-                    selectOptionsData[index].forEach((option) => {
-                        const optionElement = document.createElement("option");
-                        optionElement.value = option.id;
-                        optionElement.textContent = option.name;
-                        el.appendChild(optionElement);
-                    });
-                } else {
-                    const optionElement = document.createElement("option");
-                    optionElement.value = "";
-                    optionElement.textContent =
-                        "No topics found for this category!";
-                    el.appendChild(optionElement);
-                }
+                el.value = rowSelected[index];
             }
         );
+        // Array.from(document.querySelectorAll(".selectOptions")).forEach(
+        //     (el, index) => {
+        //         // Remove existing options
+        //         while (el.firstChild) {
+        //             el.removeChild(el.firstChild);
+        //         }
+        //         // Add new options
+        //         if (selectOptionsData[index].length > 0) {
+        //             selectOptionsData[index].forEach((option) => {
+        //                 const optionElement = document.createElement("option");
+        //                 optionElement.value = option.id;
+        //                 optionElement.textContent = option.name;
+        //                 el.appendChild(optionElement);
+        //             });
+        //         } else {
+        //             const optionElement = document.createElement("option");
+        //             optionElement.value = "";
+        //             optionElement.textContent =
+        //                 "No topics found for this category!";
+        //             el.appendChild(optionElement);
+        //         }
+        //     }
+        // );
         if (restrictedPermissionsData) {
             Array.from(
                 document.querySelectorAll(".permissionCheckBox")
@@ -135,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Submit form
-    $("form").on("submit", function (e) {
+    $(".modal form").on("submit", function (e) {
         $("#loading").toggleClass("d-none");
         $("body").css("overflow", "hidden");
         e.preventDefault();
@@ -210,16 +231,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     data:
                         $(this).text() === "#"
                             ? "serial"
-                            : $(this).text() === "Category"
-                            ? "category_title"
-                            : $(this).text() === "Group"
-                            ? "group_title"
-                            : $(this).text() === "Topic"
-                            ? "topic_name"
-                            : $(this).text() === "Categories"
-                            ? "categories_names"
-                            : $(this).text() === "Media"
-                            ? "media_file"
+                            : $(this).text() === "Board"
+                            ? "board_name"
+                            : $(this).text() === "Standard"
+                            ? "standard_name"
+                            : $(this).text() === "Subject"
+                            ? "subject_name"
+                            : $(this).text() === "Author"
+                            ? "author_name"
                             : $(this).text().toLowerCase(),
                     name: $(this).text(),
                     searchable:

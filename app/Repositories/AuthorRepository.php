@@ -2,23 +2,23 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\SubjectRepositoryInterface;
-use App\Models\Subject;
+use App\Repositories\Contracts\AuthorRepositoryInterface;
+use App\Models\Author;
 
-class SubjectRepository extends BaseRepository implements SubjectRepositoryInterface
+class AuthorRepository extends BaseRepository implements AuthorRepositoryInterface
 {
 
-    public $subject;
+    public $author;
 
-    public function __construct(Subject $subject)
+    public function __construct(Author $author)
     {
-        parent::__construct($subject);
-        $this->subject = $subject;
+        parent::__construct($author);
+        $this->author = $author;
     }
 
     public function paginated($columns, $start, $length, $sortColumn, $sortDirection, $searchValue, $countOnly = false)
     {
-        $query = $this->subject->select('*');
+        $query = $this->author->select('*');
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -52,18 +52,18 @@ class SubjectRepository extends BaseRepository implements SubjectRepositoryInter
         }
 
         $query->skip($start)->take($length);
-        $subjects = $query->get();
-        $subjects = $this->collectionModifier($columns, $subjects, $start);
-        return $subjects;
+        $authors = $query->get();
+        $authors = $this->collectionModifier($columns, $authors, $start);
+        return $authors;
     }
 
-    public function collectionModifier($columns, $subjects, $start)
+    public function collectionModifier($columns, $authors, $start)
     {
-        return $subjects->map(function ($subject, $key) use ($columns, $start) {
-            $subject->serial = $start + 1 + $key;
-            $subject->actions = view('admin.subjects.actions', compact('subject'))->render();
-            $subject->setVisible($columns);
-            return $subject;
+        return $authors->map(function ($author, $key) use ($columns, $start) {
+            $author->serial = $start + 1 + $key;
+            $author->actions = view('admin.authors.actions', compact('author'))->render();
+            $author->setVisible($columns);
+            return $author;
         });
     }
 }

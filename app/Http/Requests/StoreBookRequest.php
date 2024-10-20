@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSubjectRequest extends FormRequest
+class StoreBookRequest extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -25,6 +25,12 @@ class StoreSubjectRequest extends FormRequest
   {
     return [
       'name' => 'required',
+      'media_file' => 'file|mimes:jpeg,png,jpg', //,gif,mp4,mov,ogg',
+      'about' => 'required',
+      'board_id' => 'required',
+      'standard_id' => 'required',
+      'subject_id' => 'required',
+      'author_id' => 'required',
     ];
   }
 }

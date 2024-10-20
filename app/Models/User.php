@@ -57,4 +57,9 @@ class User extends Authenticatable
         $role = Role::firstOrCreate(['name' => $role]);
         $this->roles()->sync($role->id);
     }
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
 }

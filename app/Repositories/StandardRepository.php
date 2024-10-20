@@ -16,7 +16,7 @@ class StandardRepository extends BaseRepository implements StandardRepositoryInt
         $this->standard = $standard;
     }
 
-    public function paginated($start, $length, $sortColumn, $sortDirection, $searchValue, $countOnly = false)
+    public function paginated($columns, $start, $length, $sortColumn, $sortDirection, $searchValue, $countOnly = false)
     {
         $query = $this->standard->select('*');
 
@@ -53,16 +53,16 @@ class StandardRepository extends BaseRepository implements StandardRepositoryInt
 
         $query->skip($start)->take($length);
         $standards = $query->get();
-        $standards = $this->collectionModifier($standards, $start);
+        $standards = $this->collectionModifier($columns, $standards, $start);
         return $standards;
     }
 
-    public function collectionModifier($standards, $start)
+    public function collectionModifier($columns, $standards, $start)
     {
-        return $standards->map(function ($standard, $key) use ($start) {
+        return $standards->map(function ($standard, $key) use ($columns, $start) {
             $standard->serial = $start + 1 + $key;
             $standard->actions = view('admin.standards.actions', compact('standard'))->render();
-            $standard->setHidden(['id', 'created_at', 'updated_at']);
+            $standard->setVisible($columns);
             return $standard;
         });
     }

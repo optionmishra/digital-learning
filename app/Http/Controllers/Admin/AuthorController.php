@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Subject;
+use App\Models\Author;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\SubjectRepository;
-use App\Http\Requests\StoreSubjectRequest;
+use App\Repositories\AuthorRepository;
+use App\Http\Requests\StoreAuthorRequest;
 
-class SubjectController extends Controller
+class AuthorController extends Controller
 {
-    public $subject;
+    public $author;
 
-    public function __construct(SubjectRepository $subjectRepository)
+    public function __construct(AuthorRepository $authorRepository)
     {
-        $this->subject = $subjectRepository;
+        $this->author = $authorRepository;
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('admin.subjects.index');
+        return view('admin.authors.index');
     }
 
     /**
@@ -35,12 +35,12 @@ class SubjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSubjectRequest $request)
+    public function store(StoreAuthorRequest $request)
     {
         $data = $request->validated();
-        $subject = $this->subject->store($data, $request->input('id'));
+        $author = $this->author->store($data, $request->input('id'));
 
-        return $this->jsonResponse((bool)$subject, 'Subject ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool)$author, 'Author ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
     }
     /**
      * Display the specified resource.
@@ -69,15 +69,15 @@ class SubjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Subject $subject)
+    public function destroy(Request $request, Author $author)
     {
-        $subjectDeletion = $subject->delete();
-        return $this->jsonResponse((bool)$subjectDeletion, 'Subject deleted successfully');
+        $authorDeletion = $author->delete();
+        return $this->jsonResponse((bool)$authorDeletion, 'Author deleted successfully');
     }
 
     public function dataTable()
     {
-        $data = $this->generateDataTableData($this->subject);
+        $data = $this->generateDataTableData($this->author);
         return response()->json($data);
     }
 }
