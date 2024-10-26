@@ -28,17 +28,17 @@
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.boards.index') }}">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
-                </svg> Board</a></li>
+                </svg> Boards</a></li>
 
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.standards.index') }}">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
-                </svg> Standard</a></li>
+                </svg> Standards</a></li>
 
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.subjects.index') }}">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
-                </svg> Subject</a></li>
+                </svg> Subjects</a></li>
 
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.authors.index') }}">
                 <svg class="nav-icon">
