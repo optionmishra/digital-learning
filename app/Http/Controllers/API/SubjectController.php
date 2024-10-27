@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Book;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\BookResource;
-use App\Http\Resources\BooksResource;
-use App\Http\Resources\BookCollection;
+use App\Http\Resources\SubjectsResource;
 
-class BookController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $books = Book::all();
-        return $this->sendAPIResponse(BooksResource::collection($books), 'Books fetched successfully.');
+        $subjects = Subject::all();
+        return $this->sendAPIResponse(SubjectsResource::collection($subjects), 'Subjects fetched successfully.');
     }
 
     /**
@@ -42,20 +39,7 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        $book = Book::find($id);
-        if ($book) {
-            return $this->sendAPIResponse(BookResource::make($book, false), 'Book fetched successfully.');
-        }
-        return $this->sendAPIError('Book not found.');
-    }
-
-    public function getBookBySubjectId(string $id)
-    {
-        $books = Book::where('subject_id', $id)->get();
-        if ($books->count()) {
-            return $this->sendAPIResponse(BooksResource::collection($books), 'Books fetched successfully.');
-        }
-        return $this->sendAPIError('Books not found.');
+        //
     }
 
     /**
