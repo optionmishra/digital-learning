@@ -50,6 +50,31 @@
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
                 </svg> Books</a></li>
 
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.articles.index') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                </svg> Articles</a></li>
+
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.content_types.index') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                </svg> Content Types</a></li>
+
+        <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                </svg> Contents</a>
+            <ul class="nav-group-items compact">
+                @foreach (App\Models\ContentType::all() as $contentType)
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.contents.index', "type=$contentType->id") }}">
+                            <span class="nav-icon"><span class="nav-icon-bullet"></span></span>
+                            {{ $contentType->name }}s</a>
+                    </li>
+                @endforeach
+            </ul>
+        </li>
+
         {{-- @if (!$user->hasRestriction('can_manage_infopages')) --}}
         {{-- <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
                 <svg class="nav-icon">

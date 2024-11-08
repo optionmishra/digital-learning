@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Book;
-use App\Models\Subject;
+use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\BookResource;
-use App\Http\Resources\BooksResource;
-use App\Http\Resources\BookCollection;
+use App\Http\Resources\ArticlesResource;
 
-class BookController extends Controller
+class ArticleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $books = Book::all();
-        return $this->sendAPIResponse(BooksResource::collection($books), 'Books fetched successfully.');
+        $articles = Article::all();
+        if (!$articles) {
+            return $this->sendAPIError('Articles not found.');
+        }
+        return $this->sendAPIResponse(ArticlesResource::collection($articles), 'Articles fetched successfully.');
     }
 
     /**
@@ -42,20 +42,11 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        $book = Book::find($id);
-        if ($book) {
-            return $this->sendAPIResponse(BookResource::make($book, false), 'Book fetched successfully.');
+        $article = Article::find($id);
+        if (!$article) {
+            return $this->sendAPIError('Article not found.');
         }
-        return $this->sendAPIError('Book not found.');
-    }
-
-    public function getBooksBySubjectId(string $id)
-    {
-        $books = Book::where('subject_id', $id)->get();
-        if ($books->count()) {
-            return $this->sendAPIResponse(BooksResource::collection($books), 'Books fetched successfully.');
-        }
-        return $this->sendAPIError('Books not found.');
+        return $this->sendAPIResponse(ArticlesResource::make($article), 'Article fetched successfully.');
     }
 
     /**

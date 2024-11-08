@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\VideosResource;
+use App\Models\Content;
+use App\Models\ContentType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,10 +47,16 @@ class AuthController extends Controller
         if (Auth::once($attributes)) {
             $token = Auth::user()->createToken('MyApp')->plainTextToken;
 
+            $user = Auth::user();
+            $token = $user->createToken('MyApp')->plainTextToken;
+            $videoContentType = ContentType::whereName('Video')->first();
+            $videos = $videoContentType->contents()->take(5)->get();
+
             return $this->sendAPIResponse([
                 'token' => $token,
-                'name' => Auth::user()->name
-            ], 'User login successfully.');
+                'name' => $user->name,
+                'videos' => VideosResource::collection($videos),
+            ], 'User logged in successfully.');
         } else {
             return $this->sendAPIError('Unauthorised.', ['error' => 'Unauthorised']);
         }

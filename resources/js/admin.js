@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
             error: function (error) {
                 $("#loading").toggleClass("d-none");
                 $("body").css("overflow", "auto");
-                toastr.error("Something went wrong!", "Admin Panel");
+                toastr.error(error.responseJSON.message, "Admin Panel");
                 console.error("Error:", error);
             },
         });
@@ -310,6 +310,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     el.appendChild(optionElement);
                 }
             });
+    });
+
+    $("#src_type").on("change", function (e) {
+        if ($(this).val() == "url") {
+            $("#urlInputContainer").removeClass("d-none");
+            $("#fileInputContainer").addClass("d-none");
+        } else {
+            $("#urlInputContainer").addClass("d-none");
+            $("#fileInputContainer").removeClass("d-none");
+        }
     });
 
     // DOMContentLoaded

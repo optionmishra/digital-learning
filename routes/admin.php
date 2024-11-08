@@ -5,9 +5,12 @@ use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BoardController;
 use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\StandardController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ContentTypeController;
 
 Route::group(['middleware' => ['auth']], function () {
   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -31,4 +34,16 @@ Route::group(['middleware' => ['auth']], function () {
   // Books
   Route::resource('books', BookController::class);
   Route::get('/books-data', [BookController::class, 'dataTable'])->name('books.datatable');
+
+  // Articles
+  Route::resource('articles', ArticleController::class);
+  Route::get('/articles-data', [ArticleController::class, 'dataTable'])->name('articles.datatable');
+
+  // ContentTypes
+  Route::resource('content_types', ContentTypeController::class);
+  Route::get('/content_types-data', [ContentTypeController::class, 'dataTable'])->name('content_types.datatable');
+
+  // Contents
+  Route::resource('contents', ContentController::class);
+  Route::get('/contents-data', [ContentController::class, 'dataTable'])->name('contents.datatable');
 });
