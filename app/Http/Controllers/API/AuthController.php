@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\VideosResource;
-use App\Models\Content;
-use App\Models\ContentType;
 use App\Models\User;
+use App\Models\Content;
+use App\Models\Subject;
+use App\Models\ContentType;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\BannerResource;
+use App\Http\Resources\SubjectsResource;
+use App\Http\Resources\VideosResource;
 
 class AuthController extends Controller
 {
@@ -56,6 +59,8 @@ class AuthController extends Controller
                 'token' => $token,
                 'name' => $user->name,
                 'videos' => VideosResource::collection($videos),
+                'banners' => BannerResource::make(null),
+                'subjects' => SubjectsResource::collection(Subject::all()),
             ], 'User logged in successfully.');
         } else {
             return $this->sendAPIError('Unauthorised.', ['error' => 'Unauthorised']);
