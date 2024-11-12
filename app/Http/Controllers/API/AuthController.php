@@ -26,16 +26,44 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed',
+            'dob' => 'required',
+            'standard_id' => 'required',
+            'mobile' => 'required',
+            'school' => 'required',
+            'img' => 'file|mimes:jpeg,png,jpg',
         ]);
 
-        if (User::where('email', $attributes['email'])->exists()) {
+        $existingUser = User::where('email', $attributes['email'])->first();
+
+        if ($existingUser) {
             return $this->sendAPIError('Email already exists.', ['error' => 'Email already exists.']);
         }
 
-        $user = User::create($attributes);
-        $token = $user->createToken('MyApp')->plainTextToken;
+        $newUser = User::create($attributes);
+        $newUser->profile()->create([
+            'standard_id' => $attributes['standard_id'],
+            'dob' => $attributes['dob'],
+            'mobile' => $attributes['mobile'],
+            'school' => $attributes['school'],
+        ]);
 
-        return $this->sendAPIResponse(['name' => $user->name, 'token' => $token], 'User registered successfully.');
+        if ($request->hasFile('img')) {
+            $uploadedFile = $this->uploadFile($request->file('img'), 'users/profile/img/');
+            $newUser->profile->img = $uploadedFile['name'];
+            $newUser->profile->save();
+        }
+
+        $token = $newUser->createToken('MyApp')->plainTextToken;
+        $videoContentType = ContentType::whereName('Video')->first();
+        $videos = $videoContentType->contents()->take(5)->get();
+
+        return $this->sendAPIResponse([
+            'token' => $token,
+            'name' => $newUser->name,
+            'videos' => VideosResource::collection($videos),
+            'banners' => BannerResource::make(null),
+            'subjects' => SubjectsResource::collection(Subject::all()),
+        ], 'User registered successfully.');
     }
 
     /**
