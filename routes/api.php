@@ -16,6 +16,8 @@ Route::get('/user', function (Request $request) {
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
+
+    Route::resource('standards', StandardController::class);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -25,8 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('subjects', SubjectController::class);
 
     Route::resource('articles', ArticleController::class);
-
-    Route::resource('standards', StandardController::class);
 
     Route::get('videos', [ContentController::class, 'getThreeRandomVideos']);
     Route::get('videos/{video}', [ContentController::class, 'showVideo']);
