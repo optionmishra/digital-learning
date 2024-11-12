@@ -7,6 +7,7 @@ use App\Http\Controllers\API\BookController;
 use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\ContentController;
 use App\Http\Controllers\API\SubjectController;
+use App\Http\Controllers\API\StandardController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -24,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('subjects', SubjectController::class);
 
     Route::resource('articles', ArticleController::class);
+
+    Route::resource('standards', StandardController::class);
 
     Route::get('videos', [ContentController::class, 'getThreeRandomVideos']);
     Route::get('videos/{video}', [ContentController::class, 'showVideo']);
