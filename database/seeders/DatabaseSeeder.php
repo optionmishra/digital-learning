@@ -47,11 +47,26 @@ class DatabaseSeeder extends Seeder
         Standard::firstOrCreate(['name' => 'Class 4', 'order' => '7']);
         Standard::firstOrCreate(['name' => 'Class 5', 'order' => '8']);
 
-        $subject = Subject::firstOrCreate(['name' => 'English']);
-        Subject::firstOrCreate(['name' => 'Hindi']);
-        Subject::firstOrCreate(['name' => 'Mathematics']);
-        Subject::firstOrCreate(['name' => 'Science']);
-        Subject::firstOrCreate(['name' => 'Social Science']);
+        $subject = Subject::firstOrCreate(
+            ['name' => 'English'],
+            ['img' => 'English.png']
+        );
+        Subject::firstOrCreate(
+            ['name' => 'Hindi'],
+            ['img' => 'Hindi.png']
+        );
+        Subject::firstOrCreate(
+            ['name' => 'Mathematics'],
+            ['img' => 'Maths.png']
+        );
+        Subject::firstOrCreate(
+            ['name' => 'Science'],
+            ['img' => 'Science.png']
+        );
+        Subject::firstOrCreate(
+            ['name' => 'Social Science'],
+            ['img' => 'Social-Science.png']
+        );
 
         $author = Author::firstOrCreate(['name' => 'John Doe']);
 
