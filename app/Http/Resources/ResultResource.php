@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class McqSeriesResource extends JsonResource
+class ResultResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,11 @@ class McqSeriesResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'total_questions' => $this->total_questions,
+            'correct_answers' => $this->correct_answers,
+            'incorrect_answers' => $this->incorrect_answers,
+            'score' => $this->score . '%',
+        ];
     }
 }

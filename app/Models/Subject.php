@@ -11,9 +11,19 @@ class Subject extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function media()
+    public function books()
     {
-        return $this->hasMany(SubjectMedia::class);
+        return $this->hasMany(Book::class);
+    }
+
+    public function topics()
+    {
+        return $this->hasMany(Topic::class);
+    }
+
+    public function assessments()
+    {
+        return $this->hasMany(Assessment::class);
     }
 
     protected static function boot()
@@ -21,14 +31,9 @@ class Subject extends Model
         parent::boot();
 
         static::deleting(function ($subject) {
-            foreach ($subject->media as $media) {
-                $dir = $media->type == 'img' ? 'subjects/img/' : 'subjects/vid/';
-                // Delete the file from storage
-                Storage::disk('public')->delete($dir . $media->file);
-
-                // Delete the media record
-                $media->delete();
-            }
+            $dir = 'subjects/img/';
+            // Delete the file from storage
+            Storage::disk('public')->delete($dir . $subject->img);
         });
     }
 }

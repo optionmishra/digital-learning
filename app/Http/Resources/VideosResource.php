@@ -17,7 +17,7 @@ class VideosResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'thumbnail' => $this->img_type === 'file' ? asset('contents/img/' . $this->img) : $this->img,
+            'img' => $this->img_type === 'file' ? asset('contents/img/' . $this->img) : $this->img,
             'src' => $this->src_type === 'file' ? asset('contents/file/' . $this->src) : $this->src,
             'duration' => $this->duration,
             'tags' => explode(',', $this->tags),

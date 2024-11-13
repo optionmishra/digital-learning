@@ -6,7 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookController;
 use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\ContentController;
-use App\Http\Controllers\API\McqController;
+use App\Http\Controllers\API\AssessmentController;
 use App\Http\Controllers\API\SubjectController;
 use App\Http\Controllers\API\StandardController;
 
@@ -36,6 +36,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('ebooks/{ebook}', [ContentController::class, 'showEbook']);
     Route::get('ebooks/subject/{subject}', [ContentController::class, 'getEbooksBySubjectId']);
 
-    Route::get('mcq', [McqController::class, 'index']);
-    Route::get('mcq/subject/{subject}', [McqController::class, 'getSeriesBySubject']);
+    Route::get('mcq', [AssessmentController::class, 'mcq']);
+    Route::get('mcq/subject/{subject}', [AssessmentController::class, 'getAssessmentBySubjectId']);
+    Route::get('mcq/series/{series}', [AssessmentController::class, 'getQuestionsByAssessmentId']);
+
+    Route::post('assessment/attempt', [AssessmentController::class, 'attemptAssessment']);
 });

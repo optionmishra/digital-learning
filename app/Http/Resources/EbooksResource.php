@@ -21,6 +21,7 @@ class EbooksResource extends JsonResource
             'src' => $this->src_type === 'file' ? asset('contents/file/' . $this->src) : $this->src,
             'price' => $this->price,
             'tags' => explode(',', $this->tags),
+            'about' => $this->about
         ];
     }
 }

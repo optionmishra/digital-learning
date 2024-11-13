@@ -25,7 +25,7 @@ return new class extends Migration
             $table->enum('img_type', ['file', 'url'])->default('file');
             $table->string('tags');
             $table->integer('price')->nullable();
-            $table->string('duration')->nullable();
+            $table->time('duration')->nullable();
             $table->string('creator')->nullable();
             $table->timestamps();
         });

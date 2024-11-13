@@ -12,8 +12,9 @@ use App\Models\Author;
 use App\Models\Content;
 use App\Models\Subject;
 use App\Models\Standard;
-use App\Models\McqSeries;
+use App\Models\Assessment;
 use App\Models\ContentType;
+use App\Models\McqOption;
 use App\Models\McqQuestion;
 use Illuminate\Database\Seeder;
 
@@ -63,10 +64,19 @@ class DatabaseSeeder extends Seeder
             'author_id' => $author->id,
         ]);
 
-        $contentType = ContentType::firstOrCreate([
+        $book2 = Book::firstOrCreate([
+            'name' => $subject->name . ' Akshar Gyan ' . $standard->name,
+            'about' => 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis porro cumque placeat laboriosam voluptatum at. Quo optio neque magnam commodi in, ducimus temporibus eveniet, deserunt nobis nesciunt accusamus asperiores sint.',
+            'board_id' => $board->id,
+            'standard_id' => $standard->id,
+            'subject_id' => 2,
+            'author_id' => $author->id,
+        ]);
+
+        $videoContentType = ContentType::firstOrCreate([
             'name' => 'Video',
         ]);
-        ContentType::firstOrCreate([
+        $ebookContentType = ContentType::firstOrCreate([
             'name' => 'Ebook',
         ]);
 
@@ -76,7 +86,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
-                'content_type_id' => $contentType->id,
+                'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/sms4FmPjctU',
                 'src_type' => 'url',
                 'about' => 'All NCS music is copyright free and safe for you to use on platforms like YouTube, TikTok and Twitch. You may not use any track for the purpose of creating a listening experience (i.e., a music video) where the music is the primary focus of the video.',
@@ -94,7 +104,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
-                'content_type_id' => $contentType->id,
+                'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/B2DnkuXC8Rw',
                 'src_type' => 'url',
                 'about' => 'All NCS music is copyright free and safe for you to use on platforms like YouTube, TikTok and Twitch. You may not use any track for the purpose of creating a listening experience (i.e., a music video) where the music is the primary focus of the video.',
@@ -113,7 +123,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
-                'content_type_id' => $contentType->id,
+                'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/VKSqafvwLhA',
                 'src_type' => 'url',
                 'about' => 'All NCS music is copyright free and safe for you to use on platforms like YouTube, TikTok and Twitch. You may not use any track for the purpose of creating a listening experience (i.e., a music video) where the music is the primary focus of the video.',
@@ -131,7 +141,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
-                'content_type_id' => $contentType->id,
+                'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/u-8vtlakNy0',
                 'src_type' => 'url',
                 'about' => 'All NCS music is copyright free and safe for you to use on platforms like YouTube, TikTok and Twitch. You may not use any track for the purpose of creating a listening experience (i.e., a music video) where the music is the primary focus of the video.',
@@ -149,7 +159,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
-                'content_type_id' => $contentType->id,
+                'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/tAHs5GVIjh0',
                 'src_type' => 'url',
                 'about' => 'All NCS music is copyright free and safe for you to use on platforms like YouTube, TikTok and Twitch. You may not use any track for the purpose of creating a listening experience (i.e., a music video) where the music is the primary focus of the video.',
@@ -161,34 +171,38 @@ class DatabaseSeeder extends Seeder
                 'creator' => 'NoCopyrightSounds',
             ]
         );
-
+        Content::firstOrCreate(
+            ['title' => 'Akshar Gyan Ebook'],
+            [
+                'standard_id' => $standard->id,
+                'subject_id' => 2,
+                'book_id' => $book2->id,
+                'content_type_id' => $ebookContentType->id,
+                'src' => 'https://epochstudio.net/good_books/flipbooks/akshargyan/index.html',
+                'src_type' => 'url',
+                'about' => 'All NCS music is copyright free and safe for you to use on platforms like YouTube, TikTok and Twitch. You may not use any track for the purpose of creating a listening experience (i.e., a music video) where the music is the primary focus of the video.',
+                'img' => 'https://epochstudio.net/good_books/flipbooks/akshargyan/files/mobile/1.jpg?241102180809',
+                'img_type' => 'url',
+                'tags' => 'Ebook,2024',
+                'price' => 199,
+            ]
+        );
 
         $topic = Topic::firstOrCreate(
             ['name' => 'Active and Passive voice'],
             ['subject_id' => $subject->id, 'book_id' => $book->id]
         );
 
-        $mcqSeries = McqSeries::firstOrCreate(
+        $Assessment = Assessment::firstOrCreate(
             [
+                'name' => 'Active and Passive voice',
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
-                'topic_id' => $topic->id
+                'duration' => '00:05:00',
             ]
         );
 
-        McqQuestion::firstOrCreate(
-            ['question' => 'Which of the following sentences is in the passive voice?'],
-            [
-                'subject_id' => $subject->id,
-                'book_id' => $book->id,
-                'topic_id' => $topic->id,
-                'mcq_series_id' => $mcqSeries->id,
-                'option1' => 'The chef cooked a delicious meal.',
-                'option2' => 'The meal was cooked by the chef.',
-                'option3' => 'The chef will cook the meal.',
-                'option4' => 'The chef is cooking the meal.',
-                'answer' => 'The meal was cooked by the chef.'
-            ]
-        );
+        // Run the MCQ Questions Seeder.
+        $this->call(QuestionsSeeder::class);
     }
 }

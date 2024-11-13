@@ -17,7 +17,7 @@ class BookResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'image' => $this->img ? asset('books/img/' . $this->img) : null,
+            'img' => $this->img ? asset('books/img/' . $this->img) : null,
             'about' => $this->about,
             'board' => $this->board ? $this->board->name : null,
             'standard' => $this->standard ? $this->standard->name : null,
