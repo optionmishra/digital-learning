@@ -7,11 +7,14 @@ use App\Models\Role;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
 use App\Models\Board;
+use App\Models\Topic;
 use App\Models\Author;
 use App\Models\Content;
-use App\Models\ContentType;
 use App\Models\Subject;
 use App\Models\Standard;
+use App\Models\McqSeries;
+use App\Models\ContentType;
+use App\Models\McqQuestion;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -156,6 +159,35 @@ class DatabaseSeeder extends Seeder
                 'price' => null,
                 'duration' => '00:02:44',
                 'creator' => 'NoCopyrightSounds',
+            ]
+        );
+
+
+        $topic = Topic::firstOrCreate(
+            ['name' => 'Active and Passive voice'],
+            ['subject_id' => $subject->id, 'book_id' => $book->id]
+        );
+
+        $mcqSeries = McqSeries::firstOrCreate(
+            [
+                'subject_id' => $subject->id,
+                'book_id' => $book->id,
+                'topic_id' => $topic->id
+            ]
+        );
+
+        McqQuestion::firstOrCreate(
+            ['question' => 'Which of the following sentences is in the passive voice?'],
+            [
+                'subject_id' => $subject->id,
+                'book_id' => $book->id,
+                'topic_id' => $topic->id,
+                'mcq_series_id' => $mcqSeries->id,
+                'option1' => 'The chef cooked a delicious meal.',
+                'option2' => 'The meal was cooked by the chef.',
+                'option3' => 'The chef will cook the meal.',
+                'option4' => 'The chef is cooking the meal.',
+                'answer' => 'The meal was cooked by the chef.'
             ]
         );
     }
