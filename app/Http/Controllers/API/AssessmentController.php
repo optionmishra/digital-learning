@@ -16,16 +16,21 @@ use App\Http\Resources\QuestionsResource;
 use App\Http\Resources\AssessmentsResource;
 use App\Http\Requests\AttemptAssessmentRequest;
 use App\Http\Resources\ResultResource;
+use App\Models\Attempt;
 
 class AssessmentController extends Controller
 {
     public function mcq()
     {
         $subjects = Subject::all();
-        $mcqAssessment = Assessment::where('type', 'mcq')->latest()->get();
+        $mcqAssessments = Assessment::where('type', 'mcq')->latest()->get();
+
+        $attemptedSeriesArr = Attempt::where('user_id', Auth::user()->id)->get()->pluck('assessment_id')->toArray();
+        $attemptedMcqAssessments = Assessment::whereIn('id', $attemptedSeriesArr)->where('type', 'mcq')->latest()->get();
+
         return $this->sendAPIResponse([
-            'newSeries' => AssessmentsResource::collection($mcqAssessment),
-            'attemptedSeries' => [],
+            'newSeries' => AssessmentsResource::collection($mcqAssessments),
+            'attemptedSeries' => AssessmentsResource::collection($attemptedMcqAssessments),
             'subjects' => SubjectsResource::collection($subjects)
         ], 'Assessment fetched successfully.');
     }
