@@ -32,18 +32,26 @@ class AssessmentController extends Controller
             'newSeries' => AssessmentsResource::collection($mcqAssessments),
             'attemptedSeries' => AssessmentsResource::collection($attemptedMcqAssessments),
             'subjects' => SubjectsResource::collection($subjects)
-        ], 'Assessment fetched successfully.');
+        ], 'Assessments fetched successfully.');
     }
 
-    public function getAssessmentBySubjectId($id)
+    public function getMcqAssessmentBySubjectId($id)
     {
         $mcqAssessment = Assessment::where(['subject_id' => $id, 'type' => 'mcq'])->latest()->get();
         if ($mcqAssessment->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
-        return $this->sendAPIResponse(AssessmentsResource::collection($mcqAssessment), 'Assessment fetched successfully.');
+        return $this->sendAPIResponse(AssessmentsResource::collection($mcqAssessment), 'Assessments fetched successfully.');
     }
 
+    public function olympiad()
+    {
+        $olympiadAssessments = Assessment::where('type', 'olympiad')->latest()->get();
+
+        return $this->sendAPIResponse([
+            'olympiads' => AssessmentsResource::collection($olympiadAssessments),
+        ], 'Assessments fetched successfully.');
+    }
 
     public function getQuestionsByAssessmentId($id)
     {
@@ -51,7 +59,7 @@ class AssessmentController extends Controller
         if ($mcqQuestions->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
-        return $this->sendAPIResponse(QuestionsResource::collection($mcqQuestions), 'Assessment fetched successfully.');
+        return $this->sendAPIResponse(QuestionsResource::collection($mcqQuestions), 'Questions fetched successfully.');
     }
 
     public function attemptAssessment(AttemptAssessmentRequest $attemptAssessmentRequest)

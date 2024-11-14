@@ -37,8 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('ebooks/subject/{subject}', [ContentController::class, 'getEbooksBySubjectId']);
 
     Route::get('mcq', [AssessmentController::class, 'mcq']);
-    Route::get('mcq/subject/{subject}', [AssessmentController::class, 'getAssessmentBySubjectId']);
+    Route::get('mcq/subject/{subject}', [AssessmentController::class, 'getMcqAssessmentBySubjectId']);
     Route::get('mcq/series/{series}', [AssessmentController::class, 'getQuestionsByAssessmentId']);
+
+    Route::get('olympiad', [AssessmentController::class, 'olympiad']);
 
     Route::post('assessment/attempt', [AssessmentController::class, 'attemptAssessment']);
 });

@@ -18,7 +18,7 @@ class QuestionsSeeder extends Seeder
         $englishSubject = Subject::where('name', 'English')->first();
         $englishBook = $englishSubject->books()->first();
         $englishTopic = $englishSubject->topics()->first();
-        $englishSeries = $englishSubject->assessments()->first();
+        // $englishSeries = $englishSubject->assessments()->first();
 
         $question1 = Question::firstOrCreate(
             ['question_text' => 'Which of the following sentences is in the passive voice?'],
@@ -152,5 +152,162 @@ class QuestionsSeeder extends Seeder
 
         $assessment = Assessment::find(1);
         $assessment->questions()->sync([$question1->id, $question2->id, $question3->id, $question4->id, $question5->id]);
+
+        // Science Olympiad
+        $scienceSubject = Subject::where('name', 'Science')->first();
+        $scienceBook = $scienceSubject->books()->firstOrCreate(
+            ['name' => 'Science book'],
+            [
+                'about' => 'This is a science book',
+                'board_id' => 1,
+                'standard_id' => 1,
+                'author_id' => 1,
+            ]
+        );
+        $scienceTopic = $scienceSubject->topics()->firstOrCreate(['name' => 'Space'], [
+            'book_id' => $scienceBook->id,
+        ]);
+
+        $assessment = Assessment::firstOrCreate(
+            ['name' => 'Science Olympiad'],
+            [
+                'type' => 'olympiad',
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'duration' => "00:10:00"
+            ]
+        );
+
+        $question1 = Question::firstOrCreate(
+            ['question_text' => 'What is the chemical symbol for water?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question1->options()->firstOrCreate(['option_text' => 'O2', 'is_correct' => false]);
+        $question1->options()->firstOrCreate(['option_text' => 'H2O', 'is_correct' => true]);
+        $question1->options()->firstOrCreate(['option_text' => 'CO2', 'is_correct' => false]);
+        $question1->options()->firstOrCreate(['option_text' => 'NaCl', 'is_correct' => false]);
+
+        $question2 = Question::firstOrCreate(
+            ['question_text' => 'What planet is known as the Red Planet?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question2->options()->firstOrCreate(['option_text' => 'Earth', 'is_correct' => false]);
+        $question2->options()->firstOrCreate(['option_text' => 'Mars', 'is_correct' => true]);
+        $question2->options()->firstOrCreate(['option_text' => 'Venus', 'is_correct' => false]);
+        $question2->options()->firstOrCreate(['option_text' => 'Jupiter', 'is_correct' => false]);
+
+        $question3 = Question::firstOrCreate(
+            ['question_text' => 'Which gas is most abundant in the Earth\'s atmosphere?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question3->options()->firstOrCreate(['option_text' => 'Oxygen', 'is_correct' => false]);
+        $question3->options()->firstOrCreate(['option_text' => 'Nitrogen', 'is_correct' => true]);
+        $question3->options()->firstOrCreate(['option_text' => 'Carbon Dioxide', 'is_correct' => false]);
+        $question3->options()->firstOrCreate(['option_text' => 'Hydrogen', 'is_correct' => false]);
+
+        $question4 = Question::firstOrCreate(
+            ['question_text' => 'What is the boiling point of water in Celsius?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question4->options()->firstOrCreate(['option_text' => '100°C', 'is_correct' => true]);
+        $question4->options()->firstOrCreate(['option_text' => '50°C', 'is_correct' => false]);
+        $question4->options()->firstOrCreate(['option_text' => '0°C', 'is_correct' => false]);
+        $question4->options()->firstOrCreate(['option_text' => '25°C', 'is_correct' => false]);
+
+        $question5 = Question::firstOrCreate(
+            ['question_text' => 'What is the hardest natural substance on Earth?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question5->options()->firstOrCreate(['option_text' => 'Gold', 'is_correct' => false]);
+        $question5->options()->firstOrCreate(['option_text' => 'Iron', 'is_correct' => false]);
+        $question5->options()->firstOrCreate(['option_text' => 'Diamond', 'is_correct' => true]);
+        $question5->options()->firstOrCreate(['option_text' => 'Silver', 'is_correct' => false]);
+
+        $question6 = Question::firstOrCreate(
+            ['question_text' => 'Which planet has the most moons?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question6->options()->firstOrCreate(['option_text' => 'Jupiter', 'is_correct' => true]);
+        $question6->options()->firstOrCreate(['option_text' => 'Earth', 'is_correct' => false]);
+        $question6->options()->firstOrCreate(['option_text' => 'Mars', 'is_correct' => false]);
+        $question6->options()->firstOrCreate(['option_text' => 'Saturn', 'is_correct' => false]);
+
+        $question7 = Question::firstOrCreate(
+            ['question_text' => 'What is the center of an atom called?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question7->options()->firstOrCreate(['option_text' => 'Electron', 'is_correct' => false]);
+        $question7->options()->firstOrCreate(['option_text' => 'Nucleus', 'is_correct' => true]);
+        $question7->options()->firstOrCreate(['option_text' => 'Proton', 'is_correct' => false]);
+        $question7->options()->firstOrCreate(['option_text' => 'Neutron', 'is_correct' => false]);
+
+        $question8 = Question::firstOrCreate(
+            ['question_text' => 'Which organelle is known as the powerhouse of the cell?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question8->options()->firstOrCreate(['option_text' => 'Nucleus', 'is_correct' => false]);
+        $question8->options()->firstOrCreate(['option_text' => 'Mitochondria', 'is_correct' => true]);
+        $question8->options()->firstOrCreate(['option_text' => 'Ribosome', 'is_correct' => false]);
+        $question8->options()->firstOrCreate(['option_text' => 'Golgi Apparatus', 'is_correct' => false]);
+
+        $question9 = Question::firstOrCreate(
+            ['question_text' => 'What is the process of converting water vapor into liquid water called?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question9->options()->firstOrCreate(['option_text' => 'Evaporation', 'is_correct' => false]);
+        $question9->options()->firstOrCreate(['option_text' => 'Condensation', 'is_correct' => true]);
+        $question9->options()->firstOrCreate(['option_text' => 'Sublimation', 'is_correct' => false]);
+        $question9->options()->firstOrCreate(['option_text' => 'Transpiration', 'is_correct' => false]);
+
+        $question10 = Question::firstOrCreate(
+            ['question_text' => 'What type of rock is formed by volcanic activity?'],
+            [
+                'subject_id' => $scienceSubject->id,
+                'book_id' => $scienceBook->id,
+                'topic_id' => $scienceTopic->id,
+            ]
+        );
+        $question10->options()->firstOrCreate(['option_text' => 'Sedimentary', 'is_correct' => false]);
+        $question10->options()->firstOrCreate(['option_text' => 'Igneous', 'is_correct' => true]);
+        $question10->options()->firstOrCreate(['option_text' => 'Metamorphic', 'is_correct' => false]);
+        $question10->options()->firstOrCreate(['option_text' => 'Limestone', 'is_correct' => false]);
+
+        $assessment->questions()->sync([$question1->id, $question2->id, $question3->id, $question4->id, $question5->id, $question6->id, $question7->id, $question8->id, $question9->id, $question10->id]);
     }
 }
