@@ -55,11 +55,18 @@ class AssessmentController extends Controller
 
     public function getQuestionsByAssessmentId($id)
     {
-        $mcqQuestions = Assessment::where('id', $id)->first()->questions()->get();
-        if ($mcqQuestions->count() == 0) {
+        $assessment = Assessment::where('id', $id)->first();
+
+        if (!$assessment) {
+            return $this->sendAPIError('Assessment not found.');
+        }
+
+        $Questions = $assessment->questions()->get();
+
+        if ($Questions->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
-        return $this->sendAPIResponse(QuestionsResource::collection($mcqQuestions), 'Questions fetched successfully.');
+        return $this->sendAPIResponse(QuestionsResource::collection($Questions), 'Questions fetched successfully.');
     }
 
     public function attemptAssessment(AttemptAssessmentRequest $attemptAssessmentRequest)
