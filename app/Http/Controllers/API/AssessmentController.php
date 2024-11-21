@@ -131,11 +131,11 @@ class AssessmentController extends Controller
 
     public function scoreIndex()
     {
-        // $attemptedAssessmentsArr = Attempt::where('user_id', Auth::user()->id)->get()->pluck('assessment_id')->toArray();
-        $attemptedAssessmentsArr = Attempt::where('user_id', Auth::user()->id) // Filter for the current user
-            ->latest('attempts.created_at') // Sort by latest attempts
-            ->distinct('assessment_id') // Get distinct assessment IDs
-            ->pluck('assessment_id')->toArray(); // Get the IDs of the latest attempts
+        $attemptedAssessmentsArr = Attempt::select('assessment_id', DB::raw('max(created_at) as latest_attempt'))
+            ->where('user_id', Auth::user()->id)
+            ->groupBy('assessment_id')
+            ->orderBy('latest_attempt', 'desc')
+            ->pluck('assessment_id')->toArray();
 
         $attemptedMcqAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'mcq')->latest()->get();
         $attemptedOlympiadAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'olympiad')->latest()->get();
