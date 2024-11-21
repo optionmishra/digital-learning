@@ -2,7 +2,7 @@
     <button class="px-2 py-2 btn btn-link nav-link d-flex align-items-center edit-btn" type="button" title="Edit"
         data-coreui-toggle="modal" data-coreui-target="#standardStore"
         data-update-route="{{ route('admin.standards.store') }}"
-        data-row-data="{{ json_encode([$standard->id, $standard->name, $standard->order]) }}">
+        data-row-data="{{ json_encode(['id' => $standard->id, 'name' => $standard->name, 'order' => $standard->order]) }}">
         <svg class="icon icon-lg text-primary">
             <use xlink:href="{{ url('coreui/vendors/@coreui/icons/svg/free.svg#cil-pencil') }}">
             </use>

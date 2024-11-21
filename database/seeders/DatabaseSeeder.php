@@ -26,7 +26,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'user']);
 
         $user = User::firstOrCreate(
             ['email' => 'admin@example.com'],
@@ -211,6 +210,9 @@ class DatabaseSeeder extends Seeder
         $Assessment = Assessment::firstOrCreate(
             [
                 'name' => 'Active and Passive voice',
+            ],
+            [
+                'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
                 'duration' => '00:05:00',

@@ -8,7 +8,7 @@
             <form method="POST" action="{{ route('admin.contents.store') }}" id="updateDataForm">
                 @csrf
                 <div class="modal-body">
-                    <input type="hidden" name="id" class="updateDataField">
+                    <input type="hidden" name="id" class="">
                     <input type="hidden" name="type" value="{{ $contentType->name }}">
                     <input type="hidden" name="content_type_id" value="{{ $contentType->id }}">
 
@@ -41,13 +41,12 @@
 
                     <div class="mb-3">
                         <label class="form-label" for="title">Title</label>
-                        <input class="form-control updateDataField" id="title" type="text" placeholder="Title"
-                            name="title">
+                        <input class="form-control " id="title" type="text" placeholder="Title" name="title">
                     </div>
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-6 col-sm-1">
                             <label class="form-label" for="tags">Tags</label>
-                            <input class="form-control updateDataField" id="tags" type="text"
+                            <input class="form-control " id="tags" type="text"
                                 placeholder="Tags (separated by comma)" name="tags">
                         </div>
                         <div class="mb-3 col-lg-6 col-sm-1">
@@ -59,8 +58,8 @@
                         <div class="mb-3 row">
                             <div class="mb-3 col-lg-6 col-sm-1">
                                 <label class="form-label" for="creator">Creator</label>
-                                <input class="form-control updateDataField" id="creator" type="text"
-                                    placeholder="Creator Name" name="creator">
+                                <input class="form-control " id="creator" type="text" placeholder="Creator Name"
+                                    name="creator">
                             </div>
                         </div>
                     @endif
@@ -85,13 +84,13 @@
                         <label class="form-label" for="about">About</label>
                         <div id="about" class="editor">
                         </div>
-                        <input class="updateDataField" id="hidden_about" type="hidden" name="about">
+                        <input class="" id="hidden_about" type="hidden" name="about">
                     </div>
                     @if ($contentType->name == 'Ebook')
                         <div class="mb-3">
                             <label class="form-label" for="price">Price</label>
-                            <input class="form-control updateDataField" id="price" type="number"
-                                placeholder="Price" name="price">
+                            <input class="form-control " id="price" type="number" placeholder="Price"
+                                name="price">
                         </div>
                     @endif
                 </div>

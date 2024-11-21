@@ -19,11 +19,12 @@ class ContentController extends Controller
     // Videos
     public function getThreeRandomVideos()
     {
+        $user = auth()->user();
         $videoContentType = ContentType::whereName('Video')->first();
-        $videos = $videoContentType->contents()->inRandomOrder()->limit(3)->get();
+        $videos = $videoContentType->classContents()->inRandomOrder()->limit(3)->get();
         return $this->sendAPIResponse([
-            'videos' => VideosResource::collection($videos),
             'banners' => BannerResource::make(null),
+            'videos' => VideosResource::collection($videos),
             'subjects' => SubjectsResource::collection(Subject::all()),
         ], 'Videos fetched successfully.');
     }
@@ -31,7 +32,7 @@ class ContentController extends Controller
     public function getVideosBySubjectId(string $id)
     {
         $videoContentType = ContentType::whereName('Video')->first();
-        $videos = $videoContentType->contents()->where('subject_id', $id)->get();
+        $videos = $videoContentType->classContents()->where('subject_id', $id)->get();
         if ($videos->count()) {
             return $this->sendAPIResponse(VideosResource::collection($videos), 'Videos fetched successfully.');
         }
@@ -52,7 +53,7 @@ class ContentController extends Controller
     public function getEbooksBySubjectId(string $id)
     {
         $ebookContentType = ContentType::whereName('Ebook')->first();
-        $ebooks = $ebookContentType->contents()->where('subject_id', $id)->get();
+        $ebooks = $ebookContentType->classContents()->where('subject_id', $id)->get();
         if ($ebooks->count()) {
             return $this->sendAPIResponse(EbooksResource::collection($ebooks), 'Ebooks fetched successfully.');
         }

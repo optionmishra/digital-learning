@@ -23,7 +23,7 @@ class AssessmentController extends Controller
     public function mcq()
     {
         $subjects = Subject::all();
-        $mcqAssessments = Assessment::where('type', 'mcq')->latest()->get();
+        $mcqAssessments = Assessment::where(['type' => 'mcq', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
 
         $attemptedSeriesArr = Attempt::where('user_id', Auth::user()->id)->get()->pluck('assessment_id')->toArray();
         $attemptedMcqAssessments = Assessment::whereIn('id', $attemptedSeriesArr)->where('type', 'mcq')->latest()->get();
@@ -37,7 +37,7 @@ class AssessmentController extends Controller
 
     public function getMcqAssessmentBySubjectId($id)
     {
-        $mcqAssessment = Assessment::where(['subject_id' => $id, 'type' => 'mcq'])->latest()->get();
+        $mcqAssessment = Assessment::where(['subject_id' => $id, 'type' => 'mcq', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
         if ($mcqAssessment->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
@@ -46,7 +46,7 @@ class AssessmentController extends Controller
 
     public function olympiad()
     {
-        $olympiadAssessments = Assessment::where('type', 'olympiad')->latest()->get();
+        $olympiadAssessments = Assessment::where(['type' => 'olympiad', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
 
         return $this->sendAPIResponse([
             'olympiads' => AssessmentsResource::collection($olympiadAssessments),
@@ -127,5 +127,44 @@ class AssessmentController extends Controller
         }
 
         return $this->sendAPIResponse(['result' => ResultResource::make($result)], 'Assessment attempted successfully.');
+    }
+
+    public function scoreIndex()
+    {
+        // $attemptedAssessmentsArr = Attempt::where('user_id', Auth::user()->id)->get()->pluck('assessment_id')->toArray();
+        $attemptedAssessmentsArr = Attempt::where('user_id', Auth::user()->id) // Filter for the current user
+            ->latest('attempts.created_at') // Sort by latest attempts
+            ->distinct('assessment_id') // Get distinct assessment IDs
+            ->pluck('assessment_id')->toArray(); // Get the IDs of the latest attempts
+
+        $attemptedMcqAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'mcq')->latest()->get();
+        $attemptedOlympiadAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'olympiad')->latest()->get();
+
+        $mcqScoreSum = $attemptedMcqAssessments->sum(function ($assessment) {
+            return $assessment->results()->where('user_id', Auth::user()->id)->latest('results.created_at')->value('score'); // Sum of scores for only the latest attempt of each assessment, for the current user
+        });
+        $mcqAttemptCount = $attemptedMcqAssessments->count();
+
+        $olympiadScoreSum = $attemptedOlympiadAssessments->sum(function ($assessment) {
+            return $assessment->results->sum('score');
+        });
+        $olympiadAttemptCount = $attemptedOlympiadAssessments->count();
+
+        // $totalScoreSum = $mcqScoreSum + $olympiadScoreSum;
+        // $totalAttemptCount = $mcqAttemptCount + $olympiadAttemptCount;
+
+        return $this->sendAPIResponse(
+            [
+                'mcq' => [
+                    'overallScore' => $mcqAttemptCount > 0 ? $mcqScoreSum / $mcqAttemptCount : 0,
+                    'assessments' => AssessmentsResource::collection($attemptedMcqAssessments)
+                ],
+                'olympiad' => [
+                    'overallScore' => $olympiadAttemptCount > 0 ? $olympiadScoreSum / $olympiadAttemptCount : 0,
+                    'assessments' => AssessmentsResource::collection($attemptedOlympiadAssessments)
+                ]
+            ],
+            'Assessment attempted successfully.'
+        );
     }
 }

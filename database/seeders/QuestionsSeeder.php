@@ -172,6 +172,7 @@ class QuestionsSeeder extends Seeder
             ['name' => 'Science Olympiad'],
             [
                 'type' => 'olympiad',
+                'standard_id' => 1,
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'duration' => "00:10:00"

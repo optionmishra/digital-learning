@@ -72,4 +72,16 @@ class StandardController extends Controller
     {
         //
     }
+
+    public function setTeacherStandard(Request $request)
+    {
+        request()->validate(['standard_id' => 'required']);
+        $user = auth()->user();
+        if ($user->hasRole('teacher')) {
+            $user->profile->standard_id = $request->standard_id;
+            $user->profile->save();
+            return $this->sendAPIResponse([], 'Standard set successfully.');
+        }
+        return $this->sendAPIError('You are not a teacher.', [], 401);
+    }
 }

@@ -8,7 +8,7 @@
             <form method="POST" action="{{ route('admin.books.store') }}" id="updateDataForm">
                 @csrf
                 <div class="modal-body">
-                    <input type="hidden" name="id" class="updateDataField">
+                    <input type="hidden" name="id" class="">
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-3 col-sm-1">
                             <label class="form-label" for="board">Board</label>
@@ -58,7 +58,7 @@
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-6 col-sm-1">
                             <label class="form-label" for="name">Name</label>
-                            <input class="form-control updateDataField" id="name" type="text" placeholder="Name"
+                            <input class="form-control " id="name" type="text" placeholder="Name"
                                 name="name">
                         </div>
                         <div class="mb-3 col-lg-6 col-sm-1">
@@ -71,11 +71,11 @@
                         <label class="form-label" for="about">About</label>
                         <div id="about" class="editor">
                         </div>
-                        <input class="updateDataField" id="hidden_about" type="hidden" name="about">
+                        <input class="" id="hidden_about" type="hidden" name="about">
                     </div> --}}
                     <div class="mb-3">
                         <label class="form-label" for="about">About</label>
-                        <textarea class="form-control updateDataField" name="about" id="about" cols="30" rows="10"></textarea>
+                        <textarea class="form-control " name="about" id="about" cols="30" rows="10"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

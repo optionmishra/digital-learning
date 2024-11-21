@@ -22,13 +22,21 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    // Standards
+    Route::post('set-teacher-standard', [StandardController::class, 'setTeacherStandard']);
+
+    // Subjects
+    Route::resource('subjects', SubjectController::class);
+
+    // Books
     Route::resource('books', BookController::class);
     Route::get('books/subject/{subject}', [BookController::class, 'getBooksBySubjectId']);
 
-    Route::resource('subjects', SubjectController::class);
-
+    // Articles
     Route::resource('articles', ArticleController::class);
 
+    // Contents
     Route::get('videos', [ContentController::class, 'getThreeRandomVideos']);
     Route::get('videos/{video}', [ContentController::class, 'showVideo']);
     Route::get('videos/subject/{subject}', [ContentController::class, 'getVideosBySubjectId']);
@@ -36,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('ebooks/{ebook}', [ContentController::class, 'showEbook']);
     Route::get('ebooks/subject/{subject}', [ContentController::class, 'getEbooksBySubjectId']);
 
+    // Assessments
     Route::get('mcq', [AssessmentController::class, 'mcq']);
     Route::get('mcq/subject/{subject}', [AssessmentController::class, 'getMcqAssessmentBySubjectId']);
 
@@ -43,4 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('assessment/questions/{assessment}', [AssessmentController::class, 'getQuestionsByAssessmentId']);
     Route::post('assessment/attempt', [AssessmentController::class, 'attemptAssessment']);
+
+    // Score
+    Route::get('score', [AssessmentController::class, 'scoreIndex']);
 });

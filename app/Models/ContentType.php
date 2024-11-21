@@ -36,4 +36,9 @@ class ContentType extends Model
     {
         return $this->hasMany(Content::class);
     }
+
+    public function classContents()
+    {
+        return $this->hasMany(Content::class)->where('standard_id', auth()->user()->profile->standard_id);
+    }
 }

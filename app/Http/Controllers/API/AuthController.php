@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BannerResource;
 use App\Http\Resources\SubjectsResource;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\VideosResource;
 
 class AuthController extends Controller
@@ -22,16 +23,36 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $attributes = request()->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
-            'dob' => 'required',
-            'standard_id' => 'required',
-            'mobile' => 'required',
-            'school' => 'required',
-            'img' => 'file|mimes:jpeg,png,jpg',
+        request()->validate([
+            'type' => 'required',
         ]);
+
+        $userType = request()->input('type');
+
+        if ($userType === 'teacher') {
+            $attributes = request()->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|confirmed',
+                'standard_id' => 'required',
+                'mobile' => 'required',
+                'school' => 'required',
+                'img' => 'file|mimes:jpeg,png,jpg',
+                'type' => 'required',
+            ]);
+        } else {
+            $attributes = request()->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|confirmed',
+                'dob' => 'required',
+                'standard_id' => 'required',
+                'mobile' => 'required',
+                'school' => 'required',
+                'img' => 'file|mimes:jpeg,png,jpg',
+                'type' => 'required',
+            ]);
+        }
 
         $existingUser = User::where('email', $attributes['email'])->first();
 
@@ -40,28 +61,40 @@ class AuthController extends Controller
         }
 
         $newUser = User::create($attributes);
-        $newUser->profile()->create([
-            'standard_id' => $attributes['standard_id'],
-            'dob' => $attributes['dob'],
-            'mobile' => $attributes['mobile'],
-            'school' => $attributes['school'],
-        ]);
 
+        if ($userType === 'teacher') {
+            $newUser->profile()->create([
+                'standard_id' => $attributes['standard_id'],
+                'mobile' => $attributes['mobile'],
+                'school' => $attributes['school'],
+            ]);
+        } else {
+            $newUser->profile()->create([
+                'standard_id' => $attributes['standard_id'],
+                'dob' => $attributes['dob'],
+                'mobile' => $attributes['mobile'],
+                'school' => $attributes['school'],
+            ]);
+        }
         if ($request->hasFile('img')) {
             $uploadedFile = $this->uploadFile($request->file('img'), 'users/profile/img/');
             $newUser->profile->img = $uploadedFile['name'];
             $newUser->profile->save();
         }
 
-        $token = $newUser->createToken('MyApp')->plainTextToken;
+        // Assign role to the user
+        $newUser->assignRole($userType);
+
+        $credentials = $request->only('email', 'password');
+        Auth::once($credentials);
+
         $videoContentType = ContentType::whereName('Video')->first();
-        $videos = $videoContentType->contents()->take(5)->get();
+        $videos = $videoContentType->classContents()->take(5)->get();
 
         return $this->sendAPIResponse([
-            'token' => $token,
-            'name' => $newUser->name,
-            'videos' => VideosResource::collection($videos),
+            'user' => UserResource::make($newUser),
             'banners' => BannerResource::make(null),
+            'videos' => VideosResource::collection($videos),
             'subjects' => SubjectsResource::collection(Subject::all()),
         ], 'User registered successfully.');
     }
@@ -73,21 +106,17 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $attributes = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password');
 
-        if (Auth::once($attributes)) {
-            $token = Auth::user()->createToken('MyApp')->plainTextToken;
-
+        if (Auth::once($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('MyApp')->plainTextToken;
             $videoContentType = ContentType::whereName('Video')->first();
-            $videos = $videoContentType->contents()->take(5)->get();
+            $videos = $videoContentType->classContents()->take(5)->get();
 
             return $this->sendAPIResponse([
-                'token' => $token,
-                'name' => $user->name,
-                'videos' => VideosResource::collection($videos),
+                'user' => UserResource::make($user),
                 'banners' => BannerResource::make(null),
+                'videos' => VideosResource::collection($videos),
                 'subjects' => SubjectsResource::collection(Subject::all()),
             ], 'User logged in successfully.');
         } else {

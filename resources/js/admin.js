@@ -71,25 +71,31 @@ document.addEventListener("DOMContentLoaded", function () {
             rowData = JSON.parse(el.dataset.rowData);
         }
 
-        let selectOptionsData;
-        if (el.dataset.selectOptions) {
-            selectOptionsData = JSON.parse(el.dataset.selectOptions);
-        }
+        // let selectOptionsData;
+        // if (el.dataset.selectOptions) {
+        //     selectOptionsData = JSON.parse(el.dataset.selectOptions);
+        // }
 
-        let rowSelected;
-        if (el.dataset.rowSelected) {
-            rowSelected = JSON.parse(el.dataset.rowSelected);
-        }
+        // let rowSelected;
+        // if (el.dataset.rowSelected) {
+        //     rowSelected = JSON.parse(el.dataset.rowSelected);
+        // }
 
-        let restrictedPermissionsData;
-        if (el.dataset.restrictedPermissions) {
-            restrictedPermissionsData = JSON.parse(
-                el.dataset.restrictedPermissions
-            );
-        }
+        // let restrictedPermissionsData;
+        // if (el.dataset.restrictedPermissions) {
+        //     restrictedPermissionsData = JSON.parse(
+        //         el.dataset.restrictedPermissions
+        //     );
+        // }
         const form = document.getElementById("updateDataForm");
         form.setAttribute("action", updateRoute);
-        //   // console.log(JSON.parse(this.dataset.rowData)[1]);
+
+        Array.from(document.querySelectorAll("form [name]")).forEach((el) => {
+            if (el.name in rowData) {
+                el.value = rowData[el.name];
+            }
+        });
+        /* Setting Values
         Array.from(document.querySelectorAll(".updateDataField")).forEach(
             (el, index) => {
                 el.value = rowData[index];
@@ -100,6 +106,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 el.value = rowSelected[index];
             }
         );
+        */
+
         // Array.from(document.querySelectorAll(".selectOptions")).forEach(
         //     (el, index) => {
         //         // Remove existing options
@@ -123,15 +131,17 @@ document.addEventListener("DOMContentLoaded", function () {
         //         }
         //     }
         // );
-        if (restrictedPermissionsData) {
-            Array.from(
-                document.querySelectorAll(".permissionCheckBox")
-            ).forEach((el, index) => {
-                el.checked = !restrictedPermissionsData.includes(
-                    parseInt(el.value)
-                );
-            });
-        }
+
+        // restrictedPermissions
+        // if (restrictedPermissionsData) {
+        //     Array.from(
+        //         document.querySelectorAll(".permissionCheckBox")
+        //     ).forEach((el, index) => {
+        //         el.checked = !restrictedPermissionsData.includes(
+        //             parseInt(el.value)
+        //         );
+        //     });
+        // }
     });
 
     $("#enableArticlesForm input").on("change", function () {
@@ -314,6 +324,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $("#src_type").on("change", function (e) {
         if ($(this).val() == "url") {
+            $("#urlInputContainer").removeClass("d-none");
+            $("#fileInputContainer").addClass("d-none");
+        } else {
+            $("#urlInputContainer").addClass("d-none");
+            $("#fileInputContainer").removeClass("d-none");
+        }
+    });
+
+    $(".modal").on("shown.coreui.modal", function () {
+        console.log($("#src_type").val());
+
+        if ($("#src_type").val() == "url") {
             $("#urlInputContainer").removeClass("d-none");
             $("#fileInputContainer").addClass("d-none");
         } else {

@@ -8,17 +8,16 @@
             <form method="POST" action="{{ route('admin.articles.store') }}" id="updateDataForm">
                 @csrf
                 <div class="modal-body">
-                    <input type="hidden" name="id" class="updateDataField">
+                    <input type="hidden" name="id" class="">
                     <div class="mb-3">
                         <label class="form-label" for="title">Title</label>
-                        <input class="form-control updateDataField" id="title" type="text" placeholder="Title"
-                            name="title">
+                        <input class="form-control" id="title" type="text" placeholder="Title" name="title">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="content">Content</label>
                         <div id="content" class="editor">
                         </div>
-                        <input class="updateDataField" id="hidden_content" type="hidden" name="content">
+                        <input class="" id="hidden_content" type="hidden" name="content">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="img">Image</label>

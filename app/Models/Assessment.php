@@ -22,4 +22,9 @@ class Assessment extends Model
             table: 'assessment_questions',
         )->withTimestamps();
     }
+
+    public function results()
+    {
+        return $this->hasManyThrough(Result::class, Attempt::class, 'assessment_id', 'attempt_id');
+    }
 }
