@@ -49,7 +49,7 @@ class EvaluationController extends Controller
                     'assessments' => AssessmentsResource::collection($attemptedOlympiadAssessments)
                 ]
             ],
-            'Assessment attempted successfully.'
+            'Scores fetched successfully.'
         );
     }
 
