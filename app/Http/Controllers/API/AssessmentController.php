@@ -128,43 +128,4 @@ class AssessmentController extends Controller
 
         return $this->sendAPIResponse(['result' => ResultResource::make($result)], 'Assessment attempted successfully.');
     }
-
-    public function scoreIndex()
-    {
-        $attemptedAssessmentsArr = Attempt::select('assessment_id', DB::raw('max(created_at) as latest_attempt'))
-            ->where('user_id', Auth::user()->id)
-            ->groupBy('assessment_id')
-            ->orderBy('latest_attempt', 'desc')
-            ->pluck('assessment_id')->toArray();
-
-        $attemptedMcqAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'mcq')->latest()->get();
-        $attemptedOlympiadAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'olympiad')->latest()->get();
-
-        $mcqScoreSum = $attemptedMcqAssessments->sum(function ($assessment) {
-            return $assessment->results()->where('user_id', Auth::user()->id)->latest('results.created_at')->value('score'); // Sum of scores for only the latest attempt of each assessment, for the current user
-        });
-        $mcqAttemptCount = $attemptedMcqAssessments->count();
-
-        $olympiadScoreSum = $attemptedOlympiadAssessments->sum(function ($assessment) {
-            return $assessment->results->sum('score');
-        });
-        $olympiadAttemptCount = $attemptedOlympiadAssessments->count();
-
-        // $totalScoreSum = $mcqScoreSum + $olympiadScoreSum;
-        // $totalAttemptCount = $mcqAttemptCount + $olympiadAttemptCount;
-
-        return $this->sendAPIResponse(
-            [
-                'mcq' => [
-                    'overallScore' => $mcqAttemptCount > 0 ? $mcqScoreSum / $mcqAttemptCount : 0,
-                    'assessments' => AssessmentsResource::collection($attemptedMcqAssessments)
-                ],
-                'olympiad' => [
-                    'overallScore' => $olympiadAttemptCount > 0 ? $olympiadScoreSum / $olympiadAttemptCount : 0,
-                    'assessments' => AssessmentsResource::collection($attemptedOlympiadAssessments)
-                ]
-            ],
-            'Assessment attempted successfully.'
-        );
-    }
 }

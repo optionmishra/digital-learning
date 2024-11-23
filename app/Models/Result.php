@@ -9,4 +9,14 @@ class Result extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    public function attempt()
+    {
+        return $this->belongsTo(Attempt::class);
+    }
+
+    public function assessment()
+    {
+        return $this->hasOneThrough(Assessment::class, Attempt::class, 'id', 'id', 'attempt_id', 'assessment_id');
+    }
 }

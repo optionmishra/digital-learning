@@ -6,9 +6,10 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookController;
 use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\ContentController;
-use App\Http\Controllers\API\AssessmentController;
 use App\Http\Controllers\API\SubjectController;
 use App\Http\Controllers\API\StandardController;
+use App\Http\Controllers\API\AssessmentController;
+use App\Http\Controllers\API\EvaluationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -53,6 +54,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('assessment/questions/{assessment}', [AssessmentController::class, 'getQuestionsByAssessmentId']);
     Route::post('assessment/attempt', [AssessmentController::class, 'attemptAssessment']);
 
-    // Score
-    Route::get('score', [AssessmentController::class, 'scoreIndex']);
+    // Evaluations
+    Route::get('score', [EvaluationController::class, 'scoreIndex']);
+    Route::get('report/{assessment}', [EvaluationController::class, 'report']);
+    Route::get('solutions/{assessment}', [EvaluationController::class, 'solutions']);
 });

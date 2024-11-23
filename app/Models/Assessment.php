@@ -27,4 +27,9 @@ class Assessment extends Model
     {
         return $this->hasManyThrough(Result::class, Attempt::class, 'assessment_id', 'attempt_id');
     }
+
+    public function getLatestAttemptAttribute()
+    {
+        return $this->hasMany(Attempt::class)->latest()->first();
+    }
 }

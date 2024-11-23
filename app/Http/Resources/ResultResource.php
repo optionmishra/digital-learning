@@ -16,6 +16,7 @@ class ResultResource extends JsonResource
     {
         return [
             'total_questions' => $this->total_questions,
+            'attempted_questions' => $this->correct_answers + $this->incorrect_answers,
             'correct_answers' => $this->correct_answers,
             'incorrect_answers' => $this->incorrect_answers,
             'score' => $this->score . '%',

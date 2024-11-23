@@ -10,6 +10,16 @@ class Attempt extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+    public function assessment()
+    {
+        return $this->belongsTo(Assessment::class);
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
+
     public function result()
     {
         return $this->hasOne(Result::class);
