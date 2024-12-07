@@ -53,6 +53,20 @@ class EvaluationController extends Controller
         );
     }
 
+    public function answerKeyIndex()
+    {
+        $mcqAssessments = Assessment::where(['type' => 'mcq', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
+        $olympiadAssessments = Assessment::where(['type' => 'olympiad', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
+
+        return $this->sendAPIResponse(
+            [
+                'mcqAssessments' => AssessmentsResource::collection($mcqAssessments),
+                'olympiadAssessments' => AssessmentsResource::collection($olympiadAssessments)
+            ],
+            'Assessments fetched successfully.'
+        );
+    }
+
     public function report($id)
     {
         $attempt = Attempt::where('assessment_id', $id)->where('user_id', Auth::user()->id)->latest()->first();

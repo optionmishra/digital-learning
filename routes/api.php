@@ -11,10 +11,6 @@ use App\Http\Controllers\API\StandardController;
 use App\Http\Controllers\API\AssessmentController;
 use App\Http\Controllers\API\EvaluationController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
@@ -23,6 +19,11 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    // Profile
+    Route::get('profile', [AuthController::class, 'profile']);
+    Route::post('update-profile', [AuthController::class, 'updateProfile']);
+    Route::post('update-password', [AuthController::class, 'updatePassword']);
 
     // Standards
     Route::post('set-teacher-standard', [StandardController::class, 'setTeacherStandard']);
@@ -56,6 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Evaluations
     Route::get('score', [EvaluationController::class, 'scoreIndex']);
+    Route::get('answer-keys', [EvaluationController::class, 'answerKeyIndex']);
     Route::get('report/{assessment}', [EvaluationController::class, 'report']);
     Route::get('solutions/{assessment}', [EvaluationController::class, 'solutions']);
 });

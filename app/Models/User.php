@@ -72,4 +72,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attempt::class);
     }
+
+    public function standard()
+    {
+        return $this->hasOneThrough(
+            Standard::class,
+            UserProfile::class,
+            'user_id',
+            'id',
+            'id',
+            'standard_id'
+        );
+    }
 }
