@@ -322,25 +322,43 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 
-    $("#src_type").on("change", function (e) {
+    $("#img_type").on("change", function (e) {
         if ($(this).val() == "url") {
-            $("#urlInputContainer").removeClass("d-none");
-            $("#fileInputContainer").addClass("d-none");
+            $("#imgUrlInputContainer").removeClass("d-none");
+            $("#imgFileInputContainer").addClass("d-none");
         } else {
-            $("#urlInputContainer").addClass("d-none");
-            $("#fileInputContainer").removeClass("d-none");
+            $("#imgUrlInputContainer").addClass("d-none");
+            $("#imgFileInputContainer").removeClass("d-none");
         }
     });
 
     $(".modal").on("shown.coreui.modal", function () {
-        console.log($("#src_type").val());
-
-        if ($("#src_type").val() == "url") {
-            $("#urlInputContainer").removeClass("d-none");
-            $("#fileInputContainer").addClass("d-none");
+        if ($("#img_type").val() == "url") {
+            $("#imgUrlInputContainer").removeClass("d-none");
+            $("#imgFileInputContainer").addClass("d-none");
         } else {
-            $("#urlInputContainer").addClass("d-none");
-            $("#fileInputContainer").removeClass("d-none");
+            $("#imgUrlInputContainer").addClass("d-none");
+            $("#imgFileInputContainer").removeClass("d-none");
+        }
+    });
+
+    $("#src_type").on("change", function (e) {
+        if ($(this).val() == "url") {
+            $("#srcUrlInputContainer").removeClass("d-none");
+            $("#srcFileInputContainer").addClass("d-none");
+        } else {
+            $("#srcUrlInputContainer").addClass("d-none");
+            $("#srcFileInputContainer").removeClass("d-none");
+        }
+    });
+
+    $(".modal").on("shown.coreui.modal", function () {
+        if ($("#src_type").val() == "url") {
+            $("#srcUrlInputContainer").removeClass("d-none");
+            $("#srcFileInputContainer").addClass("d-none");
+        } else {
+            $("#srcUrlInputContainer").addClass("d-none");
+            $("#srcFileInputContainer").removeClass("d-none");
         }
     });
 

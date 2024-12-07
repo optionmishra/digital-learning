@@ -26,7 +26,7 @@ class ContentController extends Controller
     public function index(Request $request)
     {
         $contentType = ContentType::find($request->input('type'));
-        session()->flash('type', $request->input('type'));
+        session(['type' => $request->input('type')]);
         $standards = Standard::all();
         $subjects = Subject::all();
         $books = Book::all();

@@ -41,55 +41,71 @@
 
                     <div class="mb-3">
                         <label class="form-label" for="title">Title</label>
-                        <input class="form-control " id="title" type="text" placeholder="Title" name="title">
+                        <input class="form-control" id="title" type="text" placeholder="Title" name="title">
                     </div>
                     <div class="mb-3 row">
-                        <div class="mb-3 col-lg-6 col-sm-1">
+                        <div class="mb-3 col-lg-6 col-sm-12">
                             <label class="form-label" for="tags">Tags</label>
-                            <input class="form-control " id="tags" type="text"
+                            <input class="form-control" id="tags" type="text"
                                 placeholder="Tags (separated by comma)" name="tags">
                         </div>
-                        <div class="mb-3 col-lg-6 col-sm-1">
-                            <label class="form-label" for="img">Image</label>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="mb-3 col-lg-6 col-sm-12">
+                            <label class="form-label" for="img_type">Image Upload Type</label>
+                            <select class="form-control" name="img_type" id="img_type">
+                                <option value="file">File</option>
+                                <option value="url">URL</option>
+                            </select>
+                        </div>
+                        <div id="imgFileInputContainer" class="mb-3 col-lg-6 col-sm-12">
+                            <label class="form-label" for="img">File</label>
                             <input class="form-control" id="img" type="file" name="img" accept="image/*">
+                        </div>
+                        <div id="imgUrlInputContainer" class="mb-3 col-lg-6 col-sm-12 d-none">
+                            <label class="form-label" for="img_url">URL</label>
+                            <input class="form-control" id="img_url" type="url" name="img_url"
+                                placeholder="https://www.example.com/">
                         </div>
                     </div>
                     @if ($contentType->name == 'Video')
                         <div class="mb-3 row">
-                            <div class="mb-3 col-lg-6 col-sm-1">
+                            <div class="mb-3 col-lg-6 col-sm-12">
                                 <label class="form-label" for="creator">Creator</label>
-                                <input class="form-control " id="creator" type="text" placeholder="Creator Name"
+                                <input class="form-control" id="creator" type="text" placeholder="Creator Name"
                                     name="creator">
                             </div>
                         </div>
                     @endif
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-6 col-sm-12">
-                            <label class="form-label" for="src_type">Source Type</label>
+                            <label class="form-label" for="src_type">Source Upload Type</label>
                             <select class="form-control" name="src_type" id="src_type">
                                 <option value="file">File</option>
                                 <option value="url">URL</option>
                             </select>
                         </div>
-                        <div id="fileInputContainer" class="mb-3 col-lg-6 col-sm-12">
+                        <div id="srcFileInputContainer" class="mb-3 col-lg-6 col-sm-12">
                             <label class="form-label" for="file">File</label>
                             <input class="form-control" id="file" type="file" name="file">
                         </div>
-                        <div id="urlInputContainer" class="mb-3 col-lg-6 col-sm-12 d-none">
+                        <div id="srcUrlInputContainer" class="mb-3 col-lg-6 col-sm-12 d-none">
                             <label class="form-label" for="url">URL</label>
-                            <input class="form-control" id="url" type="url" name="url">
+                            <input class="form-control" id="url" type="url" name="url"
+                                placeholder="https://www.example.com/">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="about">About</label>
-                        <div id="about" class="editor">
+                        {{-- <div id="about" class="editor">
                         </div>
-                        <input class="" id="hidden_about" type="hidden" name="about">
+                        <input class="" id="hidden_about" type="hidden" name="about"> --}}
+                        <textarea class="form-control" name="about" id="about" rows="5"></textarea>
                     </div>
                     @if ($contentType->name == 'Ebook')
                         <div class="mb-3">
                             <label class="form-label" for="price">Price</label>
-                            <input class="form-control " id="price" type="number" placeholder="Price"
+                            <input class="form-control" id="price" type="number" placeholder="Price"
                                 name="price">
                         </div>
                     @endif

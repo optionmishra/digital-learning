@@ -62,7 +62,8 @@ class ContentRepository extends BaseRepository implements ContentRepositoryInter
     {
         return $contents->map(function ($content, $key) use ($columns, $start) {
             $content->serial = $start + 1 + $key;
-            // if ($content->media->first()) $content->media_file = view('admin.contents.media', compact('content'))->render();
+            $content->image = $content->img ? view('admin.contents.media', compact('content'))->render() : '';
+            $content->url = view('admin.contents.url', compact('content'))->render();
             $content->actions = view('admin.contents.actions', compact('content'))->render();
             $content->setVisible($columns);
             return $content;
