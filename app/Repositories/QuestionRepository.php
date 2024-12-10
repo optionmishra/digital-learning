@@ -59,7 +59,7 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
 
     public function collectionModifier($columns, $questions, $start)
     {
-        array_push($columns, 'correct_option');
+        array_push($columns, 'correct_option,assessment_id');
         return $questions->map(function ($question, $key) use ($columns, $start) {
             $question->serial = $start + 1 + $key;
             // $question->image = view('admin.questions.media', compact('question'))->render();
@@ -67,6 +67,7 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
             $question->book_name = $question->book->name;
             $question->topic_name = $question->topic->name;
             $question->assessment_name = $question->assessment[0]->name ?? null;
+            $question->assessment_id = $question->assessment[0]->id ?? null;
             $question->question = $question->question_text;
             $question->option_1 = $question->options[0]->option_text;
             $question->option_2 = $question->options[1]->option_text;
