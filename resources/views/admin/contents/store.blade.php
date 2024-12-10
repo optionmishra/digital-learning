@@ -32,7 +32,7 @@
                         <div class="mb-3 col-lg-4 col-sm-12">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book">
-                                @foreach ($books as $book)
+                                @foreach ($subjects[0]->books as $book)
                                     <option value="{{ $book->id }}">{{ $book->name }}</option>
                                 @endforeach
                             </select>

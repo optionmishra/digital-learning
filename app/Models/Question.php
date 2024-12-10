@@ -29,4 +29,23 @@ class Question extends Model
     {
         return $this->hasMany(Submission::class)->where('user_id', auth()->user()->id)->latest()->first()->option;
     }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
+    }
+
+    public function topic()
+    {
+        return $this->belongsTo(Topic::class);
+    }
+    public function assessment()
+    {
+        return $this->belongsToMany(Assessment::class, 'assessment_questions')->withTimestamps();
+    }
 }

@@ -32,4 +32,13 @@ class Assessment extends Model
     {
         return $this->hasMany(Attempt::class)->latest()->first();
     }
+
+    public function standard()
+    {
+        return $this->belongsTo(Standard::class);
+    }
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
+    }
 }

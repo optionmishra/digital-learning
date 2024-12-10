@@ -92,7 +92,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         Array.from(document.querySelectorAll("form [name]")).forEach((el) => {
             if (el.name in rowData) {
-                el.value = rowData[el.name];
+                if (el.name == "correct_option") {
+                    const correctOption = rowData[el.name];
+                    Array.from(
+                        document.querySelectorAll(`input[name="${el.name}"]`)
+                    ).forEach((radio) => {
+                        if (radio.value == correctOption) {
+                            radio.checked = true;
+                        }
+                    });
+                } else {
+                    el.value = rowData[el.name];
+                }
             }
         });
         /* Setting Values
@@ -247,8 +258,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             ? "standard_name"
                             : $(this).text() === "Subject"
                             ? "subject_name"
-                            : $(this).text() === "Author"
-                            ? "author_name"
+                            : $(this).text() === "Book"
+                            ? "book_name"
+                            : $(this).text() === "Topic"
+                            ? "topic_name"
+                            : $(this).text() === "Assessment"
+                            ? "assessment_name"
                             : $(this).text().toLowerCase(),
                     name: $(this).text(),
                     searchable:

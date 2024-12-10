@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BoardController;
+use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\StandardController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AssessmentController;
 use App\Http\Controllers\Admin\ContentTypeController;
 
 Route::group(['middleware' => ['auth']], function () {
@@ -46,4 +49,16 @@ Route::group(['middleware' => ['auth']], function () {
   // Contents
   Route::resource('contents', ContentController::class);
   Route::get('/contents-data', [ContentController::class, 'dataTable'])->name('contents.datatable');
+
+  // Topics
+  Route::resource('topics', TopicController::class);
+  Route::get('/topics-data', [TopicController::class, 'dataTable'])->name('topics.datatable');
+
+  // Assessments
+  Route::resource('assessments', AssessmentController::class);
+  Route::get('/assessments-data', [AssessmentController::class, 'dataTable'])->name('assessments.datatable');
+
+  // Questions
+  Route::resource('questions', QuestionController::class);
+  Route::get('/questions-data', [QuestionController::class, 'dataTable'])->name('questions.datatable');
 });
