@@ -61,4 +61,9 @@ Route::group(['middleware' => ['auth']], function () {
   // Questions
   Route::resource('questions', QuestionController::class);
   Route::get('/questions-data', [QuestionController::class, 'dataTable'])->name('questions.datatable');
+
+  // Users
+  Route::resource('users', UserController::class);
+  Route::get('/users-data', [UserController::class, 'dataTable'])->name('users.datatable');
+  Route::get('/reset-password/{user}', [UserController::class, 'resetPassword'])->name('users.reset.password');
 });
