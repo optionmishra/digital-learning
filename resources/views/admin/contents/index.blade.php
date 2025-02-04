@@ -42,6 +42,7 @@
     {{-- @vite(['resources/js/quill.js']) --}}
     <script>
         const books = @json($books);
+        const topics = @json($topics);
 
         function updateBooks() {
             const standard = document.getElementById("standard").value;
@@ -59,6 +60,23 @@
                         option.value = book.id;
                         option.textContent = book.name;
                         bookSelect.appendChild(option);
+                    }
+                });
+            }
+            updateTopics();
+        }
+
+        function updateTopics() {
+            const book = document.getElementById("book").value;
+            const topicSelect = document.getElementById("topic");
+            topicSelect.innerHTML = '';
+            if (book && topics) {
+                topics.forEach(topic => {
+                    if (topic.book_id == book) {
+                        const option = document.createElement("option");
+                        option.value = topic.id;
+                        option.textContent = topic.name;
+                        topicSelect.appendChild(option);
                     }
                 });
             }

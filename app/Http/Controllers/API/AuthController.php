@@ -45,6 +45,8 @@ class AuthController extends Controller
             'dob' => $attributes['dob'] ?? null,
         ]);
 
+        $newUser->assignBooks(explode(',', $attributes['books']));
+
         if ($request->hasFile('img')) {
             $uploadedFile = $this->uploadFile($request->file('img'), 'users/profile/img/');
             $newUser->profile->img = $uploadedFile['name'];

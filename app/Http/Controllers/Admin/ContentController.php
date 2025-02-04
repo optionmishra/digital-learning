@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Book;
+use App\Models\Topic;
 use App\Models\Content;
 use App\Models\Subject;
 use App\Models\Standard;
@@ -30,7 +31,9 @@ class ContentController extends Controller
         $standards = Standard::all();
         $subjects = Subject::all();
         $books = Book::all();
-        return view('admin.contents.index', compact('contentType', 'standards', 'subjects', 'books'));
+        $topics = Topic::all();
+
+        return view('admin.contents.index', compact('contentType', 'standards', 'subjects', 'books', 'topics'));
     }
 
     /**

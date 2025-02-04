@@ -38,3 +38,8 @@
         </div>
     </div>
 </div>
+
+@include('partials.admin.booksModal')
+@include('partials.admin.blockUserModal')
+@include('partials.admin.extendTrialModal')
+@include('partials.admin.resetPasswordModal')

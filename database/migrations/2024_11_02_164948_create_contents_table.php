@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('standard_id')->constrained()->onDelete('cascade');
             $table->foreignId('subject_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
+            $table->foreignId('topic_id')->constrained()->onDelete('cascade');
             $table->foreignId('content_type_id')->constrained()->onDelete('cascade');
             $table->string('src');
             $table->enum('src_type', ['file', 'url'])->default('file');

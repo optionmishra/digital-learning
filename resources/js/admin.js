@@ -16,6 +16,41 @@ document.addEventListener("DOMContentLoaded", function () {
         deleteRoute = deleteBtn.dataset.deleteRoute;
     }
 
+    // Block User
+    // const confirmBlockBtn = document.getElementById("confirmBlockBtn");
+    // if (confirmBlockBtn) {
+    //     confirmBlockBtn.addEventListener("click", () => {
+    //         fetch(deleteRoute, {
+    //             method: "post",
+    //             headers: {
+    //                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+    //                     "content"
+    //                 ),
+    //             },
+    //         })
+    //             .then((response) => {
+    //                 if (response.ok) {
+    //                     return response.json();
+    //                 } else {
+    //                     throw new Error(response.statusText);
+    //                 }
+    //             })
+    //             .then((data) => {
+    //                 if (data.error == true) {
+    //                     toastr.error(data.message, "Admin Panel");
+    //                 } else {
+    //                     toastr.success(data.message, "Admin Panel");
+    //                     $(".dataTable").DataTable().draw();
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 toastr.error("Something went wrong!", "Admin Panel");
+    //                 console.error("Error:", error);
+    //             });
+    //     });
+    // }
+
+    // Delete
     const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
     if (confirmDeleteBtn) {
         confirmDeleteBtn.addEventListener("click", () => {
@@ -70,26 +105,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (el.dataset.rowData) {
             rowData = JSON.parse(el.dataset.rowData);
         }
-
-        // let selectOptionsData;
-        // if (el.dataset.selectOptions) {
-        //     selectOptionsData = JSON.parse(el.dataset.selectOptions);
-        // }
-
-        // let rowSelected;
-        // if (el.dataset.rowSelected) {
-        //     rowSelected = JSON.parse(el.dataset.rowSelected);
-        // }
-
-        // let restrictedPermissionsData;
-        // if (el.dataset.restrictedPermissions) {
-        //     restrictedPermissionsData = JSON.parse(
-        //         el.dataset.restrictedPermissions
-        //     );
-        // }
         const form = document.getElementById("updateDataForm");
         form.setAttribute("action", updateRoute);
 
+        // if (rowData.length > 0) {
         Array.from(document.querySelectorAll("form [name]")).forEach((el) => {
             if (el.name in rowData) {
                 if (el.name == "correct_option") {
@@ -101,57 +120,23 @@ document.addEventListener("DOMContentLoaded", function () {
                             radio.checked = true;
                         }
                     });
+                }
+                if (el.name == "books[]") {
+                    const bookIds = rowData[el.name];
+                    bookIds.forEach((bookId) => {
+                        Array.from(
+                            document.querySelectorAll(
+                                `input[name="${el.name}"][value="${bookId}"]`
+                            )
+                        ).forEach((checkbox) => {
+                            checkbox.checked = true;
+                        });
+                    });
                 } else {
                     el.value = rowData[el.name];
                 }
             }
         });
-        /* Setting Values
-        Array.from(document.querySelectorAll(".updateDataField")).forEach(
-            (el, index) => {
-                el.value = rowData[index];
-            }
-        );
-        Array.from(document.querySelectorAll(".updateSelectedValue")).forEach(
-            (el, index) => {
-                el.value = rowSelected[index];
-            }
-        );
-        */
-
-        // Array.from(document.querySelectorAll(".selectOptions")).forEach(
-        //     (el, index) => {
-        //         // Remove existing options
-        //         while (el.firstChild) {
-        //             el.removeChild(el.firstChild);
-        //         }
-        //         // Add new options
-        //         if (selectOptionsData[index].length > 0) {
-        //             selectOptionsData[index].forEach((option) => {
-        //                 const optionElement = document.createElement("option");
-        //                 optionElement.value = option.id;
-        //                 optionElement.textContent = option.name;
-        //                 el.appendChild(optionElement);
-        //             });
-        //         } else {
-        //             const optionElement = document.createElement("option");
-        //             optionElement.value = "";
-        //             optionElement.textContent =
-        //                 "No topics found for this category!";
-        //             el.appendChild(optionElement);
-        //         }
-        //     }
-        // );
-
-        // restrictedPermissions
-        // if (restrictedPermissionsData) {
-        //     Array.from(
-        //         document.querySelectorAll(".permissionCheckBox")
-        //     ).forEach((el, index) => {
-        //         el.checked = !restrictedPermissionsData.includes(
-        //             parseInt(el.value)
-        //         );
-        //     });
         // }
     });
 
@@ -295,15 +280,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // Reset User's Password
     $(document).on("click", "[data-btn-route]", function (e) {
         const route = $(this).data("btn-route");
-        fetch(route)
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.error == true) {
-                    toastr.error(data.message, "Admin Panel");
-                } else {
-                    toastr.success(data.message, "Admin Panel");
-                }
-            });
+        const formId = $(this).data("form");
+        const form = document.getElementById(formId);
+        form.setAttribute("action", route);
+        // fetch(route)
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         if (data.error == true) {
+        //             toastr.error(data.message, "Admin Panel");
+        //         } else {
+        //             toastr.success(data.message, "Admin Panel");
+        //         }
+        //     });
     });
 
     // Category Topics Options

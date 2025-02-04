@@ -32,6 +32,7 @@ class UserRegistrationRequest extends FormRequest
             'school' => 'required',
             'img' => 'file|mimes:jpeg,png,jpg',
             'type' => 'required',
+            'books' => 'required',
         ];
 
         if ($userType === 'teacher') {

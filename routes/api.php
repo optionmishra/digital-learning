@@ -14,9 +14,16 @@ use App\Http\Controllers\API\EvaluationController;
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
-
-    Route::resource('standards', StandardController::class);
 });
+
+Route::resource('standards', StandardController::class);
+
+// Subjects
+Route::resource('subjects', SubjectController::class);
+
+// Books
+Route::resource('books', BookController::class);
+Route::get('books/subject/{subject}', [BookController::class, 'getBooksBySubjectId']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -27,13 +34,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Standards
     Route::post('set-teacher-standard', [StandardController::class, 'setTeacherStandard']);
-
-    // Subjects
-    Route::resource('subjects', SubjectController::class);
-
-    // Books
-    Route::resource('books', BookController::class);
-    Route::get('books/subject/{subject}', [BookController::class, 'getBooksBySubjectId']);
 
     // Articles
     Route::resource('articles', ArticleController::class);

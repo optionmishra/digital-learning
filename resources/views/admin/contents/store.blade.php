@@ -13,7 +13,7 @@
                     <input type="hidden" name="content_type_id" value="{{ $contentType->id }}">
 
                     <div class="mb-3 row">
-                        <div class="mb-3 col-lg-4 col-sm-12">
+                        <div class="mb-3 col-lg-3 col-sm-12">
                             <label class="form-label" for="standard">Standard</label>
                             <select class="form-control" name="standard_id" id="standard" onchange="updateBooks()">
                                 @foreach ($standards as $standard)
@@ -21,7 +21,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-lg-4 col-sm-12">
+                        <div class="mb-3 col-lg-3 col-sm-12">
                             <label class="form-label" for="subject">Subject</label>
                             <select class="form-control" name="subject_id" id="subject" onchange="updateBooks()">
                                 @foreach ($subjects as $subject)
@@ -29,11 +29,19 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-lg-4 col-sm-12">
+                        <div class="mb-3 col-lg-3 col-sm-12">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book">
                                 @foreach ($subjects[0]->books as $book)
                                     <option value="{{ $book->id }}">{{ $book->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3 col-lg-3 col-sm-12">
+                            <label class="form-label" for="topic">Topic</label>
+                            <select class="form-control" name="topic_id" id="topic">
+                                @foreach ($books[0]->topics as $topic)
+                                    <option value="{{ $topic->id }}">{{ $topic->name }}</option>
                                 @endforeach
                             </select>
                         </div>

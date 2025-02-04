@@ -65,5 +65,20 @@ Route::group(['middleware' => ['auth']], function () {
   // Users
   Route::resource('users', UserController::class);
   Route::get('/users-data', [UserController::class, 'dataTable'])->name('users.datatable');
-  Route::get('/reset-password/{user}', [UserController::class, 'resetPassword'])->name('users.reset.password');
+  Route::post('/reset-password/{user}', [UserController::class, 'resetPassword'])->name('users.reset.password');
+  Route::post(
+    '/approve-user/{user}',
+    [UserController::class, 'approveUser']
+  )->name(
+    'users.approve'
+  );
+
+  Route::post(
+    '/reject-user/{user}',
+    [UserController::class, 'rejectUser']
+  )->name(
+    'users.reject'
+  );
+
+  Route::post('/extend-trial/{user}', [UserController::class, 'extendTrial'])->name('users.extend.trial');
 });

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Topic;
+use App\Models\Scopes\UserContentScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +12,16 @@ class Content extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new UserContentScope);
+    }
+
+    public function topic()
+    {
+        return $this->belongsTo(Topic::class);
+    }
 
     // public function media()
     // {

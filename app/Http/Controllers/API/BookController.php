@@ -15,9 +15,24 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::all();
+        $query = Book::query()->with(['subject', 'standard']);
+
+        // Apply filters
+        if ($request->has('subject_ids')) {
+            $query->whereIn('subject_id', explode(',', $request->subject_ids));
+        }
+
+        if ($request->has('standard_ids')) {
+            $query->whereIn('standard_id', explode(',', $request->standard_ids));
+        }
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $books = $query->get();
         return $this->sendAPIResponse(BooksResource::collection($books), 'Books fetched successfully.');
     }
 

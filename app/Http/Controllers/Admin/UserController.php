@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -110,5 +111,45 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['message' => 'Password Reset Successful']);
+    }
+
+    public function approveUser(Request $request, User $user)
+    {
+        $request->validate([
+            'books' => 'required',
+        ], [
+            'books.required' => 'Please select at least one book',
+        ]);
+        $user->assignBooks($request->books);
+        $user->profile()->update(['status' => 'approved']);
+        return response()->json(['message' => 'User Approved Successfully']);
+    }
+
+    public function rejectUser(Request $request, User $user)
+    {
+        $user->profile()->update(['status' => 'rejected']);
+        return response()->json(['message' => 'User Rejected Successfully']);
+    }
+
+    public function extendTrial(Request $request, User $user)
+    {
+        $request->validate([
+            'days' => 'required|integer|min:1',
+        ]);
+
+        $days = (int) $request->days;
+        $profile = $user->profile;
+
+        // If trial_end exists and is in the future, extend from that date
+        // Otherwise, extend from now
+        $newTrialEnd = $profile->trial_end && Carbon::parse($profile->trial_end)->isFuture()
+            ? Carbon::parse($profile->trial_end)->addDays($days)
+            : now()->addDays($days);
+
+        $profile->update(['trial_end' => $newTrialEnd]);
+
+        return response()->json([
+            'message' => "Trial Extended Successfully till<br><strong>{$newTrialEnd->format('Y-m-d H:i:s')}</strong>",
+        ]);
     }
 }

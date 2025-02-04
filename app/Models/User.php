@@ -84,4 +84,24 @@ class User extends Authenticatable
             'standard_id'
         );
     }
+
+    public function books()
+    {
+        return $this->belongsToMany(Book::class, 'user_books')->withTimestamps();
+    }
+
+    public function getBooksIdArrAttribute()
+    {
+        return $this->books()->select('books.id')->pluck('id')->toArray();
+    }
+
+    public function assignBooks($books)
+    {
+        $this->books()->sync($books);
+    }
+
+    public function assignedBooks()
+    {
+        return $this->hasMany(UserBook::class);
+    }
 }

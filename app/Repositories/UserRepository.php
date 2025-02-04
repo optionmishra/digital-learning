@@ -65,6 +65,21 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $users->map(function ($user, $key) use ($start, $role, $columns) {
             $user->serial = $start + 1 + $key;
+            if ($role != 'admin') {
+                switch ($user->profile->status) {
+                    case 'approved':
+                        $user->status = '<span class="p-1 rounded bg-success">' . ucfirst($user->profile->status) . '</span>';
+                        break;
+                    case 'pending':
+                        $user->status = '<span class="p-1 rounded bg-warning">' . ucfirst($user->profile->status) . '</span>';
+                        break;
+                    case 'rejected':
+                        $user->status = '<span class="p-1 rounded bg-danger">' . ucfirst($user->profile->status) . '</span>';
+                        break;
+                    default:
+                        $user->status = '<span class="p-1 rounded bg-info">' . ucfirst($user->profile->status) . '</span>';
+                }
+            }
             // switch ($role) {
             //     case 'superadmin':
             //         // $user->actions = view('superadmin.superadmins.actions', compact('user'))->render();

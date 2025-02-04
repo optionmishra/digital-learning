@@ -94,12 +94,18 @@ class DatabaseSeeder extends Seeder
             'name' => 'Ebook',
         ]);
 
+        $topic = Topic::firstOrCreate(
+            ['name' => 'Active and Passive voice'],
+            ['subject_id' => $subject->id, 'book_id' => $book->id]
+        );
+
         Content::firstOrCreate(
             ['title' => 'Unknown Brain - Wonder (ft. Rarin & Bri Tolani)'],
             [
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
+                'topic_id' => $topic->id,
                 'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/sms4FmPjctU',
                 'src_type' => 'url',
@@ -118,6 +124,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
+                'topic_id' => $topic->id,
                 'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/B2DnkuXC8Rw',
                 'src_type' => 'url',
@@ -137,6 +144,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
+                'topic_id' => $topic->id,
                 'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/VKSqafvwLhA',
                 'src_type' => 'url',
@@ -155,6 +163,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
+                'topic_id' => $topic->id,
                 'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/u-8vtlakNy0',
                 'src_type' => 'url',
@@ -173,6 +182,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => $subject->id,
                 'book_id' => $book->id,
+                'topic_id' => $topic->id,
                 'content_type_id' => $videoContentType->id,
                 'src' => 'https://youtu.be/tAHs5GVIjh0',
                 'src_type' => 'url',
@@ -191,6 +201,7 @@ class DatabaseSeeder extends Seeder
                 'standard_id' => $standard->id,
                 'subject_id' => 2,
                 'book_id' => $book2->id,
+                'topic_id' => $topic->id,
                 'content_type_id' => $ebookContentType->id,
                 'src' => 'https://epochstudio.net/good_books/flipbooks/akshargyan/index.html',
                 'src_type' => 'url',
@@ -202,10 +213,6 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $topic = Topic::firstOrCreate(
-            ['name' => 'Active and Passive voice'],
-            ['subject_id' => $subject->id, 'book_id' => $book->id]
-        );
 
         $Assessment = Assessment::firstOrCreate(
             [

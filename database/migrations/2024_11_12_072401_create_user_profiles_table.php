@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('img')->nullable();
             $table->string('school')->nullable();
             $table->foreignId('standard_id')->constrained()->onDelete('cascade')->nullable();
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->date('trial_end')->default(now()->addWeek());
             $table->timestamps();
         });
     }
