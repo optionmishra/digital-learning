@@ -4,8 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\Subject;
 use App\Models\Question;
+use App\Models\Standard;
 use App\Models\Assessment;
+use App\Models\StandardSubject;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class QuestionsSeeder extends Seeder
@@ -310,5 +313,27 @@ class QuestionsSeeder extends Seeder
         $question10->options()->firstOrCreate(['option_text' => 'Limestone', 'is_correct' => false]);
 
         $assessment->questions()->sync([$question1->id, $question2->id, $question3->id, $question4->id, $question5->id, $question6->id, $question7->id, $question8->id, $question9->id, $question10->id]);
+
+        // First clear the table to avoid duplicate entries
+        DB::table('standard_subjects')->truncate();
+
+        // Get all standards and subjects
+        $standards = Standard::all();
+        $subjects = Subject::all();
+
+        // Create records for each combination
+        foreach ($standards as $standard) {
+            foreach ($subjects as $subject) {
+                StandardSubject::create([
+                    'standard_id' => $standard->id,
+                    'subject_id' => $subject->id,
+                ]);
+            }
+        }
+
+        Subject::firstOrCreate(
+            ['name' => 'Literature'],
+            ['img' => 'Social-Science.png']
+        );
     }
 }

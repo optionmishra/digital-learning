@@ -36,4 +36,9 @@ class Subject extends Model
             Storage::disk('public')->delete($dir . $subject->img);
         });
     }
+
+    public function standards()
+    {
+        return $this->belongsToMany(Standard::class, 'standard_subjects');
+    }
 }

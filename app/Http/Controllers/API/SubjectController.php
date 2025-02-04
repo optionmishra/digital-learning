@@ -12,9 +12,16 @@ class SubjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $subjects = Subject::all();
+        if ($request->has('standard_ids')) {
+            $subjects = Subject::whereHas('standards', function ($query) use ($request) {
+                $query->whereIn('standards.id', explode(',', $request->standard_ids));
+            })->get();
+        } else {
+            $subjects = Subject::all();
+        }
+
         return $this->sendAPIResponse(SubjectsResource::collection($subjects), 'Subjects fetched successfully.');
     }
 
