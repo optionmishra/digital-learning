@@ -104,4 +104,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserBook::class);
     }
+
+    public function standards()
+    {
+        return $this->belongsToMany(Standard::class, 'user_standards')->withTimestamps();
+    }
+
+    public function assignStandards($standards)
+    {
+        $this->standards()->sync($standards);
+    }
+
+    public function assignedStandards()
+    {
+        return $this->hasMany(UserStandard::class);
+    }
 }

@@ -38,14 +38,17 @@ class AuthController extends Controller
 
         $newUser = User::create($attributes);
 
+        $standardIdArr = explode(',', $attributes['standard_id']);
+
         $newUser->profile()->create([
-            'standard_id' => $attributes['standard_id'],
+            'standard_id' => $standardIdArr[0],
             'mobile' => $attributes['mobile'],
             'school' => $attributes['school'],
             'dob' => $attributes['dob'] ?? null,
         ]);
 
         $newUser->assignBooks(explode(',', $attributes['books']));
+        $newUser->assignStandards($standardIdArr);
 
         if ($request->hasFile('img')) {
             $uploadedFile = $this->uploadFile($request->file('img'), 'users/profile/img/');

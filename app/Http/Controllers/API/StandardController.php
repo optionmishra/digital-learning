@@ -73,6 +73,17 @@ class StandardController extends Controller
         //
     }
 
+    public function getTeacherStandards()
+    {
+        $user = auth()->user();
+        $standards = $user->standards;
+
+        if (!$standards) {
+            return $this->sendAPIResponse([], 'Standards not found.');
+        }
+        return $this->sendAPIResponse(StandardsResource::collection($standards), 'Standards fetched successfully.');
+    }
+
     public function setTeacherStandard(Request $request)
     {
         request()->validate(['standard_id' => 'required']);

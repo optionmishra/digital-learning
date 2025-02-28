@@ -48,4 +48,9 @@ class Question extends Model
     {
         return $this->belongsToMany(Assessment::class, 'assessment_questions')->withTimestamps();
     }
+
+    public function questionType()
+    {
+        return $this->belongsTo(QuestionType::class);
+    }
 }

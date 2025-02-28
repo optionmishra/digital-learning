@@ -6,6 +6,7 @@ use App\Models\Subject;
 use App\Models\Question;
 use App\Models\Standard;
 use App\Models\Assessment;
+use App\Models\QuestionType;
 use App\Models\StandardSubject;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -23,12 +24,20 @@ class QuestionsSeeder extends Seeder
         $englishTopic = $englishSubject->topics()->first();
         // $englishSeries = $englishSubject->assessments()->first();
 
+        $questionTypeMultipleChoice = QuestionType::where('name', 'Multiple Choice')->firstOrCreate([
+            'name' => 'Multiple Choice',
+        ]);
+        $questionTypeFillInTheBlank = QuestionType::where('name', 'Fill in the Blank')->firstOrCreate([
+            'name' => 'Fill in the Blank',
+        ]);
+
         $question1 = Question::firstOrCreate(
             ['question_text' => 'Which of the following sentences is in the passive voice?'],
             [
                 'subject_id' => $englishSubject->id,
                 'book_id' => $englishBook->id,
                 'topic_id' => $englishTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
 
@@ -55,6 +64,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $englishSubject->id,
                 'book_id' => $englishBook->id,
                 'topic_id' => $englishTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
 
@@ -81,6 +91,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $englishSubject->id,
                 'book_id' => $englishBook->id,
                 'topic_id' => $englishTopic->id,
+                'question_type_id' => $questionTypeFillInTheBlank->id,
             ]
         );
 
@@ -107,6 +118,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $englishSubject->id,
                 'book_id' => $englishBook->id,
                 'topic_id' => $englishTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
 
@@ -133,6 +145,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $englishSubject->id,
                 'book_id' => $englishBook->id,
                 'topic_id' => $englishTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
 
@@ -188,6 +201,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question1->options()->firstOrCreate(['option_text' => 'O2', 'is_correct' => false]);
@@ -201,6 +215,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question2->options()->firstOrCreate(['option_text' => 'Earth', 'is_correct' => false]);
@@ -214,6 +229,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question3->options()->firstOrCreate(['option_text' => 'Oxygen', 'is_correct' => false]);
@@ -227,6 +243,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question4->options()->firstOrCreate(['option_text' => '100°C', 'is_correct' => true]);
@@ -240,6 +257,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question5->options()->firstOrCreate(['option_text' => 'Gold', 'is_correct' => false]);
@@ -253,6 +271,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question6->options()->firstOrCreate(['option_text' => 'Jupiter', 'is_correct' => true]);
@@ -266,6 +285,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question7->options()->firstOrCreate(['option_text' => 'Electron', 'is_correct' => false]);
@@ -279,6 +299,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question8->options()->firstOrCreate(['option_text' => 'Nucleus', 'is_correct' => false]);
@@ -292,6 +313,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question9->options()->firstOrCreate(['option_text' => 'Evaporation', 'is_correct' => false]);
@@ -305,6 +327,7 @@ class QuestionsSeeder extends Seeder
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
                 'topic_id' => $scienceTopic->id,
+                'question_type_id' => $questionTypeMultipleChoice->id,
             ]
         );
         $question10->options()->firstOrCreate(['option_text' => 'Sedimentary', 'is_correct' => false]);

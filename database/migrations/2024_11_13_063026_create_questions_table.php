@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('subject_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
             $table->foreignId('topic_id')->constrained()->onDelete('cascade');
+            $table->foreignId('question_type_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

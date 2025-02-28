@@ -19,4 +19,21 @@ class Topic extends Model
     {
         return $this->belongsTo(Book::class);
     }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    public function questionTypes()
+    {
+        return $this->hasManyThrough(
+            QuestionType::class,
+            Question::class,
+            'topic_id', // Foreign key on questions table
+            'id', // Local key on question_types table
+            'id', // Local key on topics table
+            'question_type_id' // Foreign key on questions table
+        );
+    }
 }

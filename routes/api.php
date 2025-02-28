@@ -4,12 +4,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookController;
+use App\Http\Controllers\API\TopicController;
 use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\ContentController;
 use App\Http\Controllers\API\SubjectController;
 use App\Http\Controllers\API\StandardController;
 use App\Http\Controllers\API\AssessmentController;
 use App\Http\Controllers\API\EvaluationController;
+use App\Http\Controllers\API\QuestionController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
@@ -25,6 +27,12 @@ Route::resource('subjects', SubjectController::class);
 Route::resource('books', BookController::class);
 Route::get('books/subject/{subject}', [BookController::class, 'getBooksBySubjectId']);
 
+// TPG
+// Topics
+Route::get('topics/{book}', [TopicController::class, 'getTopicsByBookId']);
+Route::get('question-types', [TopicController::class, 'getQuestionTypesByTopicIds']);
+Route::get('questions', [QuestionController::class, 'index']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // Profile
@@ -34,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Standards
     Route::post('set-teacher-standard', [StandardController::class, 'setTeacherStandard']);
+    Route::get('get-teacher-standards', [StandardController::class, 'getTeacherStandards']);
 
     // Articles
     Route::resource('articles', ArticleController::class);
