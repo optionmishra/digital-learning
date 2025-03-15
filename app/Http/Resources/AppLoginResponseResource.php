@@ -27,7 +27,9 @@ class AppLoginResponseResource extends JsonResource
             'user' => UserResource::make($this),
             'banners' => BannerResource::make(null),
             'videos' => VideosResource::collection($videos),
-            'subjects' => SubjectsResource::collection(Subject::all()),
+            'standards' => StandardsResource::collection($this->standards),
+            'subjects' => SubjectsResource::collection($this->subjects),
+            'books' => BooksResource::collection($this->books),
         ];
     }
 }

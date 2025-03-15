@@ -25,14 +25,17 @@ class Book extends Model
     {
         return $this->belongsTo(Board::class);
     }
+
     public function standard()
     {
         return $this->belongsTo(Standard::class);
     }
+
     public function subject()
     {
         return $this->belongsTo(Subject::class);
     }
+
     public function author()
     {
         return $this->belongsTo(Author::class);
@@ -42,6 +45,7 @@ class Book extends Model
     {
         return $this->hasMany(Topic::class);
     }
+
     public function assessments()
     {
         return $this->hasMany(Assessment::class);
@@ -50,5 +54,10 @@ class Book extends Model
     public function contents()
     {
         return $this->hasMany(Content::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_books');
     }
 }

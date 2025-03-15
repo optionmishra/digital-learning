@@ -119,4 +119,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserStandard::class);
     }
+
+    public function getSubjectsAttribute()
+    {
+        return Subject::whereHas('books', function ($query) {
+            $query->whereHas('users', function ($q) {
+                $q->where('users.id', $this->id);
+            });
+        })->get();
+    }
 }
