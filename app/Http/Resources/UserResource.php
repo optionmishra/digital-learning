@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'role' => $this->roles()->first()->name,
             'dob' => $this->profile->dob,
             'school' => $this->profile->school,
+            'standard' => $this->profile->standard_id,
         ];
     }
 }
