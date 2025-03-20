@@ -10,7 +10,9 @@ use App\Http\Controllers\API\ContentController;
 use App\Http\Controllers\API\SubjectController;
 use App\Http\Controllers\API\StandardController;
 use App\Http\Controllers\API\AssessmentController;
+use App\Http\Controllers\API\ConfigController;
 use App\Http\Controllers\API\EvaluationController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\QuestionController;
 
 Route::controller(AuthController::class)->group(function () {
@@ -32,6 +34,12 @@ Route::get('books/subject/{subject}', [BookController::class, 'getBooksBySubject
 Route::get('topics/{book}', [TopicController::class, 'getTopicsByBookId']);
 Route::get('question-types', [TopicController::class, 'getQuestionTypesByTopicIds']);
 Route::get('questions', [QuestionController::class, 'index']);
+
+// Notifications
+Route::get('notifications', [NotificationController::class, 'index']);
+
+// Configs
+Route::get('configs', [ConfigController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
