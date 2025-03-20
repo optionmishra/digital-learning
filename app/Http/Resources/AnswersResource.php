@@ -17,6 +17,7 @@ class AnswersResource extends JsonResource
         $user = auth()->user();
         if ($user->hasRole('student')) {
             return [
+                'id' => $this->id,
                 'question_text' => $this->question_text,
                 'options' => OptionsResource::collection($this->options),
                 'correct_option' => OptionsResource::make($this->options->where('is_correct', true)->first()),
@@ -24,6 +25,7 @@ class AnswersResource extends JsonResource
             ];
         } else {
             return [
+                'id' => $this->id,
                 'question_text' => $this->question_text,
                 'options' => OptionsResource::collection($this->options),
                 'correct_option' => OptionsResource::make($this->options->where('is_correct', true)->first()),

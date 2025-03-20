@@ -34,7 +34,7 @@ class VideosResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'topic' => $this->topic->name,
+            'topic' => TopicResource::make($this->topic),
             'img' => $this->img_type === 'file' ? asset('contents/img/' . $this->img) : $this->img,
             'src' => $src,
             'url_type' => $urlType,
