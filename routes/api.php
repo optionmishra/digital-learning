@@ -5,15 +5,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookController;
 use App\Http\Controllers\API\TopicController;
+use App\Http\Controllers\API\ConfigController;
 use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\ContentController;
 use App\Http\Controllers\API\SubjectController;
+use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\StandardController;
 use App\Http\Controllers\API\AssessmentController;
-use App\Http\Controllers\API\ConfigController;
 use App\Http\Controllers\API\EvaluationController;
 use App\Http\Controllers\API\NotificationController;
-use App\Http\Controllers\API\QuestionController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
@@ -40,6 +41,9 @@ Route::get('notifications', [NotificationController::class, 'index']);
 
 // Configs
 Route::get('configs', [ConfigController::class, 'index']);
+
+// Forgot Password
+Route::post('forgot-password', [PasswordResetLinkController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
