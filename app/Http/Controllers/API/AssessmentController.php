@@ -80,7 +80,8 @@ class AssessmentController extends Controller
 
         $user = Auth::user();
         $attempt = $user->attempts()->create([
-            'assessment_id' => $assessmentId
+            'assessment_id' => $assessmentId,
+            'time_taken' => $attemptAssessmentRequest->time_taken,
         ]);
 
         // Ensure clean and filtered arrays of integers

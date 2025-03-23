@@ -25,6 +25,7 @@ class AttemptAssessmentRequest extends FormRequest
             'assessment_id' => 'required',
             'questions' => 'required',
             'answers' => 'required',
+            'time_taken' => 'required',
         ];
     }
 }
