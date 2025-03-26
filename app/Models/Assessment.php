@@ -37,8 +37,14 @@ class Assessment extends Model
     {
         return $this->belongsTo(Standard::class);
     }
+
     public function book()
     {
         return $this->belongsTo(Book::class);
+    }
+
+    public function attempts()
+    {
+        return $this->hasMany(Attempt::class);
     }
 }

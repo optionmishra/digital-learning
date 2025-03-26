@@ -53,6 +53,51 @@ class EvaluationController extends Controller
         );
     }
 
+    public function getAttemptsBySubjectId($subject_id)
+    {
+        // Get the assessments attempted by the user in the specific subject
+        $attemptDetails = Assessment::where('subject_id', $subject_id)
+            ->whereHas('attempts', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            })
+            ->with(['attempts' => function ($query) {
+                $query->where('user_id', Auth::user()->id)
+                    ->with(['result', 'submissions'])
+                    ->latest();
+            }])
+            ->get()
+            ->map(function ($assessment) {
+                // Get the latest attempt for this assessment
+                $latestAttempt = $assessment->attempts->first();
+
+                if (!$latestAttempt) {
+                    return null;
+                }
+
+                // Prepare the result details
+                $result = $latestAttempt->result;
+
+                return [
+                    'assessment_name' => $assessment->name,
+                    'attempt_details' => [
+                        'total_questions' => $result->total_questions,
+                        'attempted_questions' => $result->correct_answers + $result->incorrect_answers, // Assuming all questions are attempted
+                        'correct_answers' => $result->correct_answers,
+                        'incorrect_answers' => $result->incorrect_answers,
+                        'score' => number_format($result->score, 2) . '%',
+                    ],
+                    'time_taken' => $latestAttempt->time_taken,
+                    'total_duration' => $assessment->duration,
+                ];
+            })
+            ->filter() // Remove null values
+            ->values(); // Reset array keys
+
+        return $this->sendAPIResponse([
+            'attemptedSeries' => $attemptDetails,
+        ], 'Attempted assessments fetched successfully.');
+    }
+
     public function answerKeyIndex()
     {
         $mcqAssessments = Assessment::where(['type' => 'mcq', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();

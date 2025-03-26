@@ -53,6 +53,16 @@ class AssessmentController extends Controller
         ], 'Assessments fetched successfully.');
     }
 
+
+    public function getOlympiadAssessmentBySubjectId($id)
+    {
+        $olympiadAssessment = Assessment::where(['subject_id' => $id, 'type' => 'olympiad', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
+        if ($olympiadAssessment->count() == 0) {
+            return $this->sendAPIResponse([], 'Assessment not found.');
+        }
+        return $this->sendAPIResponse(AssessmentsResource::collection($olympiadAssessment), 'Assessments fetched successfully.');
+    }
+
     public function getQuestionsByAssessmentId($id)
     {
         $assessment = Assessment::where('id', $id)->first();

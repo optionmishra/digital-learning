@@ -72,12 +72,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('mcq/subject/{subject}', [AssessmentController::class, 'getMcqAssessmentBySubjectId']);
 
     Route::get('olympiad', [AssessmentController::class, 'olympiad']);
+    Route::get('olympiad/subject/{subject}', [AssessmentController::class, 'getOlympiadAssessmentBySubjectId']);
 
     Route::get('assessment/questions/{assessment}', [AssessmentController::class, 'getQuestionsByAssessmentId']);
     Route::post('assessment/attempt', [AssessmentController::class, 'attemptAssessment']);
 
     // Evaluations
     Route::get('score', [EvaluationController::class, 'scoreIndex']);
+    Route::get('score/{subject}', [EvaluationController::class, 'getAttemptsBySubjectId']);
     Route::get('answer-keys', [EvaluationController::class, 'answerKeyIndex']);
     Route::get('report/{assessment}', [EvaluationController::class, 'report']);
     Route::get('solutions/{assessment}', [EvaluationController::class, 'solutions']);
