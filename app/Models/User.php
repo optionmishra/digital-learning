@@ -123,6 +123,7 @@ class User extends Authenticatable
     public function getSubjectsAttribute()
     {
         return Subject::whereHas('books', function ($query) {
+            $query->where('standard_id', $this->standard->id);
             $query->whereHas('users', function ($q) {
                 $q->where('users.id', $this->id);
             });
