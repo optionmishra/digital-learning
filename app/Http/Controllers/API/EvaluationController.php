@@ -53,10 +53,11 @@ class EvaluationController extends Controller
         );
     }
 
-    public function getAttemptsBySubjectId($subject_id)
+    public function getAttemptsBySubjectId(Request $request, $subject_id)
     {
         // Get the assessments attempted by the user in the specific subject
         $attemptDetails = Assessment::where('subject_id', $subject_id)
+            ->when($request->type, fn($query, $type) => $query->where('type', $type))
             ->whereHas('attempts', function ($query) {
                 $query->where('user_id', Auth::user()->id);
             })
@@ -78,10 +79,11 @@ class EvaluationController extends Controller
                 $result = $latestAttempt->result;
 
                 return [
+                    'id' => $assessment->id,
                     'assessment_name' => $assessment->name,
                     'attempt_details' => [
                         'total_questions' => $result->total_questions,
-                        'attempted_questions' => $result->correct_answers + $result->incorrect_answers, // Assuming all questions are attempted
+                        'attempted_questions' => $result->correct_answers + $result->incorrect_answers,
                         'correct_answers' => $result->correct_answers,
                         'incorrect_answers' => $result->incorrect_answers,
                         'score' => number_format($result->score, 2) . '%',
