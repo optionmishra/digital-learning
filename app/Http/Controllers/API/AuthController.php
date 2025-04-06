@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Code;
 use App\Models\User;
 use App\Models\Content;
 use App\Models\Subject;
@@ -18,6 +19,8 @@ use App\Http\Requests\Auth\UserRegistrationRequest;
 use App\Http\Requests\PasswordUpdateRequest;
 use App\Http\Requests\UserProfileUpdateRequest;
 use App\Http\Resources\AppLoginResponseResource;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -30,41 +33,64 @@ class AuthController extends Controller
     {
         $attributes = $request->validated();
 
-        $existingUser = User::where('email', $attributes['email'])->first();
-
-        if ($existingUser) {
-            return $this->sendAPIError('Email already exists.', ['error' => 'Email already exists.']);
+        // Check for existing user before starting transaction
+        if (User::where('mobile', $attributes['mobile'])->exists()) {
+            return $this->sendAPIError('Mobile already exists.', ['error' => 'Mobile already exists.']);
         }
 
-        $newUser = User::create($attributes);
+        try {
+            return DB::transaction(function () use ($request, $attributes) {
+                // Parse standard IDs once
+                $standardIdArr = explode(',', $attributes['standard_id']);
 
-        $standardIdArr = explode(',', $attributes['standard_id']);
+                // Validate code before user creation
+                $validatedCode = $this->validateCode($attributes['code']);
+                if (!$validatedCode) return $this->sendAPIError('Invalid Code', 'Invalid Code');
 
-        $newUser->profile()->create([
-            'standard_id' => $standardIdArr[0],
-            'mobile' => $attributes['mobile'],
-            'school' => $attributes['school'],
-            'dob' => $attributes['dob'] ?? null,
-        ]);
+                // Create user with minimal attributes
+                $newUser = User::create([
+                    'name' => $attributes['name'],
+                    'mobile' => $attributes['mobile']
+                ]);
 
-        $newUser->assignBooks(explode(',', $attributes['books']));
-        $newUser->assignStandards($standardIdArr);
+                // Create profile
+                $newUser->profile()->create([
+                    'standard_id' => $standardIdArr[0],
+                    'code_id' => $validatedCode->id,
+                    'school_id' => $validatedCode->school->id,
+                    // 'dob' => $attributes['dob'] ?? null,
+                ]);
 
-        if ($request->hasFile('img')) {
-            $uploadedFile = $this->uploadFile($request->file('img'), 'users/profile/img/');
-            $newUser->profile->img = $uploadedFile['name'];
-            $newUser->profile->save();
+                // Assign standards
+                $newUser->assignStandards($standardIdArr);
+
+                // Assign role
+                $newUser->assignRole($validatedCode->role->name);
+
+                // Handle file upload if present
+                if ($request->hasFile('img')) {
+                    $uploadedFile = $this->uploadFile($request->file('img'), 'users/profile/img/');
+                    $newUser->profile->img = $uploadedFile['name'];
+                    $newUser->profile->save();
+                }
+
+                // Authenticate user
+//                Auth::once($request->only('mobile'));
+                Auth::login($newUser);
+
+                return $this->sendAPIResponse([
+                    AppLoginResponseResource::make($newUser),
+                ], 'User registered successfully.');
+            });
+        } catch (\Exception $e) {
+            // Log the exception with stack trace
+            Log::error('User registration failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return $this->sendAPIError('Registration failed. Please try again.', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
         }
-
-        // Assign role to the user
-        $newUser->assignRole($attributes['type']);
-
-        $credentials = $request->only('email', 'password');
-        Auth::once($credentials);
-
-        return $this->sendAPIResponse([
-            AppLoginResponseResource::make($newUser),
-        ], 'User registered successfully.');
     }
 
     /**
@@ -74,17 +100,18 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('mobile');
+        $user = User::where($credentials)->first();
 
-        if (Auth::once($credentials)) {
-            $user = Auth::user();
-
-            return $this->sendAPIResponse([
-                AppLoginResponseResource::make($user),
-            ], 'User logged in successfully.');
-        } else {
-            return $this->sendAPIError('Unauthorised.', ['error' => 'Unauthorised']);
+        if (!$user) {
+            return $this->sendAPIError('User not found.', ['error' => 'User not found']);
         }
+
+        Auth::login($user);
+
+        return $this->sendAPIResponse([
+            AppLoginResponseResource::make(Auth::user()),
+        ], 'User logged in successfully.');
     }
 
     public function profile()
@@ -115,5 +142,14 @@ class AuthController extends Controller
         $user->password = bcrypt($attributes['password']);
         $user->save();
         return $this->sendAPIResponse(UserProfileResource::make($user), 'Password updated successfully.');
+    }
+
+    private function validateCode($regCode)
+    {
+        $code = Code::where('code', $regCode)
+            ->first();
+
+        if (!$code) return false;
+        return $code;
     }
 }

@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Book;
 use App\Models\Role;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\School;
+use App\Models\Code;
 use App\Models\User;
 use App\Models\Board;
 use App\Models\Topic;
@@ -25,11 +28,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::firstOrCreate(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
+        $studentRole = Role::firstOrCreate(['name' => 'student']);
 
         $user = User::firstOrCreate(
             ['email' => 'admin@example.com'],
-            ['name' => 'Admin', 'password' => 'password']
+            ['name' => 'Admin', 'mobile' => '9898988989', 'password' => 'password']
+        );
+
+        $school = School::firstOrCreate(
+            ['name' => 'ABC School']
+        );
+
+        $teacherCode = Code::firstOrCreate(
+            ['code' => 'abcTeacher'],
+            ['role_id' => $teacherRole->id, 'school_id' => $school->id]
+        );
+        $studentCode = Code::firstOrCreate(
+            ['code' => 'adcStudent'],
+            ['role_id' => $studentRole->id, 'school_id' => $school->id]
         );
 
         $user->assignRole('admin');

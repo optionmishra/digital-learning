@@ -21,26 +21,27 @@ class UserRegistrationRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userType = $this->input('type');
+//        $userType = $this->input('type');
 
-        $commonRules = [
+        return $commonRules = [
             'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
+//            'email' => 'required|email|unique:users',
+//            'password' => 'required|confirmed',
             'standard_id' => 'required',
             'mobile' => 'required',
-            'school' => 'required',
+//            'school' => 'required',
             'img' => 'file|mimes:jpeg,png,jpg',
-            'type' => 'required',
-            'books' => 'required',
+            'code' => 'required',
+//            'type' => 'required,in:student,teacher',
+//            'books' => 'required',
         ];
 
-        if ($userType === 'teacher') {
-            return $commonRules;
-        }
-
-        return array_merge($commonRules, [
-            'dob' => 'required',
-        ]);
+//        if ($userType === 'teacher') {
+//            return $commonRules;
+//        }
+//
+//        return array_merge($commonRules, [
+//          'dob' => 'required',
+//        ]);
     }
 }

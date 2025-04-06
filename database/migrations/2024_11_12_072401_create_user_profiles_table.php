@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('mobile')->nullable();
-            $table->string('dob')->nullable();
+            $table->foreignId('school_id')->constrained()->onDelete('cascade');
+            $table->foreignId('code_id')->constrained()->onDelete('cascade');
+//            $table->string('dob')->nullable();
             $table->string('img')->nullable();
-            $table->string('school')->nullable();
             $table->foreignId('standard_id')->constrained()->onDelete('cascade')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->date('trial_end')->default(now()->addWeek());
