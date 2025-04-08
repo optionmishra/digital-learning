@@ -1,18 +1,18 @@
 @extends('layouts.admin')
 @section('content')
     <div class="body flex-grow-1">
-        <div class="px-4 container-lg">
-            <div class="mb-4 row card">
+        <div class="container-lg px-4">
+            <div class="row card mb-4">
                 <div class="card-header">
                     <h5 class="card-title">{{ ucfirst($role->name) }}s</h5>
                 </div>
                 <div class="card-body table-responsive">
-                    <table class="table table-striped table-bordered" data-table-route="{{ route('admin.users.datatable') }}">
+                    <table class="table-striped table-bordered table" data-table-route="{{ route('admin.users.datatable') }}">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Email</th>
+                                <th scope="col">Mobile</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                             </tr>
