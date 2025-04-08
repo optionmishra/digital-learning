@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Standard;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Auth\Events\Registered;
+use App\Http\Requests\Auth\UserRegistrationRequest;
 
 class RegisteredUserController extends Controller
 {
@@ -22,29 +26,76 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
+    public function createTeacher(): View
+    {
+        $standards = Standard::all();
+        return view('auth.teacher-registration', compact('standards'));
+    }
+
+    public function createStudent(): View
+    {
+        $standards = Standard::all();
+        return view('auth.student-registration', compact('standards'));
+    }
+
     /**
      * Handle an incoming registration request.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(UserRegistrationRequest $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $attributes = $request->validated();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        // Check for existing user before starting transaction
+        if (User::where('mobile', $attributes['mobile'])->exists()) {
+            return back()->with('error', 'Mobile already exists. Please use a different mobile number.');
+        }
 
-        event(new Registered($user));
+        try {
+            return DB::transaction(function () use ($request, $attributes) {
+                // Parse standard IDs once
+                $standardIdArr = is_array($attributes['standard_id']) ? $attributes['standard_id'] : explode(',', $attributes['standard_id']);
 
-        Auth::login($user);
+                // Validate code before user creation
+                $validatedCode = $this->validateCode($attributes['code']);
+                if (!$validatedCode) return back()->with('error', 'Registration failed, Invalid Code.');
 
-        return redirect(route('dashboard', absolute: false));
+                // Create user with minimal attributes
+                $newUser = User::create([
+                    'name' => $attributes['name'],
+                    'mobile' => $attributes['mobile']
+                ]);
+
+                // Create profile
+                $newUser->profile()->create([
+                    'standard_id' => $standardIdArr[0],
+                    'code_id' => $validatedCode->id,
+                    'school_id' => $validatedCode->school->id,
+                    // 'dob' => $attributes['dob'] ?? null,
+                ]);
+
+                // Assign standards
+                $newUser->assignStandards($standardIdArr);
+
+                // Assign role
+                $newUser->assignRole($validatedCode->role->name);
+
+                // Handle file upload if present
+                if ($request->hasFile('img')) {
+                    $uploadedFile = $this->uploadFile($request->file('img'), 'users/profile/img/');
+                    $newUser->profile->img = $uploadedFile['name'];
+                    $newUser->profile->save();
+                }
+                return back()->with('success', 'Registration successfull.');
+            });
+        } catch (\Exception $e) {
+            // Log the exception with stack trace
+            Log::error('User registration failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+            return back()->with('error', 'Registration failed, Please try again.');
+        }
     }
 }
