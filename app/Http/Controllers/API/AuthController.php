@@ -2,18 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Code;
 use App\Models\User;
-use App\Models\Content;
-use App\Models\Subject;
-use App\Models\ContentType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\BannerResource;
-use App\Http\Resources\VideosResource;
-use App\Http\Resources\SubjectsResource;
 use App\Http\Resources\UserProfileResource;
 use App\Http\Requests\Auth\UserRegistrationRequest;
 use App\Http\Requests\PasswordUpdateRequest;
