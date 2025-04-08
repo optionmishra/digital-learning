@@ -75,7 +75,7 @@ class AuthController extends Controller
                 }
 
                 // Authenticate user
-//                Auth::once($request->only('mobile'));
+                //                Auth::once($request->only('mobile'));
                 Auth::login($newUser);
 
                 return $this->sendAPIResponse([
@@ -142,14 +142,5 @@ class AuthController extends Controller
         $user->password = bcrypt($attributes['password']);
         $user->save();
         return $this->sendAPIResponse(UserProfileResource::make($user), 'Password updated successfully.');
-    }
-
-    private function validateCode($regCode)
-    {
-        $code = Code::where('code', $regCode)
-            ->first();
-
-        if (!$code) return false;
-        return $code;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Code;
 use Illuminate\Support\Str;
 
 abstract class Controller
@@ -131,5 +132,14 @@ abstract class Controller
         }
 
         return response()->json($response, $code);
+    }
+
+    protected function validateCode($regCode)
+    {
+        $code = Code::where('code', $regCode)
+            ->first();
+
+        if (!$code) return false;
+        return $code;
     }
 }
