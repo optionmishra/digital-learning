@@ -24,6 +24,10 @@
                 </svg> Dashboard</a></li>
         {{-- </svg> Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li> --}}
 
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.schools.index') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                </svg> Schools</a></li>
 
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.boards.index') }}">
                 <svg class="nav-icon">
@@ -86,7 +90,6 @@
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
                 </svg> Questions</a></li>
-
 
         <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
                 <svg class="nav-icon">

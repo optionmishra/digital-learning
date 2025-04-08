@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BoardController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\SubjectController;
@@ -17,6 +18,10 @@ use App\Http\Controllers\Admin\ContentTypeController;
 
 Route::group(['middleware' => ['auth']], function () {
   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+  // Schools
+  Route::resource('schools', SchoolController::class);
+  Route::get('/schools-data', [SchoolController::class, 'dataTable'])->name('schools.datatable');
 
   // Boards
   Route::resource('boards', BoardController::class);
