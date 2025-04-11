@@ -99,6 +99,11 @@ class AuthController extends Controller
             return $this->sendAPIError('User not found.', ['error' => 'User not found']);
         }
 
+        if ($request->series_id) {
+            $user->profile->series_id = $request->series_id;
+            $user->profile->save();
+        }
+
         Auth::login($user);
 
         return $this->sendAPIResponse([

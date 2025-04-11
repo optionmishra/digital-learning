@@ -74,6 +74,18 @@ class User extends Authenticatable
         return $this->hasMany(Attempt::class);
     }
 
+    public function series()
+    {
+        return $this->hasOneThrough(
+            Series::class,
+            UserProfile::class,
+            'user_id',
+            'id',
+            'id',
+            'series_id'
+        );
+    }
+
     public function standard()
     {
         return $this->hasOneThrough(
@@ -124,10 +136,11 @@ class User extends Authenticatable
     public function getSubjectsAttribute()
     {
         return Subject::whereHas('books', function ($query) {
+            $query->where('series_id', $this->series->id);
             $query->where('standard_id', $this->standard->id);
-            $query->whereHas('users', function ($q) {
-                $q->where('users.id', $this->id);
-            });
+            // $query->whereHas('users', function ($q) {
+            //     $q->where('users.id', $this->id);
+            // });
         })->get();
     }
 }

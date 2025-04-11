@@ -43,7 +43,7 @@ class Book extends Model
 
     public function topics()
     {
-        return $this->hasMany(Topic::class);
+        return $this->hasMany(Topic::class)->orderBy('serial');
     }
 
     public function assessments()

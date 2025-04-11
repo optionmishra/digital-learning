@@ -36,4 +36,26 @@ class Topic extends Model
             'question_type_id' // Foreign key on questions table
         );
     }
+
+    public function contentTypes()
+    {
+        return $this->hasManyThrough(
+            ContentType::class,
+            Content::class,
+            'topic_id', // Foreign key on contents table
+            'id', // Local key on content_types table
+            'id', // Local key on topics table
+            'content_type_id' // Foreign key on contents table
+        );
+    }
+
+    public function getUniqueAvailableContentTypesAttribute()
+    {
+        $user = auth()->user();
+        return $this->contentTypes()
+            ->distinct('name')
+            ->where(function ($query) use ($user) {
+                $query->whereNull('role_id')->orWhere('role_id', $user->roles[0]->id);
+            })->get();
+    }
 }

@@ -28,11 +28,11 @@ class UserContentScope implements Scope
         }
 
         // Base query to check book assignment
-        $builder->whereExists(function ($query) use ($user) {
-            $query->from('user_books')
-                ->whereColumn('user_books.book_id', 'contents.book_id')
-                ->where('user_books.user_id', $user->id);
-        });
+        // $builder->whereExists(function ($query) use ($user) {
+        //     $query->from('user_books')
+        //         ->whereColumn('user_books.book_id', 'contents.book_id')
+        //         ->where('user_books.user_id', $user->id);
+        // });
 
         switch ($profile->status) {
             case 'pending':

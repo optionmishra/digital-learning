@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Topic;
 use App\Models\Content;
 use App\Models\Subject;
 use App\Models\ContentType;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\EbookResource;
 use App\Http\Resources\VideoResource;
 use App\Http\Resources\BannerResource;
+use App\Http\Resources\ContentTypesResource;
 use App\Http\Resources\EbooksResource;
 use App\Http\Resources\VideosResource;
 use App\Http\Resources\SubjectsResource;
@@ -54,9 +56,8 @@ class ContentController extends Controller
     {
         $ebookContentType = ContentType::whereName('Ebook')->first();
         $ebooks = $ebookContentType->classContents()->where('subject_id', $id)->get();
-        if ($ebooks->count()) {
-            return $this->sendAPIResponse(EbooksResource::collection($ebooks), 'Ebooks fetched successfully.');
-        }
+        if ($ebooks->count()) return $this->sendAPIResponse(EbooksResource::collection($ebooks), 'Ebooks fetched successfully.');
+
         return $this->sendAPIError('Ebooks not found.');
     }
 
@@ -64,9 +65,29 @@ class ContentController extends Controller
     {
         $ebookContentType = ContentType::whereName('Ebook')->first();
         $ebook = $ebookContentType->contents()->find($id);
-        if ($ebook) {
-            return $this->sendAPIResponse(EbookResource::make($ebook), 'Ebook fetched successfully.');
-        }
+        if ($ebook) return $this->sendAPIResponse(EbookResource::make($ebook), 'Ebook fetched successfully.');
+
         return $this->sendAPIError('Ebook not found.');
+    }
+
+    public function getContentTypesByTopicId($topicId)
+    {
+        $topic = Topic::find(
+            $topicId
+        );
+
+        if (!$topic) return $this->sendAPIError('Topic not found.');
+
+        return $this->sendAPIResponse(ContentTypesResource::collection($topic->uniqueAvailableContentTypes), 'Content Types fetched successfully.');
+    }
+
+    public function contentsByTopicIdAndTypeId(Request $request)
+    {
+        $contents = Content::where([
+            'topic_id' => $request->topic,
+            'content_type_id' => $request->content_type
+        ])->get();
+
+        return $this->sendAPIResponse(VideoResource::collection($contents), 'Contents fetched successfully.');
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookController;
 use App\Http\Controllers\API\TopicController;
 use App\Http\Controllers\API\ConfigController;
+use App\Http\Controllers\API\SeriesController;
 use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\ContentController;
 use App\Http\Controllers\API\SubjectController;
@@ -23,6 +24,9 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::resource('standards', StandardController::class);
 
+// Series
+Route::resource('series', SeriesController::class);
+
 // Subjects
 Route::resource('subjects', SubjectController::class);
 
@@ -30,8 +34,7 @@ Route::resource('subjects', SubjectController::class);
 Route::resource('books', BookController::class);
 Route::get('books/subject/{subject}', [BookController::class, 'getBooksBySubjectId']);
 
-// TPG
-// Topics
+// TPG Topics
 Route::get('topics/{book}', [TopicController::class, 'getTopicsByBookId']);
 Route::get('question-types', [TopicController::class, 'getQuestionTypesByTopicIds']);
 Route::get('questions', [QuestionController::class, 'index']);
@@ -56,10 +59,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('set-teacher-standard', [StandardController::class, 'setTeacherStandard']);
     Route::get('get-teacher-standards', [StandardController::class, 'getTeacherStandards']);
 
+    // Topics
+    Route::get('topics/subject/{subject}', [TopicController::class, 'getTopicsBySubjectId']);
+
     // Articles
     Route::resource('articles', ArticleController::class);
 
+    // Content Types
+    Route::get('content-types/topic/{topic}', [ContentController::class, 'getContentTypesByTopicId']);
+
     // Contents
+    Route::get('contents', [ContentController::class, 'contentsByTopicIdAndTypeId']);
     Route::get('videos', [ContentController::class, 'getThreeRandomVideos']);
     Route::get('videos/{video}', [ContentController::class, 'showVideo']);
     Route::get('videos/subject/{subject}', [ContentController::class, 'getVideosBySubjectId']);

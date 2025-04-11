@@ -3,23 +3,25 @@
 namespace Database\Seeders;
 
 use App\Models\Book;
-use App\Models\Role;
+use App\Models\Code;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\School;
-use App\Models\Code;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Board;
 use App\Models\Topic;
 use App\Models\Author;
+use App\Models\School;
+use App\Models\Series;
 use App\Models\Content;
 use App\Models\Subject;
 use App\Models\Standard;
+use App\Models\McqOption;
 use App\Models\Assessment;
 use App\Models\ContentType;
-use App\Models\McqOption;
 use App\Models\McqQuestion;
 use Illuminate\Database\Seeder;
+use Database\Seeders\QuestionsSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -46,7 +48,7 @@ class DatabaseSeeder extends Seeder
             ['role_id' => $teacherRole->id, 'school_id' => $school->id]
         );
         $studentCode = Code::firstOrCreate(
-            ['code' => 'adcStudent'],
+            ['code' => 'abcStudent'],
             ['role_id' => $studentRole->id, 'school_id' => $school->id]
         );
 
@@ -69,28 +71,36 @@ class DatabaseSeeder extends Seeder
             ['img' => 'English.png']
         );
         Subject::firstOrCreate(
-            ['name' => 'Hindi'],
-            ['img' => 'Hindi.png']
+            ['name' => 'EVS'],
+            ['img' => 'Social-Science.png']
         );
         Subject::firstOrCreate(
             ['name' => 'Mathematics'],
             ['img' => 'Maths.png']
         );
         Subject::firstOrCreate(
+            ['name' => 'Rhymes'],
+            ['img' => 'Hindi.png']
+        );
+        Subject::firstOrCreate(
             ['name' => 'Science'],
             ['img' => 'Science.png']
         );
         Subject::firstOrCreate(
-            ['name' => 'Social Science'],
+            ['name' => 'Stories'],
             ['img' => 'Social-Science.png']
         );
 
         $author = Author::firstOrCreate(['name' => 'John Doe']);
 
+        $IcebergSeries = Series::firstOrCreate(['name' => 'Iceberg']);
+        $littleThinkersSeries = Series::firstOrCreate(['name' => 'Little Thinkers']);
+
         $book = Book::firstOrCreate([
             'name' => $subject->name . ' ' . $standard->name,
             'about' => 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis porro cumque placeat laboriosam voluptatum at. Quo optio neque magnam commodi in, ducimus temporibus eveniet, deserunt nobis nesciunt accusamus asperiores sint.',
             'board_id' => $board->id,
+            'series_id' => $IcebergSeries->id,
             'standard_id' => $standard->id,
             'subject_id' => $subject->id,
             'author_id' => $author->id,
@@ -100,21 +110,22 @@ class DatabaseSeeder extends Seeder
             'name' => $subject->name . ' Akshar Gyan ' . $standard->name,
             'about' => 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis porro cumque placeat laboriosam voluptatum at. Quo optio neque magnam commodi in, ducimus temporibus eveniet, deserunt nobis nesciunt accusamus asperiores sint.',
             'board_id' => $board->id,
+            'series_id' => $littleThinkersSeries->id,
             'standard_id' => $standard->id,
             'subject_id' => 2,
             'author_id' => $author->id,
         ]);
 
+        $animationContentType = ContentType::firstOrCreate([
+            'name' => 'Animation',
+        ]);
         $videoContentType = ContentType::firstOrCreate([
             'name' => 'Video',
-        ]);
-        $ebookContentType = ContentType::firstOrCreate([
-            'name' => 'Ebook',
         ]);
 
         $topic = Topic::firstOrCreate(
             ['name' => 'Active and Passive voice'],
-            ['subject_id' => $subject->id, 'book_id' => $book->id]
+            ['subject_id' => $subject->id, 'book_id' => $book->id, 'serial' => 1]
         );
 
         Content::firstOrCreate(
@@ -213,38 +224,38 @@ class DatabaseSeeder extends Seeder
                 'creator' => 'NoCopyrightSounds',
             ]
         );
-        Content::firstOrCreate(
-            ['title' => 'Akshar Gyan Ebook'],
-            [
-                'standard_id' => $standard->id,
-                'subject_id' => 2,
-                'book_id' => $book2->id,
-                'topic_id' => $topic->id,
-                'content_type_id' => $ebookContentType->id,
-                'src' => 'https://epochstudio.net/good_books/flipbooks/akshargyan/index.html',
-                'src_type' => 'url',
-                'about' => 'All NCS music is copyright free and safe for you to use on platforms like YouTube, TikTok and Twitch. You may not use any track for the purpose of creating a listening experience (i.e., a music video) where the music is the primary focus of the video.',
-                'img' => 'https://epochstudio.net/good_books/flipbooks/akshargyan/files/mobile/1.jpg?241102180809',
-                'img_type' => 'url',
-                'tags' => 'Ebook,2024',
-                'price' => 199,
-            ]
-        );
+        // Content::firstOrCreate(
+        //     ['title' => 'Akshar Gyan Ebook'],
+        //     [
+        //         'standard_id' => $standard->id,
+        //         'subject_id' => 2,
+        //         'book_id' => $book2->id,
+        //         'topic_id' => $topic->id,
+        //         'content_type_id' => $ebookContentType->id,
+        //         'src' => 'https://epochstudio.net/good_books/flipbooks/akshargyan/index.html',
+        //         'src_type' => 'url',
+        //         'about' => 'All NCS music is copyright free and safe for you to use on platforms like YouTube, TikTok and Twitch. You may not use any track for the purpose of creating a listening experience (i.e., a music video) where the music is the primary focus of the video.',
+        //         'img' => 'https://epochstudio.net/good_books/flipbooks/akshargyan/files/mobile/1.jpg?241102180809',
+        //         'img_type' => 'url',
+        //         'tags' => 'Ebook,2024',
+        //         'price' => 199,
+        //     ]
+        // );
 
 
-        $Assessment = Assessment::firstOrCreate(
-            [
-                'name' => 'Active and Passive voice',
-            ],
-            [
-                'standard_id' => $standard->id,
-                'subject_id' => $subject->id,
-                'book_id' => $book->id,
-                'duration' => '00:05:00',
-            ]
-        );
+        // $Assessment = Assessment::firstOrCreate(
+        //     [
+        //         'name' => 'Active and Passive voice',
+        //     ],
+        //     [
+        //         'standard_id' => $standard->id,
+        //         'subject_id' => $subject->id,
+        //         'book_id' => $book->id,
+        //         'duration' => '00:05:00',
+        //     ]
+        // );
 
         // Run the MCQ Questions Seeder.
-        $this->call(QuestionsSeeder::class);
+        // $this->call(QuestionsSeeder::class);
     }
 }

@@ -25,11 +25,11 @@ class AppLoginResponseResource extends JsonResource
 
         return [
             'user' => UserResource::make($this),
-//            'banners' => BannerResource::make(null),
-//            'videos' => VideosResource::collection($videos),
+            //            'banners' => BannerResource::make(null),
+            //            'videos' => VideosResource::collection($videos),
             'standards' => StandardsResource::collection($this->standards),
-//            'subjects' => SubjectsResource::collection($this->subjects),
-//            'books' => BooksResource::collection($this->books),
+            'subjects' => SubjectsResource::collection($this->subjects),
+            //            'books' => BooksResource::collection($this->books),
         ];
     }
 }

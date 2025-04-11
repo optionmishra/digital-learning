@@ -3,12 +3,27 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Book;
+use App\Models\Subject;
 use App\Models\QuestionType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TopicResource;
 
 class TopicController extends Controller
 {
+    public function getTopicsBySubjectId($subjectId)
+    {
+        $user = auth()->user();
+        $book = Book::where([
+            'series_id' => $user->series->id,
+            'standard_id' => $user->standard->id,
+            'subject_id' => $subjectId
+        ])->first();
+
+        $topics = $book->topics;
+        return $this->sendAPIResponse(TopicResource::collection($topics), 'Topics fetched successfully.');
+    }
+
     public function getTopicsByBookId($bookId)
     {
         $book = Book::find($bookId);
