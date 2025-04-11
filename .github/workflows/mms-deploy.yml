@@ -1,0 +1,66 @@
+name: Deploy Laravel Application
+
+on:
+  push:
+    branches:
+      - mms
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history to properly detect changes
+
+      - name: Check for asset file changes
+        id: check_changes
+        run: |
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+
+          if grep -q -E '\.blade\.php$|\.css$|\.js$|\.jsx$|\.ts$|\.tsx$' changed_files.txt; then
+            echo "assets_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "assets_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check for migration changes
+        id: check_migrations
+        run: |
+          if grep -q -E 'database/migrations/' changed_files.txt; then
+            echo "migrations_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "migrations_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy application
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.MMS_SSH_HOST }}
+          username: ${{ secrets.MMS_SSH_USERNAME }}
+          password: ${{ secrets.MMS_SSH_PASSWORD }}
+          script: |
+            cd /var/www/mms.com/public_html/
+            git pull origin mms
+
+            # Run migrations if needed
+            if [ "${{ steps.check_migrations.outputs.migrations_changed }}" == "true" ]; then
+              echo "Migrations detected. Running migrations..."
+              php artisan migrate --force
+            else
+              echo "No migrations detected. Skipping migration step."
+            fi
+
+            # Run asset build if necessary
+            if [ "${{ steps.check_changes.outputs.assets_changed }}" == "true" ]; then
+              echo "Assets changed. Running pnpm build..."
+              pnpm build
+            else
+              echo "No asset changes detected. Skipping pnpm build."
+            fi
+
+            # Always optimize the application
+            php artisan optimize
