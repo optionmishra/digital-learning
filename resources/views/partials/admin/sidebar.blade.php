@@ -34,6 +34,11 @@
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
                 </svg> Boards</a></li>
 
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.series.index') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                </svg> Series</a></li>
+
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.standards.index') }}">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>

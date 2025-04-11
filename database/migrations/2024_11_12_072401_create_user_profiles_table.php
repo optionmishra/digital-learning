@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('school_id')->constrained()->onDelete('cascade');
             $table->foreignId('code_id')->constrained()->onDelete('cascade');
-//            $table->string('dob')->nullable();
+            // $table->string('dob')->nullable();
             $table->string('img')->nullable();
+            $table->foreignId('series_id')->default(1)->constrained()->onDelete('cascade');
             $table->foreignId('standard_id')->constrained()->onDelete('cascade')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->date('trial_end')->default(now()->addWeek());

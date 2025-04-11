@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BoardController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\SchoolController;
+use App\Http\Controllers\Admin\SeriesController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\SubjectController;
@@ -26,6 +27,10 @@ Route::group(['middleware' => ['auth']], function () {
   // Boards
   Route::resource('boards', BoardController::class);
   Route::get('/boards-data', [BoardController::class, 'dataTable'])->name('boards.datatable');
+
+  // Series
+  Route::resource('series', SeriesController::class);
+  Route::get('/series-data', [SeriesController::class, 'dataTable'])->name('series.datatable');
 
   // Standards
   Route::resource('standards', StandardController::class);
