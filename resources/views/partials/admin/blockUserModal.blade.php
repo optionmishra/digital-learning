@@ -1,4 +1,4 @@
-<div class="modal fade" id="blockModal" tabindex="-1" aria-labelledby="blockModalLabel" aria-hidden="true">
+<div class="modal fade" id="blockModal" tabindex="-1" aria-labelledby="blockModalLabel">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,7 +15,7 @@
                             <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-x-circle') }}">
                             </use>
                         </svg>
-                        <p class="my-2 text-center fs-3 text-danger">
+                        <p class="fs-3 text-danger my-2 text-center">
                             This user will be blocked and will no longer be able to access the platform until the block
                             is removed.
                         </p>

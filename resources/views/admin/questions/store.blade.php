@@ -1,4 +1,4 @@
-<div class="modal fade" id="questionStore" tabindex="-1" aria-labelledby="questionStoreLabel" aria-hidden="true">
+<div class="modal fade" id="questionStore" tabindex="-1" aria-labelledby="questionStoreLabel">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,8 +9,8 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id" class="">
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-4 col-sm-12">
+                    <div class="row mb-3">
+                        <div class="col-lg-4 col-sm-12 mb-3">
                             <label class="form-label" for="subject">Subject</label>
                             <select class="form-control" name="subject_id" id="subject" onchange="updateBooks()">
                                 @foreach ($subjects as $subject)
@@ -18,7 +18,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-lg-4 col-sm-12">
+                        <div class="col-lg-4 col-sm-12 mb-3">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book"
                                 onchange="updateTopics(), updateAssessments()">
@@ -27,7 +27,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-lg-4 col-sm-12">
+                        <div class="col-lg-4 col-sm-12 mb-3">
                             <label class="form-label" for="topic">Topic</label>
                             <select class="form-control" name="topic_id" id="topic">
                                 @foreach ($books[0]->topics as $topic)
@@ -49,12 +49,12 @@
                         <input class="form-control" id="question_text" type="text" placeholder="Question"
                             name="question_text">
                     </div>
-                    <div class="mb-3 row">
+                    <div class="row mb-3">
                         <div class="col-lg-6 col-sm-12">
                             <label for="option_1" class="form-label">Option 1</label>
                             <input id="option_1" type="text" name="option_1" class="form-control"
                                 placeholder="Enter Option 1" required>
-                            <div class="mt-2 form-check">
+                            <div class="form-check mt-2">
                                 <input id="correct_option_1" type="radio" name="correct_option" value="1"
                                     class="form-check-input" required>
                                 <label class="form-check-label" for="correct_option_1">Mark as Correct</label>
@@ -64,19 +64,19 @@
                             <label for="option_2" class="form-label">Option 2</label>
                             <input id="option_2" type="text" name="option_2" class="form-control"
                                 placeholder="Enter Option 2" required>
-                            <div class="mt-2 form-check">
+                            <div class="form-check mt-2">
                                 <input id="correct_option_2" type="radio" name="correct_option" value="2"
                                     class="form-check-input" required>
                                 <label class="form-check-label" for="correct_option_2">Mark as Correct</label>
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3 row">
+                    <div class="row mb-3">
                         <div class="col-lg-6 col-sm-12">
                             <label for="option_3" class="form-label">Option 3</label>
                             <input id="option_3" type="text" name="option_3" class="form-control"
                                 placeholder="Enter Option 3" required>
-                            <div class="mt-2 form-check">
+                            <div class="form-check mt-2">
                                 <input id="correct_option_3" type="radio" name="correct_option" value="3"
                                     class="form-check-input" required>
                                 <label class="form-check-label" for="correct_option_3">Mark as Correct</label>
@@ -86,7 +86,7 @@
                             <label for="option_4" class="form-label">Option 4</label>
                             <input id="option_4" type="text" name="option_4" class="form-control"
                                 placeholder="Enter Option 4" required>
-                            <div class="mt-2 form-check">
+                            <div class="form-check mt-2">
                                 <input id="correct_option_4" type="radio" name="correct_option" value="4"
                                     class="form-check-input" required>
                                 <label class="form-check-label" for="correct_option_4">Mark as Correct</label>

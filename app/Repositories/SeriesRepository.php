@@ -35,9 +35,9 @@ class SeriesRepository extends BaseRepository implements SeriesRepositoryInterfa
                 case "#":
                     $sortColumn = 'id';
                     break;
-                    // case "category":
-                    //     $sortColumn = 'category_id';
-                    //     break;
+                // case "category":
+                //     $sortColumn = 'category_id';
+                //     break;
                 default:
                     $sortColumn = strtolower($sortColumn);
                     break;
@@ -62,7 +62,7 @@ class SeriesRepository extends BaseRepository implements SeriesRepositoryInterfa
         return $seriess->map(function ($series, $key) use ($columns, $start) {
             $series->serial = $start + 1 + $key;
             // if ($series->media->first()) $series->media_file = view('admin.seriess.media', compact('series'))->render();
-            $series->actions = view('admin.seriess.actions', compact('series'))->render();
+            $series->actions = view('admin.series.actions', compact('series'))->render();
             $series->setVisible($columns);
             return $series;
         });

@@ -1,5 +1,5 @@
-<div class="modal fade" id="seriesStore" tabindex="-1" aria-labelledby="seriesStoreLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+<div class="modal fade" id="seriesStore" tabindex="-1" aria-labelledby="seriesStoreLabel">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title h4" id="seriesStoreLabel">Series Details</h5>

@@ -1,4 +1,4 @@
-<div class="modal fade" id="bookStore" tabindex="-1" aria-labelledby="bookStoreLabel" aria-hidden="true">
+<div class="modal fade" id="bookStore" tabindex="-1" aria-labelledby="bookStoreLabel">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,8 +9,8 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id" class="">
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-3 col-sm-1">
+                    <div class="row mb-3">
+                        <div class="col-lg-3 col-sm-1 mb-3">
                             <label class="form-label" for="board">Board</label>
                             <Select class="form-control updateSelectedValue" id="board" name="board_id"
                                 @disabled(!$boards->count())>
@@ -21,7 +21,7 @@
                                 @endforelse
                             </Select>
                         </div>
-                        <div class="mb-3 col-lg-3 col-sm-1">
+                        <div class="col-lg-3 col-sm-1 mb-3">
                             <label class="form-label" for="standard">Standard</label>
                             <Select class="form-control updateSelectedValue" id="standard" name="standard_id"
                                 @disabled(!$standards->count())>
@@ -32,7 +32,7 @@
                                 @endforelse
                             </Select>
                         </div>
-                        <div class="mb-3 col-lg-3 col-sm-1">
+                        <div class="col-lg-3 col-sm-1 mb-3">
                             <label class="form-label" for="subject">Subject</label>
                             <Select class="form-control updateSelectedValue" id="subject" name="subject_id"
                                 @disabled(!$subjects->count())>
@@ -43,7 +43,7 @@
                                 @endforelse
                             </Select>
                         </div>
-                        <div class="mb-3 col-lg-3 col-sm-1">
+                        <div class="col-lg-3 col-sm-1 mb-3">
                             <label class="form-label" for="author">Author</label>
                             <Select class="form-control updateSelectedValue" id="author" name="author_id"
                                 @disabled(!$authors->count())>
@@ -55,13 +55,12 @@
                             </Select>
                         </div>
                     </div>
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-6 col-sm-1">
+                    <div class="row mb-3">
+                        <div class="col-lg-6 col-sm-1 mb-3">
                             <label class="form-label" for="name">Name</label>
-                            <input class="form-control " id="name" type="text" placeholder="Name"
-                                name="name">
+                            <input class="form-control" id="name" type="text" placeholder="Name" name="name">
                         </div>
-                        <div class="mb-3 col-lg-6 col-sm-1">
+                        <div class="col-lg-6 col-sm-1 mb-3">
                             <label class="form-label" for="bookMedia">Image</label>
                             <input class="form-control" id="bookMedia" type="file" name="media_file"
                                 accept="image/*">
@@ -75,7 +74,7 @@
                     </div> --}}
                     <div class="mb-3">
                         <label class="form-label" for="about">About</label>
-                        <textarea class="form-control " name="about" id="about" cols="30" rows="10"></textarea>
+                        <textarea class="form-control" name="about" id="about" cols="30" rows="10"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

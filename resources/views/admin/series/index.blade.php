@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    @include('admin.seriess.store')
+    @include('admin.series.store')
 @endsection
 {{-- @section('bottom-scripts')
     @vite(['resources/js/quill.js'])

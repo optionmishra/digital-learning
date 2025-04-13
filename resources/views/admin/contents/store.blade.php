@@ -1,4 +1,4 @@
-<div class="modal fade" id="contentStore" tabindex="-1" aria-labelledby="contentStoreLabel" aria-hidden="true">
+<div class="modal fade" id="contentStore" tabindex="-1" aria-labelledby="contentStoreLabel">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -12,8 +12,8 @@
                     <input type="hidden" name="type" value="{{ $contentType->name }}">
                     <input type="hidden" name="content_type_id" value="{{ $contentType->id }}">
 
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-3 col-sm-12">
+                    <div class="row mb-3">
+                        <div class="col-lg-3 col-sm-12 mb-3">
                             <label class="form-label" for="standard">Standard</label>
                             <select class="form-control" name="standard_id" id="standard" onchange="updateBooks()">
                                 @foreach ($standards as $standard)
@@ -21,7 +21,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-lg-3 col-sm-12">
+                        <div class="col-lg-3 col-sm-12 mb-3">
                             <label class="form-label" for="subject">Subject</label>
                             <select class="form-control" name="subject_id" id="subject" onchange="updateBooks()">
                                 @foreach ($subjects as $subject)
@@ -29,7 +29,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-lg-3 col-sm-12">
+                        <div class="col-lg-3 col-sm-12 mb-3">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book">
                                 @foreach ($subjects[0]->books as $book)
@@ -37,7 +37,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-lg-3 col-sm-12">
+                        <div class="col-lg-3 col-sm-12 mb-3">
                             <label class="form-label" for="topic">Topic</label>
                             <select class="form-control" name="topic_id" id="topic">
                                 @foreach ($books[0]->topics as $topic)
@@ -51,53 +51,53 @@
                         <label class="form-label" for="title">Title</label>
                         <input class="form-control" id="title" type="text" placeholder="Title" name="title">
                     </div>
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-6 col-sm-12">
+                    <div class="row mb-3">
+                        <div class="col-lg-6 col-sm-12 mb-3">
                             <label class="form-label" for="tags">Tags</label>
                             <input class="form-control" id="tags" type="text"
                                 placeholder="Tags (separated by comma)" name="tags">
                         </div>
                     </div>
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-6 col-sm-12">
+                    <div class="row mb-3">
+                        <div class="col-lg-6 col-sm-12 mb-3">
                             <label class="form-label" for="img_type">Image Upload Type</label>
                             <select class="form-control" name="img_type" id="img_type">
                                 <option value="file">File</option>
                                 <option value="url">URL</option>
                             </select>
                         </div>
-                        <div id="imgFileInputContainer" class="mb-3 col-lg-6 col-sm-12">
+                        <div id="imgFileInputContainer" class="col-lg-6 col-sm-12 mb-3">
                             <label class="form-label" for="img">File</label>
                             <input class="form-control" id="img" type="file" name="img" accept="image/*">
                         </div>
-                        <div id="imgUrlInputContainer" class="mb-3 col-lg-6 col-sm-12 d-none">
+                        <div id="imgUrlInputContainer" class="col-lg-6 col-sm-12 d-none mb-3">
                             <label class="form-label" for="img_url">URL</label>
                             <input class="form-control" id="img_url" type="url" name="img_url"
                                 placeholder="https://www.example.com/">
                         </div>
                     </div>
                     @if ($contentType->name == 'Video')
-                        <div class="mb-3 row">
-                            <div class="mb-3 col-lg-6 col-sm-12">
+                        <div class="row mb-3">
+                            <div class="col-lg-6 col-sm-12 mb-3">
                                 <label class="form-label" for="creator">Creator</label>
                                 <input class="form-control" id="creator" type="text" placeholder="Creator Name"
                                     name="creator">
                             </div>
                         </div>
                     @endif
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-6 col-sm-12">
+                    <div class="row mb-3">
+                        <div class="col-lg-6 col-sm-12 mb-3">
                             <label class="form-label" for="src_type">Source Upload Type</label>
                             <select class="form-control" name="src_type" id="src_type">
                                 <option value="file">File</option>
                                 <option value="url">URL</option>
                             </select>
                         </div>
-                        <div id="srcFileInputContainer" class="mb-3 col-lg-6 col-sm-12">
+                        <div id="srcFileInputContainer" class="col-lg-6 col-sm-12 mb-3">
                             <label class="form-label" for="file">File</label>
                             <input class="form-control" id="file" type="file" name="file">
                         </div>
-                        <div id="srcUrlInputContainer" class="mb-3 col-lg-6 col-sm-12 d-none">
+                        <div id="srcUrlInputContainer" class="col-lg-6 col-sm-12 d-none mb-3">
                             <label class="form-label" for="url">URL</label>
                             <input class="form-control" id="url" type="url" name="url"
                                 placeholder="https://www.example.com/">

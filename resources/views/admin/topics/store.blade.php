@@ -1,4 +1,4 @@
-<div class="modal fade" id="topicStore" tabindex="-1" aria-labelledby="topicStoreLabel" aria-hidden="true">
+<div class="modal fade" id="topicStore" tabindex="-1" aria-labelledby="topicStoreLabel">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,8 +9,8 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id" class="">
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-6 col-sm-12">
+                    <div class="row mb-3">
+                        <div class="col-lg-6 col-sm-12 mb-3">
                             <label class="form-label" for="subject">Subject</label>
                             <select class="form-control" name="subject_id" id="subject" onchange="updateBooks()">
                                 @foreach ($subjects as $subject)
@@ -18,7 +18,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-lg-6 col-sm-12">
+                        <div class="col-lg-6 col-sm-12 mb-3">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book">
                                 @foreach ($subjects[0]->books as $book)

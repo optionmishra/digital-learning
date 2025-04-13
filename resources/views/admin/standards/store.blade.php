@@ -1,4 +1,4 @@
-<div class="modal fade" id="standardStore" tabindex="-1" aria-labelledby="standardStoreLabel" aria-hidden="true">
+<div class="modal fade" id="standardStore" tabindex="-1" aria-labelledby="standardStoreLabel">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,11 +11,11 @@
                     <input type="hidden" name="id" class="">
                     <div class="mb-3">
                         <label class="form-label" for="name">Name</label>
-                        <input class="form-control " id="name" type="text" placeholder="Name" name="name">
+                        <input class="form-control" id="name" type="text" placeholder="Name" name="name">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="order">Order</label>
-                        <input class="form-control " id="order" type="number" placeholder="Order" name="order">
+                        <input class="form-control" id="order" type="number" placeholder="Order" name="order">
                     </div>
                 </div>
                 <div class="modal-footer">

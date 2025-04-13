@@ -1,4 +1,4 @@
-<div class="modal fade" id="schoolStore" tabindex="-1" aria-labelledby="schoolStoreLabel" aria-hidden="true">
+<div class="modal fade" id="schoolStore" tabindex="-1" aria-labelledby="schoolStoreLabel">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">

@@ -1,12 +1,11 @@
-<footer class="px-4 footer">
+<footer class="footer px-4">
     {{-- <div><a href="https://coreui.io">CoreUI </a><a
             href="https://coreui.io/product/free-bootstrap-admin-template/">Bootstrap Admin Template</a> © 2024
         creativeLabs.</div>
     <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div> --}}
 </footer>
 
-
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,7 +20,7 @@
                         <svg class="text-danger">
                             <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-trash') }}"></use>
                         </svg>
-                        <p class="my-2 text-center fs-3 text-danger">
+                        <p class="fs-3 text-danger my-2 text-center">
                             You won't be able to revert this!
                         </p>
                     </div>

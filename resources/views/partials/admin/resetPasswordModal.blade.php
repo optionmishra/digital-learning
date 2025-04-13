@@ -1,4 +1,4 @@
-<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,7 +16,7 @@
                                 xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-loop-circular') }}">
                             </use>
                         </svg>
-                        <p class="my-2 text-center fs-3 text-danger">
+                        <p class="fs-3 text-danger my-2 text-center">
                             This will set the user's email as their new password.
                         </p>
                     </div>
