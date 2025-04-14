@@ -27,6 +27,7 @@ class StoreBookRequest extends FormRequest
       'name' => 'required',
       'media_file' => 'file|mimes:jpeg,png,jpg', //,gif,mp4,mov,ogg',
       'about' => 'required',
+      'series_id' => 'required',
       'board_id' => 'required',
       'standard_id' => 'required',
       'subject_id' => 'required',

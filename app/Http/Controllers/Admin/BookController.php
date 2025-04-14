@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Book;
 use App\Models\Board;
 use App\Models\Author;
+use App\Models\Series;
 use App\Models\Subject;
 use App\Models\Standard;
 use Illuminate\Http\Request;
@@ -25,11 +26,12 @@ class BookController extends Controller
      */
     public function index()
     {
+        $series = Series::all();
         $boards = Board::all();
         $standards = Standard::all();
         $subjects = Subject::all();
         $authors = Author::all();
-        return view('admin.books.index', compact('boards', 'standards', 'subjects', 'authors'));
+        return view('admin.books.index', compact('series', 'boards', 'standards', 'subjects', 'authors'));
     }
 
     /**
