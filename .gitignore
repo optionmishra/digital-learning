@@ -19,4 +19,5 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
-miranda.env
+.env.main
+.env.mms
