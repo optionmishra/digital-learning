@@ -11,6 +11,17 @@
                     <input type="hidden" name="id" class="">
                     <div class="row mb-3">
                         <div class="col-lg-3 col-sm-1 mb-3">
+                            <label class="form-label" for="series">Series</label>
+                            <Select class="form-control updateSelectedValue" id="series" name="series_id"
+                                @disabled(!$series->count())>
+                                @forelse ($series as $series)
+                                    <option value="{{ $series->id }}">{{ $series->name }}</option>
+                                @empty
+                                    <option value="">Please add a Series first</option>
+                                @endforelse
+                            </Select>
+                        </div>
+                        <div class="col-lg-3 col-sm-1 mb-3">
                             <label class="form-label" for="board">Board</label>
                             <Select class="form-control updateSelectedValue" id="board" name="board_id"
                                 @disabled(!$boards->count())>
@@ -43,7 +54,18 @@
                                 @endforelse
                             </Select>
                         </div>
-                        <div class="col-lg-3 col-sm-1 mb-3">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-lg-4 col-sm-1 mb-3">
+                            <label class="form-label" for="name">Name</label>
+                            <input class="form-control" id="name" type="text" placeholder="Name" name="name">
+                        </div>
+                        <div class="col-lg-4 col-sm-1 mb-3">
+                            <label class="form-label" for="bookMedia">Image</label>
+                            <input class="form-control" id="bookMedia" type="file" name="media_file"
+                                accept="image/*">
+                        </div>
+                        <div class="col-lg-4 col-sm-1 mb-3">
                             <label class="form-label" for="author">Author</label>
                             <Select class="form-control updateSelectedValue" id="author" name="author_id"
                                 @disabled(!$authors->count())>
@@ -53,17 +75,6 @@
                                     <option value="">Please add a Author first</option>
                                 @endforelse
                             </Select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-6 col-sm-1 mb-3">
-                            <label class="form-label" for="name">Name</label>
-                            <input class="form-control" id="name" type="text" placeholder="Name" name="name">
-                        </div>
-                        <div class="col-lg-6 col-sm-1 mb-3">
-                            <label class="form-label" for="bookMedia">Image</label>
-                            <input class="form-control" id="bookMedia" type="file" name="media_file"
-                                accept="image/*">
                         </div>
                     </div>
                     {{-- <div class="mb-3">
