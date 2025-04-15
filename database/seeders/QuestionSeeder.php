@@ -8,11 +8,9 @@ use App\Models\Standard;
 use App\Models\Assessment;
 use App\Models\QuestionType;
 use App\Models\StandardSubject;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class QuestionsSeeder extends Seeder
+class QuestionSeeder extends BaseSeeder
 {
     /**
      * Run the database seeds.
