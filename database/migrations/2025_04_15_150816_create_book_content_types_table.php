@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('content_types', function (Blueprint $table) {
+        Schema::create('book_content_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('img')->nullable();
-            $table->foreignId('role_id')->nullable()->constrained()->onDelete('restrict')->onUpdate('cascade');
-            $table->integer('order')->nullable();
+            $table->foreignId('book_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('content_type_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('content_types');
+        Schema::dropIfExists('book_content_types');
     }
 };

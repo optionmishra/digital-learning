@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('img')->nullable();
             $table->text('about');
-            $table->foreignId('board_id')->constrained()->onDelete('cascade');
+            $table->foreignId('board_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('standard_id')->constrained()->onDelete('cascade');
             $table->foreignId('subject_id')->constrained()->onDelete('cascade');
-            $table->foreignId('author_id')->constrained()->onDelete('cascade');
+            $table->foreignId('author_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

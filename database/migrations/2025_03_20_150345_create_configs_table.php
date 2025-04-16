@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('key')->unique();
             $table->text('value')->nullable();
-            $table->enum('type', ['text', 'html', 'json'])->default('text');
+            $table->enum('type', ['text', 'html', 'json', 'file'])->default('text');
             $table->timestamps();
         });
     }

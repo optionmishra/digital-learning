@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('standards', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable();
             $table->timestamps();
         });
     }
