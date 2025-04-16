@@ -83,7 +83,7 @@ class ChunkProcessor
     }
 
     if ($sourceTable === 'web_user') {
-      if (property_exists($record, 'series_classes')) {
+      if (property_exists($record, 'series_classes') && $record->series_classes !== null) {
         $unserializedSeriesClasses = unserialize($record->series_classes);
         $bookIdsArr = [];
 
