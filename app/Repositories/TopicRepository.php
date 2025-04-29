@@ -35,9 +35,9 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
                 case "#":
                     $sortColumn = 'id';
                     break;
-                    // case "category":
-                    //     $sortColumn = 'category_id';
-                    //     break;
+                // case "category":
+                //     $sortColumn = 'category_id';
+                //     break;
                 default:
                     $sortColumn = strtolower($sortColumn);
                     break;
@@ -60,11 +60,12 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
     public function collectionModifier($columns, $topics, $start)
     {
         return $topics->map(function ($topic, $key) use ($columns, $start) {
+            $topic->serialNo = $topic->serial;
+            $topic->actions = view('admin.topics.actions', compact('topic'))->render();
             $topic->serial = $start + 1 + $key;
             // $topic->image = view('admin.topics.media', compact('topic'))->render();
             $topic->subject_name = $topic->subject->name;
             $topic->book_name = $topic->book->name;
-            $topic->actions = view('admin.topics.actions', compact('topic'))->render();
             $topic->setVisible($columns);
             return $topic;
         });

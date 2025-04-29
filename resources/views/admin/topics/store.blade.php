@@ -1,5 +1,5 @@
 <div class="modal fade" id="topicStore" tabindex="-1" aria-labelledby="topicStoreLabel">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title h4" id="topicStoreLabel">Topic Details</h5>
@@ -27,15 +27,21 @@
                             </select>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="name">Name</label>
-                        <input class="form-control" id="name" type="text" placeholder="Name" name="name">
+                    <div class="row mb-3">
+                        <div class="col-lg-2 col-sm-12 mb-3">
+                            <label class="form-label" for="serial">Serial No.</label>
+                            <input class="form-control" id="serial" type="number" placeholder="Serial"
+                                name="serial">
+                        </div>
+                        <div class="col-lg-10 col-sm-12 mb-3">
+                            <label class="form-label" for="name">Name</label>
+                            <input class="form-control" id="name" type="text" placeholder="Name" name="name">
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" type="submit">Save</button>
-                </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
             </form>
         </div>
     </div>
