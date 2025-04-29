@@ -8,9 +8,9 @@
             <form method="POST" action="{{ route('admin.contents.store') }}" id="updateDataForm">
                 @csrf
                 <div class="modal-body">
-                    <input type="hidden" name="id" class="">
-                    <input type="hidden" name="type" value="{{ $contentType->name }}">
-                    <input type="hidden" name="content_type_id" value="{{ $contentType->id }}">
+                    <input class="d-none" type="text" name="id">
+                    <input class="d-none" type="text" name="type" value="{{ $contentType->name }}">
+                    <input class="d-none" type="text" name="content_type_id" value="{{ $contentType->id }}">
 
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-3 col-sm-12">
