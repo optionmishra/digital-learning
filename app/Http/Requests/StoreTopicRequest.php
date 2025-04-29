@@ -25,6 +25,7 @@ class StoreTopicRequest extends FormRequest
             'name' => 'required',
             'subject_id' => 'required',
             'book_id' => 'required',
+            'serial' => 'required'
         ];
     }
 }

@@ -249,6 +249,14 @@ document.addEventListener("DOMContentLoaded", function () {
                             ? "topic_name"
                             : $(this).text() === "Assessment"
                             ? "assessment_name"
+                            : $(this).text() === "Author"
+                            ? "author_name"
+                            : $(this).text() === "Teacher Code"
+                            ? "teacherCode"
+                            : $(this).text() === "Student Code"
+                            ? "studentCode"
+                            : $(this).text() === "Serial No."
+                            ? "serialNo"
                             : $(this).text().toLowerCase(),
                     name: $(this).text(),
                     searchable:
