@@ -64,8 +64,8 @@ class SchoolRepository extends BaseRepository implements BaseRepositoryInterface
         $roles = Role::whereIn('name', ['teacher', 'student'])->get()->keyBy('name');
         return $schools->map(function ($school, $key) use ($columns, $start, $roles) {
             $school->serial = $start + 1 + $key;
-            $school->teacherCode = $school->codes()->where('role_id', $roles['teacher']->id)->first()?->code;
-            $school->studentCode = $school->codes()->where('role_id', $roles['student']->id)->first()?->code;
+            $school->teacherCode = view('admin.schools.codes-count', ['school' => $school, 'role' => $roles['teacher']])->render();
+            $school->studentCode = view('admin.schools.codes-count', ['school' => $school, 'role' => $roles['student']])->render();
             $school->actions = view('admin.schools.actions', compact('school'))->render();
             $school->setVisible($columns);
             return $school;

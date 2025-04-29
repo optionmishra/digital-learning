@@ -300,6 +300,22 @@ document.addEventListener("DOMContentLoaded", function () {
         //     });
     });
 
+    // Codes Table
+    $(document).on("click", "[data-codes-route]", function (e) {
+        e.preventDefault(); // Prevent default link or button behavior if any
+        const route = $(this).data("codes-route");
+
+        fetch(route)
+            .then((res) => res.text()) // Get response as plain text (HTML)
+            .then((html) => {
+                // Insert the HTML into a target element (change #target-container as needed)
+                $("#codesTableBody").html(html);
+            })
+            .catch((err) => {
+                console.error("Failed to fetch HTML:", err);
+            });
+    });
+
     // Category Topics Options
     $("#categoryPostCategory").on("change", function () {
         // Get selected option element

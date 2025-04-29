@@ -25,4 +25,14 @@ class Code extends Model
     {
         return $this->belongsTo(Role::class);
     }
+
+    public function standards()
+    {
+        return $this->belongsToMany(Standard::class, 'code_standards')->withTimestamps();
+    }
+
+    public function assignStandards($standards)
+    {
+        $this->standards()->sync($standards);
+    }
 }

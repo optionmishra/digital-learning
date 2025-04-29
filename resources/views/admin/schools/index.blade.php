@@ -7,8 +7,16 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="card-title">Schools</h5>
-                        <button class="btn btn-primary px-2 py-2" type="button" title="Edit" data-coreui-toggle="modal"
-                            data-coreui-target="#schoolStore">Create</button>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary px-2 py-2" type="button" title="Edit" data-coreui-toggle="modal"
+                                data-coreui-target="#schoolStore">Create School</button>
+                            <button class="btn btn-primary px-2 py-2" type="button" title="Edit"
+                                data-coreui-toggle="modal" data-coreui-target="#teacherCodeStore">Create Teacher
+                                Code</button>
+                            <button class="btn btn-primary px-2 py-2" type="button" title="Edit"
+                                data-coreui-toggle="modal" data-coreui-target="#studentCodeStore">Create Student
+                                Code</button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body table-responsive">
@@ -31,4 +39,7 @@
         </div>
     </div>
     @include('admin.schools.store')
+    @include('admin.schools.codes-modal')
+    @include('admin.schools.store-teacher-code')
+    @include('admin.schools.store-student-code')
 @endsection

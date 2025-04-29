@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Code;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserProfileResource;
-use App\Http\Requests\Auth\UserRegistrationRequest;
 use App\Http\Requests\PasswordUpdateRequest;
 use App\Http\Requests\UserProfileUpdateRequest;
 use App\Http\Resources\AppLoginResponseResource;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Http\Requests\Auth\UserRegistrationRequest;
 
 class AuthController extends Controller
 {
@@ -92,11 +93,25 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->only('mobile');
-        $user = User::where($credentials)->first();
+        $code = Code::where('code', $request->code)->where('status', '1')->first();
+        if (!$code) return $this->sendAPIError('Invalid Code', ['error' => 'Invalid Code']);
+
+        $mobile = $request->only('mobile');
+        $user = User::where($mobile)->first();
+
+        if ($user && $user->profile->code_id != $code->id) return $this->sendAPIError('Invalid Credentials', ['error' => 'Invalid Credentials'], 401);
 
         if (!$user) {
-            return $this->sendAPIError('User not found.', ['error' => 'User not found']);
+            $user = User::create($mobile);
+            $standardIdArr = $code->standards->pluck('id')->toArray();
+
+            $user->profile()->create([
+                'standard_id' => $standardIdArr[0],
+                'code_id' => $code->id,
+                'school_id' => $code->school->id,
+            ]);
+            $user->assignStandards($standardIdArr);
+            $user->assignRole($code->role->name);
         }
 
         if ($request->series_id) {
@@ -108,7 +123,7 @@ class AuthController extends Controller
 
         return $this->sendAPIResponse([
             AppLoginResponseResource::make(Auth::user()),
-        ], 'User logged in successfully.');
+        ], 'Login successful');
     }
 
     public function profile()

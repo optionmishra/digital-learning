@@ -23,6 +23,8 @@ Route::group(['middleware' => ['auth']], function () {
   // Schools
   Route::resource('schools', SchoolController::class);
   Route::get('/schools-data', [SchoolController::class, 'dataTable'])->name('schools.datatable');
+  Route::get('/schools-codes-data/{school}/{role}', [SchoolController::class, 'codesTable'])->name('schools.codesTable');
+  Route::post('/schools-codes-store/{role}', [SchoolController::class, 'storeCode'])->name('schools.code.store');
 
   // Boards
   Route::resource('boards', BoardController::class);
