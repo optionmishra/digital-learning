@@ -8,7 +8,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="card-title">Topics</h5>
                         <button class="btn btn-primary px-2 py-2" type="button" title="Edit" data-coreui-toggle="modal"
-                            data-coreui-target="#topicStore">Create</button>
+                            data-coreui-target="#topicStore" onclick="updateBooks()">Create</button>
                     </div>
                 </div>
                 <div class="card-body table-responsive">

@@ -42,6 +42,7 @@
                         <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
                         <button class="btn btn-primary" type="submit">Save</button>
                     </div>
+                </div>
             </form>
         </div>
     </div>
