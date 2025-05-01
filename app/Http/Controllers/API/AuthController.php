@@ -93,7 +93,7 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $code = Code::where('code', $request->code)->where('status', '1')->first();
+        $code = Code::where('code', $request->code)->where('role_id', $request->role_id)->where('status', '1')->first();
         if (!$code) return $this->sendAPIError('Invalid Code', ['error' => 'Invalid Code']);
 
         $mobile = $request->only('mobile');

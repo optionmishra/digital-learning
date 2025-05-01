@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('img')->nullable();
             $table->foreignId('series_id')->default(1)->constrained()->onDelete('cascade');
             $table->foreignId('standard_id')->constrained()->onDelete('cascade')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('approved');
             $table->date('trial_end')->default(now()->addWeek());
             $table->timestamps();
         });

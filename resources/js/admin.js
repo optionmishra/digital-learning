@@ -92,7 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    // Update
     document.addEventListener("click", function (e) {
         const el =
             e.target.closest("[data-row-data]") ||
@@ -108,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("updateDataForm");
         form.setAttribute("action", updateRoute);
 
-        // if (rowData.length > 0) {
+        // Update form elements and trigger change events
         Array.from(document.querySelectorAll("form [name]")).forEach((el) => {
             if (el.name in rowData) {
                 if (el.name == "correct_option") {
@@ -116,28 +115,47 @@ document.addEventListener("DOMContentLoaded", function () {
                     Array.from(
                         document.querySelectorAll(`input[name="${el.name}"]`)
                     ).forEach((radio) => {
+                        const wasChecked = radio.checked;
                         if (radio.value == correctOption) {
                             radio.checked = true;
+                            if (!wasChecked) {
+                                // Trigger change event if the state changed
+                                radio.dispatchEvent(
+                                    new Event("change", { bubbles: true })
+                                );
+                            }
                         }
                     });
-                }
-                if (el.name == "books[]") {
+                } else if (el.name == "books[]") {
                     const bookIds = rowData[el.name];
-                    bookIds.forEach((bookId) => {
-                        Array.from(
-                            document.querySelectorAll(
-                                `input[name="${el.name}"][value="${bookId}"]`
-                            )
-                        ).forEach((checkbox) => {
-                            checkbox.checked = true;
-                        });
+                    Array.from(
+                        document.querySelectorAll(`input[name="${el.name}"]`)
+                    ).forEach((checkbox) => {
+                        const wasChecked = checkbox.checked;
+                        const shouldBeChecked = bookIds.includes(
+                            checkbox.value
+                        );
+                        checkbox.checked = shouldBeChecked;
+                        if (wasChecked !== shouldBeChecked) {
+                            // Trigger change event if the state changed
+                            checkbox.dispatchEvent(
+                                new Event("change", { bubbles: true })
+                            );
+                        }
                     });
                 } else {
+                    const oldValue = el.value;
                     el.value = rowData[el.name];
+                    if (oldValue !== el.value) {
+                        // Trigger change and input events for text-based inputs
+                        el.dispatchEvent(new Event("input", { bubbles: true }));
+                        el.dispatchEvent(
+                            new Event("change", { bubbles: true })
+                        );
+                    }
                 }
             }
         });
-        // }
     });
 
     $("#enableArticlesForm input").on("change", function () {
