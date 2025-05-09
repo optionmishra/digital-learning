@@ -14,4 +14,9 @@ class School extends Model
     {
         return $this->hasMany(Code::class);
     }
+    public function userProfiles()
+{
+    return $this->hasMany(UserProfile::class, 'school_id', 'id');
+}
+
 }

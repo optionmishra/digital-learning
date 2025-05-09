@@ -18,7 +18,8 @@ class ContentRepository extends BaseRepository implements ContentRepositoryInter
     public function paginated($columns, $type, $start, $length, $sortColumn, $sortDirection, $searchValue, $countOnly = false)
     {
         //  Eager load standard and subject
-        $query = $this->content->with(['standard', 'subject'])->select('*');
+        // $query = $this->content->with(['standard', 'subject'])->select('*');
+        $query = Content::with(['standard', 'subject']);
         $query->where('content_type_id', 'LIKE', $type);
 
         if (!empty($searchValue)) {
@@ -60,16 +61,16 @@ class ContentRepository extends BaseRepository implements ContentRepositoryInter
         
 
             //  Show subject name
-            $content->subject = optional($content->subject)->name;
+            $content->subject_name = optional($content->subject)->name;
             
             
         
             
-
+            
             $content->image = $content->img ? view('admin.contents.media', compact('content'))->render() : '';
             $content->url = view('admin.contents.url', compact('content'))->render();
             $content->actions = view('admin.contents.actions', compact('content'))->render();
-
+            
             $content->setVisible($columns);
             return $content;
         });

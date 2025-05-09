@@ -74,8 +74,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $user->serial = $start + 1 + $key;
 
             
-            $user->school_name = $user->profile->school_name ?? 'N/A';
-            $user->user_code = optional($user->schoolCode)->code ?? 'N/A';
+            $user->school = $user->schoolName->name ?? 'N/A';
+            $user->code = optional($user->schoolCode)->code ?? 'N/A';
             
 
             
@@ -100,7 +100,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             
             $user->actions = view('admin.users.actions', compact('user'))->render();
 
-           
+
             $user->setVisible($columns);
 
             return $user;

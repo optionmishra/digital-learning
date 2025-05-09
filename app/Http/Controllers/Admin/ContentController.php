@@ -108,7 +108,7 @@ class ContentController extends Controller
         $sortDirection = request()->get('order')[0]['dir'] ?? 'asc';
         $searchValue = request()->get('search')['value'];
         $columns = array_map(fn($column) => $column['data'], request()->get('columns'));
-
+       
         $count = $repository->paginated($columns, $type, $start, $length, $sortColumn, $sortDirection, $searchValue, true);
         $data = $repository->paginated($columns, $type, $start, $length, $sortColumn, $sortDirection, $searchValue);
 

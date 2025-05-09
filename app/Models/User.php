@@ -156,5 +156,16 @@ public function schoolCode()
         'school_id'    
     );     
 }
+public function schoolName()
+{
+    return $this->hasOneThrough(
+        School::class,         
+        UserProfile::class,  
+        'user_id',
+        'id',
+        'id',
+        'school_id'
+    );     
+}
 
 }

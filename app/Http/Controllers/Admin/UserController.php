@@ -89,7 +89,7 @@ class UserController extends Controller
                                
         $count = $repository->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue, true);
         $data = $repository->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue);
-
+        
         return $data = array(
             "draw" => intval(request()->input('draw')),
             "recordsTotal" => intval($count),
