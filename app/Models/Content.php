@@ -23,6 +23,17 @@ class Content extends Model
         return $this->belongsTo(Topic::class);
     }
 
+    public function standard()
+{
+    return $this->belongsTo(\App\Models\Standard::class);
+}
+
+public function subject()
+{
+    return $this->belongsTo(\App\Models\Subject::class);
+}
+
+
     // public function media()
     // {
     //     return $this->hasMany(ContentMedia::class);

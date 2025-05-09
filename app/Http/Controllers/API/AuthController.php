@@ -91,40 +91,63 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // Kuldeep
     public function login(Request $request)
     {
-        $code = Code::where('code', $request->code)->where('role_id', $request->role_id)->where('status', '1')->first();
-        if (!$code) return $this->sendAPIError('Invalid Code', ['error' => 'Invalid Code']);
-
+        $code = Code::where('code', $request->code)
+                    ->where('role_id', $request->role_id)
+                    ->where('status', '1')
+                    ->first();
+    
+        if (!$code) {
+            return $this->sendAPIError('Invalid Code', ['error' => 'Invalid Code']);
+        }
+    
         $mobile = $request->only('mobile');
         $user = User::where($mobile)->first();
-
-        if ($user && $user->profile->code_id != $code->id) return $this->sendAPIError('Invalid Credentials', ['error' => 'Invalid Credentials'], 401);
-
-        if (!$user) {
+    
+        if ($user) {
+            if ($user->profile->code_id != $code->id) {
+                return $this->sendAPIError('Invalid Credentials', ['error' => 'Invalid Credentials'], 401);
+            }
+    
+            //  ADDED: Series ID check for existing user
+            if ($user->profile->series_id != $request->series_id) {
+                return $this->sendAPIError('Invalid Series ID', ['error' => 'Series ID does not match'], 401);
+            }
+    
+        } else {
+            //  CHANGED: Create new user with profile
             $user = User::create($mobile);
             $standardIdArr = $code->standards->pluck('id')->toArray();
-
+    
             $user->profile()->create([
                 'standard_id' => $standardIdArr[0],
                 'code_id' => $code->id,
                 'school_id' => $code->school->id,
+                'series_id' => $request->series_id, //  ADDED
             ]);
+    
             $user->assignStandards($standardIdArr);
             $user->assignRole($code->role->name);
         }
-
-        if ($request->series_id) {
+    
+        //  REMOVED:
+        // This block is now unnecessary as we already checked/assigned series_id above
+        /*
+        if ($request->series_id == $user->profile->series_id) {
             $user->profile->series_id = $request->series_id;
             $user->profile->save();
         }
-
+        */
+    
         Auth::login($user);
-
+    
         return $this->sendAPIResponse([
             AppLoginResponseResource::make(Auth::user()),
         ], 'Login successful');
     }
+    
 
     public function profile()
     {

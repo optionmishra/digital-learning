@@ -93,4 +93,10 @@ Route::group(['middleware' => ['auth']], function () {
   );
 
   Route::post('/extend-trial/{user}', [UserController::class, 'extendTrial'])->name('users.extend.trial');
+
+  Route::get('admin/users/datatable', [UserController::class, 'datatable'])->name('admin.users.datatable');
 });
+
+ // Route::get('users/index', [UserController::class, 'getData'])->name('users.index');
+ 
+  

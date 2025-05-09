@@ -67,14 +67,14 @@ class UserController extends Controller
     {
         //
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request, User $user)
     {
         $userDeletion = $user->delete();
-        return $this->jsonResponse((bool)$userDeletion, 'User deleted successfully');
+        return $this->jsonResponse((bool) $userDeletion, 'User deleted successfully');
     }
 
     public function generateDataTableData($repository)
@@ -86,17 +86,17 @@ class UserController extends Controller
         $sortDirection = request()->get('order')[0]['dir'] ?? 'asc';
         $searchValue = request()->get('search')['value'];
         $columns = array_map(fn($column) => $column['data'], request()->get('columns'));
-
+                               
         $count = $repository->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue, true);
         $data = $repository->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue);
 
         return $data = array(
-            "draw"            => intval(request()->input('draw')),
-            "recordsTotal"    => intval($count),
+            "draw" => intval(request()->input('draw')),
+            "recordsTotal" => intval($count),
             "recordsFiltered" => intval($count),
-            "data"            => $data
+            "data" => $data
         );
-    }
+    }       
 
     public function dataTable()
     {
@@ -152,4 +152,29 @@ class UserController extends Controller
             'message' => "Trial Extended Successfully till<br><strong>{$newTrialEnd->format('Y-m-d H:i:s')}</strong>",
         ]);
     }
+
+    public function getData(Request $request, UserRepository $userRepo)
+{
+    
+    $columns = ['id', 'school_id', 'user_id', 'name', 'email', 'status', 'actions'];
+
+    $start = $request->input('start', 0);
+    $length = $request->input('length', 10);
+    $sortColumnIndex = $request->input('order.0.column');
+    $sortColumn = $columns[$sortColumnIndex] ?? 'id';
+    $sortDirection = $request->input('order.0.dir', 'asc');
+    $searchValue = $request->input('search.value', '');
+    
+
+   
+    $data = $userRepo->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue, false);
+    $total = $userRepo->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue, true);
+
+    return response()->json([
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => $total,
+        'recordsFiltered' => $total,
+        'data' => $data,
+    ]);
+}
 }

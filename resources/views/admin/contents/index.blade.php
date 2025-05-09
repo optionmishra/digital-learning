@@ -18,7 +18,8 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Title</th>
-                                <th scope="col">Image</th>
+                                <th scope="col">Class</th>
+                                <th scope="col">Subject</th>
                                 <th scope="col">Tags</th>
                                 <th scope="col">URL</th>
                                 @if ($contentType->name == 'Video')
@@ -83,3 +84,4 @@
         }
     </script>
 @endsection
+<!-- kkkkkkkkkkkkkkkkkkkkkkkkk -->

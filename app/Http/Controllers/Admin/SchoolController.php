@@ -121,6 +121,7 @@ class SchoolController extends Controller
         return response()->json($data);
     }
 
+   //Kuldeep
     public function codesTable(Request $request, School $school, $role_id)
     {
         $codes = $school->codes()
@@ -128,17 +129,15 @@ class SchoolController extends Controller
             ->with('standards') // eager load standards
             ->get()
             ->map(function ($code) {
-                return $code->standards->map(function ($standard) use ($code) {
-                    return [
-                        'standard' => $standard->name,
-                        'code' => $code->code, // assuming 'code' is a column in your 'codes' table
-                    ];
-                });
-            })
-            ->flatten(1); // because map inside map returns nested arrays
+              return [
+                 'code' => $code->code,
+                  'standard' => $code->standards->pluck('name')->implode(', ')
+            ];
+         });
 
         return view('admin.schools.codes-table', compact('codes'));
     }
+
 
     public function storeCode(Request $request, $role_id)
     {

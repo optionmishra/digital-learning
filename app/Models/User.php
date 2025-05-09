@@ -143,4 +143,18 @@ class User extends Authenticatable
             // });
         })->get();
     }
+    
+
+public function schoolCode()
+{
+    return $this->hasOneThrough(
+        Code::class,         
+        UserProfile::class,  
+        'user_id',          
+        'school_id',        
+        'id',              
+        'school_id'    
+    );     
+}
+
 }

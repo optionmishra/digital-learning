@@ -25,4 +25,10 @@ class UserProfile extends Model
     {
         return $this->belongsTo(Standard::class);
     }
+
+    public function code()
+{
+    return $this->belongsTo(Code::class, 'school_id', 'school_id');
+}
+
 }

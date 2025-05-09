@@ -35,4 +35,9 @@ class Code extends Model
     {
         $this->standards()->sync($standards);
     }
+    public function userProfiles()
+{
+    return $this->hasMany(UserProfile::class, 'school_id', 'school_id');
+}
+
 }
