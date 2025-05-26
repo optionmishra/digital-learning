@@ -15,168 +15,196 @@ use App\Models\Standard;
 
 class SchoolController extends Controller
 {
-    public $school;
+  public $school;
 
-    public function __construct(SchoolRepository $schoolRepository)
-    {
-        $this->school = $schoolRepository;
+  public function __construct(SchoolRepository $schoolRepository)
+  {
+    $this->school = $schoolRepository;
+  }
+
+  /**
+   * Display a listing of the resource.
+   */
+  public function index()
+  {
+    $schools = School::all();
+    $standards = Standard::all();
+
+    // Get roles
+    $roles = Role::whereIn("name", ["teacher", "student"])
+      ->get()
+      ->keyBy("name");
+    return view(
+      "admin.schools.index",
+      compact("schools", "standards", "roles")
+    );
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   */
+  public function create()
+  {
+    //
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   */
+  public function store(StoreSchoolRequest $request)
+  {
+    try {
+      return DB::transaction(function () use ($request) {
+        $data = $request->validated();
+        $school = $this->school->store($data, $request->input("id"));
+
+        // // Get roles
+        // $roles = Role::whereIn('name', ['teacher', 'student'])->get()->keyBy('name');
+
+        // if (!$request->input('id') && $roles->has('teacher') && $roles->has('student')) {
+        //     // Prepare codes data
+        //     $codesData = [
+        //         [
+        //             'code' => substr(trim($school->name), 0, 5) . Str::random(5),
+        //             'role_id' => $roles['teacher']->id,
+        //         ],
+        //         [
+        //             'code' => substr(trim($school->name), 0, 5) . Str::random(5),
+        //             'role_id' => $roles['student']->id,
+        //         ]
+        //     ];
+
+        //     $school->codes()->createMany($codesData);
+        // }
+
+        $action = $request->input("id") ? "updated" : "created";
+        return $this->jsonResponse(true, "School {$action} successfully");
+      });
+    } catch (\Exception $e) {
+      // Log the error
+      Log::error("School creation failed: " . $e->getMessage());
+      return $this->jsonResponse(
+        false,
+        "Failed to process school data",
+        [],
+        500
+      );
     }
+  }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $schools = School::all();
-        $standards = Standard::all();
+  /**
+   * Display the specified resource.
+   */
+  public function show(string $id)
+  {
+    //
+  }
 
-        // Get roles
-        $roles = Role::whereIn('name', ['teacher', 'student'])->get()->keyBy('name');
-        return view("admin.schools.index", compact('schools', 'standards', 'roles'));
-    }
+  /**
+   * Show the form for editing the specified resource.
+   */
+  public function edit(string $id)
+  {
+    //
+  }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+  /**
+   * Update the specified resource in storage.
+   */
+  public function update(Request $request, string $id)
+  {
+    //
+  }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreSchoolRequest $request)
-    {
-        try {
-            return DB::transaction(function () use ($request) {
-                $data = $request->validated();
-                $school = $this->school->store($data, $request->input('id'));
+  /**
+   * Remove the specified resource from storage.
+   */
+  public function destroy(Request $request, School $school)
+  {
+    $schoolDeletion = $school->delete();
+    return $this->jsonResponse(
+      (bool) $schoolDeletion,
+      "School deleted successfully"
+    );
+  }
 
-                // // Get roles
-                // $roles = Role::whereIn('name', ['teacher', 'student'])->get()->keyBy('name');
+  public function dataTable()
+  {
+    $data = $this->generateDataTableData($this->school);
+    return response()->json($data);
+  }
 
-                // if (!$request->input('id') && $roles->has('teacher') && $roles->has('student')) {
-                //     // Prepare codes data
-                //     $codesData = [
-                //         [
-                //             'code' => substr(trim($school->name), 0, 5) . Str::random(5),
-                //             'role_id' => $roles['teacher']->id,
-                //         ],
-                //         [
-                //             'code' => substr(trim($school->name), 0, 5) . Str::random(5),
-                //             'role_id' => $roles['student']->id,
-                //         ]
-                //     ];
+  //Kuldeep
+  public function codesTable(Request $request, School $school, $role_id)
+  {
+    $codes = $school
+      ->codes()
+      ->where("role_id", $role_id)
+      ->with("standards") // eager load standards
+      ->get()
+      ->map(function ($code) {
+        return [
+          "code" => $code->code,
+          "standard" => $code->standards->pluck("name")->implode(", "),
+        ];
+      });
 
-                //     $school->codes()->createMany($codesData);
-                // }
+    return view("admin.schools.codes-table", compact("codes"));
+  }
 
-                $action = $request->input('id') ? 'updated' : 'created';
-                return $this->jsonResponse(true, "School {$action} successfully");
-            });
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('School creation failed: ' . $e->getMessage());
-            return $this->jsonResponse(false, 'Failed to process school data', [], 500);
+  public function storeCode(Request $request, $role_id)
+  {
+    $school = School::find($request->input("school"));
+    $standardIdArr = $request->input("standards");
+    $str = $school->name;
+    $schoolNamePart = "";
+
+    // Get first 2 non-space characters from the school name
+    $count = 0;
+    for ($i = 0; $i < strlen($str); $i++) {
+      if ($str[$i] !== " ") {
+        $schoolNamePart .= $str[$i];
+        $count++;
+        if ($count === 2) {
+          break;
         }
+      }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+    // Pad with 'X' if the school name is too short
+    $schoolNamePart = str_pad($schoolNamePart, 2, "X");
+
+    // Generate 3-digit random number
+    $randomDigits = str_pad(rand(0, 999), 3, "0", STR_PAD_LEFT);
+
+    // Final code
+    $finalCode = strtoupper($schoolNamePart) . $randomDigits;
+
+    try {
+      return DB::transaction(function () use (
+        $request,
+        $school,
+        $standardIdArr,
+        $role_id,
+        $finalCode
+      ) {
+        $roles = Role::whereIn("name", ["teacher", "student"])
+          ->get()
+          ->keyBy("name");
+
+        $codesData = [
+          "code" => $finalCode,
+          "role_id" => $role_id,
+        ];
+
+        $code = $school->codes()->create($codesData);
+        $code->assignStandards($standardIdArr);
+
+        return $this->jsonResponse(true, "Code created successfully");
+      });
+    } catch (\Exception $e) {
+      Log::error("Code creation failed: " . $e->getMessage());
+      return $this->jsonResponse(false, "Failed to process code data", [], 500);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request, School $school)
-    {
-        $schoolDeletion = $school->delete();
-        return $this->jsonResponse((bool)$schoolDeletion, 'School deleted successfully');
-    }
-
-    public function dataTable()
-    {
-        $data = $this->generateDataTableData($this->school);
-        return response()->json($data);
-    }
-
-   //Kuldeep
-    public function codesTable(Request $request, School $school, $role_id)
-    {
-        $codes = $school->codes()
-            ->where('role_id', $role_id)
-            ->with('standards') // eager load standards
-            ->get()
-            ->map(function ($code) {
-              return [
-                 'code' => $code->code,
-                  'standard' => $code->standards->pluck('name')->implode(', ')
-            ];
-         });
-
-        return view('admin.schools.codes-table', compact('codes'));
-    }
-
-
-    public function storeCode(Request $request, $role_id)
-    {
-        $school = School::find($request->input('school'));
-        $standardIdArr = $request->input('standards');
-        $str = $school->name;
-        $count = 0;
-        $schoolName = "";
-
-        for ($i = 0; $i < strlen($str); $i++) {
-            if ($str[$i] !== ' ') {
-                $schoolName .= $str[$i];
-                $count++;
-                if ($count === 5) {
-                    break;
-                }
-            }
-        }
-
-        try {
-            return DB::transaction(function () use ($request, $school, $schoolName, $standardIdArr, $role_id) {
-
-                // Get roles
-                $roles = Role::whereIn('name', ['teacher', 'student'])->get()->keyBy('name');
-
-                $codesData = [
-                    'code' => substr($schoolName, 0, 5) . Str::random(5),
-                    'role_id' => $role_id,
-                ];
-
-                $code = $school->codes()->create($codesData);
-                $code->assignStandards($standardIdArr);
-
-                return $this->jsonResponse(true, "Code created successfully");
-            });
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('Code creation failed: ' . $e->getMessage());
-            return $this->jsonResponse(false, 'Failed to process code data', [], 500);
-        }
-    }
+  }
 }
