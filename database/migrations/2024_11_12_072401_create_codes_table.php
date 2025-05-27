@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('codes', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
+            $table->string('code')->unique();
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->foreignId('school_id')->constrained()->onDelete('cascade');
             $table->timestamps();
