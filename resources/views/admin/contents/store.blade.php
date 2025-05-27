@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-lg-3 col-sm-12 mb-3">
                             <label class="form-label" for="book">Book</label>
-                            <select class="form-control" name="book_id" id="book">
+                            <select class="form-control" name="book_id" id="book" onchange="updateTopics()">
                                 @foreach ($subjects[0]->books as $book)
                                     <option value="{{ $book->id }}">{{ $book->name }}</option>
                                 @endforeach
