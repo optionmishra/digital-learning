@@ -17,10 +17,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function paginated($columns, $role = null, $start, $length, $sortColumn, $sortDirection, $searchValue, $countOnly = false)
     {
-        
+
         $query = $this->user->with(['profile', 'schoolCode'])->select('*');
 
-        
+
         if (!empty($role)) {
             $query->whereHas('roles', function ($q) use ($role) {
                 $q->where('name', $role);
@@ -31,34 +31,34 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             });
         }
 
-        
+
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('name', 'LIKE', "%$searchValue%")
-                  ->orWhere('email', 'LIKE', "%$searchValue%")
-                  ->orWhere('mobile', 'LIKE', "%$searchValue%")
-                  ->orWhereHas('profile', function ($q2) use ($searchValue) {
-                      $q2->where('school_id', 'LIKE', "%$searchValue%");
-                  })
-                  ->orWhereHas('school_id', function ($q3) use ($searchValue) {
-                      $q3->where('code_id', 'LIKE', "%$searchValue%");
-                  });
+                    ->orWhere('email', 'LIKE', "%$searchValue%")
+                    ->orWhere('mobile', 'LIKE', "%$searchValue%")
+                    ->orWhereHas('profile', function ($q2) use ($searchValue) {
+                        $q2->where('school_id', 'LIKE', "%$searchValue%");
+                    })
+                    ->orWhereHas('school_id', function ($q3) use ($searchValue) {
+                        $q3->where('code_id', 'LIKE', "%$searchValue%");
+                    });
             });
         }
 
-        
+
         if (!empty($sortColumn)) {
             $sortColumn = strtolower($sortColumn) === '#' ? 'id' : strtolower($sortColumn);
             $sortDirection = strtolower($sortDirection) === 'asc' && strtolower($sortColumn) === 'id' ? 'DESC' : 'ASC';
             $query->orderBy($sortColumn == 'serial' ? 'id' : $sortColumn, $sortDirection);
         }
 
-       
+
         if ($countOnly) {
             return $query->count();
         }
 
-        
+
         $query->skip($start)->take($length);
 
         $users = $query->get();
@@ -70,18 +70,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public static function collectionModifier($users, $start, $role, $columns)
     {
         return $users->map(function ($user, $key) use ($start, $role, $columns) {
-           
+
             $user->serial = $start + 1 + $key;
-
-            
             $user->school = $user->schoolName->name ?? 'N/A';
-            $user->code = optional($user->schoolCode)->code ?? 'N/A';
-            
-
-            
+            $user->code = $user->schoolCode->code ?? 'N/A';
             $user->mobile = $user->mobile ?? 'N/A';
 
-           
+
             $status = $user->profile->status ?? 'pending';
             switch ($status) {
                 case 'approved':
@@ -97,7 +92,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                     $user->status = '<span class="p-1 rounded bg-info">' . ucfirst($status) . '</span>';
             }
 
-            
+
             $user->actions = view('admin.users.actions', compact('user'))->render();
 
 
