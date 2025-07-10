@@ -14,7 +14,7 @@ class StandardController extends Controller
      */
     public function index()
     {
-        $standards = Standard::all();
+        $standards = Standard::where('status', true)->get();
         if (!$standards) {
             return $this->sendAPIResponse([], 'Standards not found.');
         }

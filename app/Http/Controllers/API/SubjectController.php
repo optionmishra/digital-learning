@@ -19,7 +19,7 @@ class SubjectController extends Controller
                 $query->whereIn('standards.id', explode(',', $request->standard_ids));
             })->get();
         } else {
-            $subjects = Subject::all();
+            $subjects = Subject::where('status', true)->get();
         }
 
         return $this->sendAPIResponse(SubjectsResource::collection($subjects), 'Subjects fetched successfully.');
