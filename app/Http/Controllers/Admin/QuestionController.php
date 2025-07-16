@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Book;
-use App\Models\Topic;
-use App\Models\Subject;
-use App\Models\Question;
-use App\Models\Assessment;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\QuestionRepository;
 use App\Http\Requests\StoreQuestionRequest;
+use App\Models\Assessment;
+use App\Models\Book;
+use App\Models\Question;
+use App\Models\Subject;
+use App\Models\Topic;
+use App\Repositories\QuestionRepository;
+use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
     public $question;
+
     public function __construct(QuestionRepository $question)
     {
         $this->question = $question;
@@ -29,6 +30,7 @@ class QuestionController extends Controller
         $books = Book::all();
         $topics = Topic::all();
         $assessments = Assessment::all();
+
         return view('admin.questions.index', compact('subjects', 'books', 'topics', 'assessments'));
     }
 
@@ -50,14 +52,14 @@ class QuestionController extends Controller
         foreach (range(1, 4) as $i) {
             $question->options()->create([
                 'option_text' => $data["option_$i"],
-                'is_correct' => $data['correct_option'] == $i
+                'is_correct' => $data['correct_option'] == $i,
             ]);
         }
 
         $assessment = Assessment::find($data['assessment_id']);
         $assessment->questions()->syncWithoutDetaching($question->id);
 
-        return $this->jsonResponse((bool)$question, 'Question ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $question, 'Question '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
 
     /**
@@ -90,11 +92,14 @@ class QuestionController extends Controller
     public function destroy(Request $request, Question $question)
     {
         $questionDeletion = $question->delete();
-        return $this->jsonResponse((bool)$questionDeletion, 'Question deleted successfully');
+
+        return $this->jsonResponse((bool) $questionDeletion, 'Question deleted successfully');
     }
+
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->question);
+
         return response()->json($data);
     }
 }

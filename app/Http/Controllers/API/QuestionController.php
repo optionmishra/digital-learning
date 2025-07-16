@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Topic;
-use App\Models\QuestionType;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\QuestionsResource;
-use App\Http\Resources\TPG\TopicResource;
 use App\Http\Resources\TPG\AutomaticQuestionTypeResource;
+use App\Http\Resources\TPG\TopicResource;
+use App\Models\QuestionType;
+use App\Models\Topic;
+use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
@@ -20,9 +19,9 @@ class QuestionController extends Controller
             $typeIds = explode(',', $request->type_ids);
             $quesSelected = explode(',', $request->ques_selected);
 
-            $data = array();
+            $data = [];
 
-            #0
+            // 0
             foreach ($typeIds as $key => $typeId) {
                 // Get the selected number of questions for this question type
                 $limit = isset($quesSelected[$key]) ? $quesSelected[$key] : 0;
@@ -42,7 +41,7 @@ class QuestionController extends Controller
                 }
             }
 
-            #1
+            // 1
             // foreach ($typeIds as $key => $typeId) {
             //     $question_types = QuestionType::with(['questions' => function ($query) use ($topicIds, $typeIds, $ques_selected, $key) {
             //         $query->whereIn('topic_id', $topicIds);
@@ -54,7 +53,7 @@ class QuestionController extends Controller
             //     array_push($data, AutomaticQuestionTypeResource::collection($question_types));
             // }
 
-            #2
+            // 2
             // foreach ($topicIds as $key => $topicId) {
             //     $topic = Topic::find($topicId);
             //     $question_types = QuestionType::with(['questions' => function ($query) use ($topicId, $typeIds, $ques_selected, $key) {
@@ -68,8 +67,7 @@ class QuestionController extends Controller
             //     array_push($data, $topic);
             // }
 
-
-            #3
+            // 3
             // $data = collect($typeIds)->map(function ($typeId, $key) use ($topicIds, $ques_selected) {
             //     $type = QuestionType::find($typeId);
             //     $type->load(['questions' => function ($query) use ($topicIds, $ques_selected, $key) {
@@ -87,7 +85,7 @@ class QuestionController extends Controller
         if ($request->has('topic_ids')) {
             $topicIds = explode(',', $request->topic_ids);
 
-            $data = array();
+            $data = [];
             foreach ($topicIds as $key => $topicId) {
                 $topic = Topic::find($topicId);
                 $question_types = QuestionType::with(['questions' => function ($query) use ($topicId) {

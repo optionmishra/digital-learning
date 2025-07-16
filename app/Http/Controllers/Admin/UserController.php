@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public $user;
+
     public function __construct(UserRepository $userRepository)
     {
         $this->user = $userRepository;
@@ -25,6 +26,7 @@ class UserController extends Controller
     {
         $role = Role::find($request->input('role'));
         session(['role' => $role->name]);
+
         return view('admin.users.index', compact('role'));
     }
 
@@ -74,7 +76,8 @@ class UserController extends Controller
     public function destroy(Request $request, User $user)
     {
         $userDeletion = $user->delete();
-        return $this->jsonResponse((bool)$userDeletion, 'User deleted successfully');
+
+        return $this->jsonResponse((bool) $userDeletion, 'User deleted successfully');
     }
 
     public function generateDataTableData($repository)
@@ -85,25 +88,25 @@ class UserController extends Controller
         $sortColumn = request()->get('order')[0]['name'] ?? 'id';
         $sortDirection = request()->get('order')[0]['dir'] ?? 'asc';
         $searchValue = request()->get('search')['value'];
-        $columns = array_map(fn($column) => $column['data'], request()->get('columns'));
+        $columns = array_map(fn ($column) => $column['data'], request()->get('columns'));
 
         $count = $repository->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue, true);
         $data = $repository->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue);
 
-        return $data = array(
-            "draw"            => intval(request()->input('draw')),
-            "recordsTotal"    => intval($count),
-            "recordsFiltered" => intval($count),
-            "data"            => $data
-        );
+        return $data = [
+            'draw' => intval(request()->input('draw')),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            'data' => $data,
+        ];
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->user);
+
         return response()->json($data);
     }
-
 
     public function resetPassword(Request $request, User $user)
     {
@@ -122,12 +125,14 @@ class UserController extends Controller
         ]);
         $user->assignBooks($request->books);
         $user->profile()->update(['status' => 'approved']);
+
         return response()->json(['message' => 'User Approved Successfully']);
     }
 
     public function rejectUser(Request $request, User $user)
     {
         $user->profile()->update(['status' => 'rejected']);
+
         return response()->json(['message' => 'User Rejected Successfully']);
     }
 

@@ -16,7 +16,7 @@ class BannerResource extends JsonResource
     {
         return [
             asset('banner/img/banner.png'),
-            asset('banner/img/banner2.png')
+            asset('banner/img/banner2.png'),
         ];
     }
 }

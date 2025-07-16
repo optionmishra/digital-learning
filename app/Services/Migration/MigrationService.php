@@ -9,95 +9,99 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrationService
 {
-  protected $mappingConfig;
-  protected $transformerFactory;
-  protected $sourceConnection;
-  protected $targetConnection;
-  protected $output;
+    protected $mappingConfig;
 
-  public function __construct(
-    MappingConfig $mappingConfig,
-    TransformerFactory $transformerFactory
-  ) {
-    $this->mappingConfig = $mappingConfig;
-    $this->transformerFactory = $transformerFactory;
-    $this->sourceConnection = config('database.ci_migration.source', 'codeigniter');
-    $this->targetConnection = config('database.ci_migration.target', 'mysql');
-  }
+    protected $transformerFactory;
 
-  public function setOutput(OutputInterface $output): void
-  {
-    $this->output = $output;
-  }
+    protected $sourceConnection;
 
-  public function migrate(array $options): bool
-  {
-    $tableMappings = $this->mappingConfig->getTableMappings();
-    $fieldMappings = $this->mappingConfig->getFieldMappings();
+    protected $targetConnection;
 
-    $chunkSize = $options['chunkSize'];
-    $singleTable = $options['singleTable'];
-    $startOffset = $options['startOffset'];
+    protected $output;
 
-    // Filter tables if a specific one is requested
-    if ($singleTable) {
-      if (!isset($tableMappings[$singleTable])) {
-        throw new \InvalidArgumentException("Table {$singleTable} not found in mappings");
-      }
-      $tablesToProcess = [$singleTable => $tableMappings[$singleTable]];
-    } else {
-      $tablesToProcess = $tableMappings;
+    public function __construct(
+        MappingConfig $mappingConfig,
+        TransformerFactory $transformerFactory
+    ) {
+        $this->mappingConfig = $mappingConfig;
+        $this->transformerFactory = $transformerFactory;
+        $this->sourceConnection = config('database.ci_migration.source', 'codeigniter');
+        $this->targetConnection = config('database.ci_migration.target', 'mysql');
     }
 
-    foreach ($tablesToProcess as $sourceTable => $targetTables) {
-      // Convert single target tables to array for consistent processing
-      if (!is_array($targetTables)) {
-        $targetTables = [$targetTables];
-      }
-
-      $this->info("Migrating table {$sourceTable} to " . implode(', ', $targetTables));
-
-      // Count total records
-      $totalRecords = DB::connection($this->sourceConnection)
-        ->table($sourceTable)
-        ->count();
-
-      $this->info("Found {$totalRecords} records to migrate");
-
-      // Process in chunks to avoid memory issues
-      $counter = 0;
-      DB::connection($this->sourceConnection)
-        ->table($sourceTable)
-        ->orderBy('id')
-        ->when($startOffset > 0, function ($query) use ($startOffset) {
-          return $query->where('id', '>=', $startOffset);
-        })
-        ->chunk($chunkSize, function ($records) use ($sourceTable, $targetTables, $fieldMappings, &$counter, $totalRecords, $options) {
-          $processor = new ChunkProcessor(
-            $this->transformerFactory,
-            $this->sourceConnection,
-            $this->targetConnection,
-            $options['debug']
-          );
-
-          $processor->process($records, $sourceTable, $targetTables, $fieldMappings);
-
-          $counter += count($records);
-          $this->info("Migrated {$counter} of {$totalRecords} records");
-        });
-
-      $this->info("Completed migration for table {$sourceTable}: {$counter} records processed");
+    public function setOutput(OutputInterface $output): void
+    {
+        $this->output = $output;
     }
 
-    return true;
-  }
+    public function migrate(array $options): bool
+    {
+        $tableMappings = $this->mappingConfig->getTableMappings();
+        $fieldMappings = $this->mappingConfig->getFieldMappings();
 
-  protected function info(string $message): void
-  {
-    if ($this->output) {
-      $this->output->writeln($message);
+        $chunkSize = $options['chunkSize'];
+        $singleTable = $options['singleTable'];
+        $startOffset = $options['startOffset'];
+
+        // Filter tables if a specific one is requested
+        if ($singleTable) {
+            if (! isset($tableMappings[$singleTable])) {
+                throw new \InvalidArgumentException("Table {$singleTable} not found in mappings");
+            }
+            $tablesToProcess = [$singleTable => $tableMappings[$singleTable]];
+        } else {
+            $tablesToProcess = $tableMappings;
+        }
+
+        foreach ($tablesToProcess as $sourceTable => $targetTables) {
+            // Convert single target tables to array for consistent processing
+            if (! is_array($targetTables)) {
+                $targetTables = [$targetTables];
+            }
+
+            $this->info("Migrating table {$sourceTable} to ".implode(', ', $targetTables));
+
+            // Count total records
+            $totalRecords = DB::connection($this->sourceConnection)
+                ->table($sourceTable)
+                ->count();
+
+            $this->info("Found {$totalRecords} records to migrate");
+
+            // Process in chunks to avoid memory issues
+            $counter = 0;
+            DB::connection($this->sourceConnection)
+                ->table($sourceTable)
+                ->orderBy('id')
+                ->when($startOffset > 0, function ($query) use ($startOffset) {
+                    return $query->where('id', '>=', $startOffset);
+                })
+                ->chunk($chunkSize, function ($records) use ($sourceTable, $targetTables, $fieldMappings, &$counter, $totalRecords, $options) {
+                    $processor = new ChunkProcessor(
+                        $this->transformerFactory,
+                        $this->sourceConnection,
+                        $this->targetConnection,
+                        $options['debug']
+                    );
+
+                    $processor->process($records, $sourceTable, $targetTables, $fieldMappings);
+
+                    $counter += count($records);
+                    $this->info("Migrated {$counter} of {$totalRecords} records");
+                });
+
+            $this->info("Completed migration for table {$sourceTable}: {$counter} records processed");
+        }
+
+        return true;
     }
 
-    Log::info("[MigrationService] " . $message);
-  }
+    protected function info(string $message): void
+    {
+        if ($this->output) {
+            $this->output->writeln($message);
+        }
+
+        Log::info('[MigrationService] '.$message);
+    }
 }

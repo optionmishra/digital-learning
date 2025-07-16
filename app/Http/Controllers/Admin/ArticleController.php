@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Article;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\ArticleRepository;
 use App\Http\Requests\StoreArticleRequest;
+use App\Models\Article;
+use App\Repositories\ArticleRepository;
+use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
@@ -16,6 +16,7 @@ class ArticleController extends Controller
     {
         $this->article = $articleRepository;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -47,8 +48,9 @@ class ArticleController extends Controller
             $article->save();
         }
 
-        return $this->jsonResponse((bool)$article, 'Article ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $article, 'Article '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
+
     /**
      * Display the specified resource.
      */
@@ -79,12 +81,14 @@ class ArticleController extends Controller
     public function destroy(Request $request, Article $article)
     {
         $articleDeletion = $article->delete();
-        return $this->jsonResponse((bool)$articleDeletion, 'Article deleted successfully');
+
+        return $this->jsonResponse((bool) $articleDeletion, 'Article deleted successfully');
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->article);
+
         return response()->json($data);
     }
 }

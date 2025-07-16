@@ -1,20 +1,19 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\ArticleController;
+use App\Http\Controllers\API\AssessmentController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookController;
-use App\Http\Controllers\API\TopicController;
 use App\Http\Controllers\API\ConfigController;
-use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\ContentController;
-use App\Http\Controllers\API\SubjectController;
-use App\Http\Controllers\API\QuestionController;
-use App\Http\Controllers\API\StandardController;
-use App\Http\Controllers\API\AssessmentController;
 use App\Http\Controllers\API\EvaluationController;
 use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\QuestionController;
+use App\Http\Controllers\API\StandardController;
+use App\Http\Controllers\API\SubjectController;
+use App\Http\Controllers\API\TopicController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');

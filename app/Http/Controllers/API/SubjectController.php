@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Subject;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SubjectsResource;
+use App\Models\Subject;
+use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {

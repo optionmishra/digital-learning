@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Book;
-use App\Models\Topic;
-use App\Models\Content;
-use App\Models\Subject;
-use App\Models\Standard;
-use App\Models\ContentType;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\ContentRepository;
 use App\Http\Requests\StoreContentRequest;
+use App\Models\Book;
+use App\Models\Content;
+use App\Models\ContentType;
+use App\Models\Standard;
+use App\Models\Subject;
+use App\Models\Topic;
+use App\Repositories\ContentRepository;
+use Illuminate\Http\Request;
 
 class ContentController extends Controller
 {
@@ -21,6 +21,7 @@ class ContentController extends Controller
     {
         $this->content = $contentRepository;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -50,7 +51,7 @@ class ContentController extends Controller
     public function store(StoreContentRequest $request)
     {
         $data = $request->validated();
-        $data['src'] = $data['src_type'] === 'file' ?  '' : $data['url'];
+        $data['src'] = $data['src_type'] === 'file' ? '' : $data['url'];
         $content = $this->content->store($data, $request->input('id'));
 
         if ($request->hasFile('img')) {
@@ -64,8 +65,9 @@ class ContentController extends Controller
             $content->save();
         }
 
-        return $this->jsonResponse((bool)$content, 'Content ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $content, 'Content '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
+
     /**
      * Display the specified resource.
      */
@@ -96,7 +98,8 @@ class ContentController extends Controller
     public function destroy(Request $request, Content $content)
     {
         $contentDeletion = $content->delete();
-        return $this->jsonResponse((bool)$contentDeletion, 'Content deleted successfully');
+
+        return $this->jsonResponse((bool) $contentDeletion, 'Content deleted successfully');
     }
 
     public function generateDataTableData($repository)
@@ -107,22 +110,23 @@ class ContentController extends Controller
         $sortColumn = request()->get('order')[0]['name'] ?? 'id';
         $sortDirection = request()->get('order')[0]['dir'] ?? 'asc';
         $searchValue = request()->get('search')['value'];
-        $columns = array_map(fn($column) => $column['data'], request()->get('columns'));
+        $columns = array_map(fn ($column) => $column['data'], request()->get('columns'));
 
         $count = $repository->paginated($columns, $type, $start, $length, $sortColumn, $sortDirection, $searchValue, true);
         $data = $repository->paginated($columns, $type, $start, $length, $sortColumn, $sortDirection, $searchValue);
 
-        return $data = array(
-            "draw"            => intval(request()->input('draw')),
-            "recordsTotal"    => intval($count),
-            "recordsFiltered" => intval($count),
-            "data"            => $data
-        );
+        return $data = [
+            'draw' => intval(request()->input('draw')),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            'data' => $data,
+        ];
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->content);
+
         return response()->json($data);
     }
 }

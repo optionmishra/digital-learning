@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\AuthorRepositoryInterface;
 use App\Models\Author;
+use App\Repositories\Contracts\AuthorRepositoryInterface;
 
 class AuthorRepository extends BaseRepository implements AuthorRepositoryInterface
 {
-
     public $author;
 
     public function __construct(Author $author)
@@ -20,7 +19,7 @@ class AuthorRepository extends BaseRepository implements AuthorRepositoryInterfa
     {
         $query = $this->author->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('name', 'LIKE', "%$searchValue%");
                 // ->orWhere('content', 'LIKE', "%$searchValue%");
@@ -30,9 +29,9 @@ class AuthorRepository extends BaseRepository implements AuthorRepositoryInterfa
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -54,6 +53,7 @@ class AuthorRepository extends BaseRepository implements AuthorRepositoryInterfa
         $query->skip($start)->take($length);
         $authors = $query->get();
         $authors = $this->collectionModifier($columns, $authors, $start);
+
         return $authors;
     }
 
@@ -63,6 +63,7 @@ class AuthorRepository extends BaseRepository implements AuthorRepositoryInterfa
             $author->serial = $start + 1 + $key;
             $author->actions = view('admin.authors.actions', compact('author'))->render();
             $author->setVisible($columns);
+
             return $author;
         });
     }

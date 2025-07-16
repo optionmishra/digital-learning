@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Author;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\AuthorRepository;
 use App\Http\Requests\StoreAuthorRequest;
+use App\Models\Author;
+use App\Repositories\AuthorRepository;
+use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
@@ -16,6 +16,7 @@ class AuthorController extends Controller
     {
         $this->author = $authorRepository;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -40,8 +41,9 @@ class AuthorController extends Controller
         $data = $request->validated();
         $author = $this->author->store($data, $request->input('id'));
 
-        return $this->jsonResponse((bool)$author, 'Author ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $author, 'Author '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
+
     /**
      * Display the specified resource.
      */
@@ -72,12 +74,14 @@ class AuthorController extends Controller
     public function destroy(Request $request, Author $author)
     {
         $authorDeletion = $author->delete();
-        return $this->jsonResponse((bool)$authorDeletion, 'Author deleted successfully');
+
+        return $this->jsonResponse((bool) $authorDeletion, 'Author deleted successfully');
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->author);
+
         return response()->json($data);
     }
 }

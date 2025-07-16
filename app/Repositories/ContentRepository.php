@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\ContentRepositoryInterface;
 use App\Models\Content;
+use App\Repositories\Contracts\ContentRepositoryInterface;
 
 class ContentRepository extends BaseRepository implements ContentRepositoryInterface
 {
-
     public $content;
 
     public function __construct(Content $content)
@@ -21,7 +20,7 @@ class ContentRepository extends BaseRepository implements ContentRepositoryInter
         $query = $this->content->select('*');
         $query->where('content_type_id', 'LIKE', $type);
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('title', 'LIKE', "%$searchValue%");
                 // ->orWhere('content', 'LIKE', "%$searchValue%");
@@ -31,9 +30,9 @@ class ContentRepository extends BaseRepository implements ContentRepositoryInter
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -55,6 +54,7 @@ class ContentRepository extends BaseRepository implements ContentRepositoryInter
         $query->skip($start)->take($length);
         $contents = $query->get();
         $contents = $this->collectionModifier($columns, $contents, $start);
+
         return $contents;
     }
 
@@ -66,6 +66,7 @@ class ContentRepository extends BaseRepository implements ContentRepositoryInter
             $content->url = view('admin.contents.url', compact('content'))->render();
             $content->actions = view('admin.contents.actions', compact('content'))->render();
             $content->setVisible($columns);
+
             return $content;
         });
     }

@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\ContentTypeRepositoryInterface;
 use App\Models\ContentType;
+use App\Repositories\Contracts\ContentTypeRepositoryInterface;
 
 class ContentTypeRepository extends BaseRepository implements ContentTypeRepositoryInterface
 {
-
     public $contentType;
 
     public function __construct(ContentType $contentType)
@@ -20,7 +19,7 @@ class ContentTypeRepository extends BaseRepository implements ContentTypeReposit
     {
         $query = $this->contentType->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('name', 'LIKE', "%$searchValue%");
                 // ->orWhere('content', 'LIKE', "%$searchValue%");
@@ -30,9 +29,9 @@ class ContentTypeRepository extends BaseRepository implements ContentTypeReposit
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -54,6 +53,7 @@ class ContentTypeRepository extends BaseRepository implements ContentTypeReposit
         $query->skip($start)->take($length);
         $contentTypes = $query->get();
         $contentTypes = $this->collectionModifier($columns, $contentTypes, $start);
+
         return $contentTypes;
     }
 
@@ -64,6 +64,7 @@ class ContentTypeRepository extends BaseRepository implements ContentTypeReposit
             // if ($contentType->media->first()) $contentType->media_file = view('admin.content_types.media', compact('contentType'))->render();
             $contentType->actions = view('admin.content_types.actions', compact('contentType'))->render();
             $contentType->setVisible($columns);
+
             return $contentType;
         });
     }

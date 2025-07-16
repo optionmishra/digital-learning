@@ -24,20 +24,20 @@ class StoreContentRequest extends FormRequest
     public function rules()
     {
         return [
-            "content_type_id" => "required",
-            "standard_id" => "required",
-            "subject_id" => "required",
-            "book_id" => "required",
-            "topic_id" => "",
-            "title" => "required",
-            "tags" => "required",
-            "img" => "file|mimes:jpeg,png,jpg",
-            "about" => "required",
-            "src_type" => "required",
-            "file" => "file",
-            "url" => "url|nullable",
-            "creator" => "",
-            "price" => "",
+            'content_type_id' => 'required',
+            'standard_id' => 'required',
+            'subject_id' => 'required',
+            'book_id' => 'required',
+            'topic_id' => '',
+            'title' => 'required',
+            'tags' => 'required',
+            'img' => 'file|mimes:jpeg,png,jpg',
+            'about' => 'required',
+            'src_type' => 'required',
+            'file' => 'file',
+            'url' => 'url|nullable',
+            'creator' => '',
+            'price' => '',
         ];
     }
 }

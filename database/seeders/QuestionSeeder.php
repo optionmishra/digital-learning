@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Subject;
-use App\Models\Question;
-use App\Models\Standard;
 use App\Models\Assessment;
+use App\Models\Question;
 use App\Models\QuestionType;
+use App\Models\Standard;
 use App\Models\StandardSubject;
+use App\Models\Subject;
 use Illuminate\Support\Facades\DB;
 
 class QuestionSeeder extends BaseSeeder
@@ -41,19 +41,19 @@ class QuestionSeeder extends BaseSeeder
 
         $question1->options()->firstOrCreate([
             'option_text' => 'The chef cooked a delicious meal.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question1->options()->firstOrCreate([
             'option_text' => 'The meal was cooked by the chef.',
-            'is_correct' => true
+            'is_correct' => true,
         ]);
         $question1->options()->firstOrCreate([
             'option_text' => 'The chef will cook the meal.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question1->options()->firstOrCreate([
             'option_text' => 'The chef is cooking the meal.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
 
         $question2 = Question::firstOrCreate(
@@ -68,19 +68,19 @@ class QuestionSeeder extends BaseSeeder
 
         $question2->options()->firstOrCreate([
             'option_text' => 'The project will be completed by Sarah.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question2->options()->firstOrCreate([
             'option_text' => 'Sarah will complete the project.',
-            'is_correct' => true
+            'is_correct' => true,
         ]);
         $question2->options()->firstOrCreate([
             'option_text' => 'The project has been completed by Sarah.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question2->options()->firstOrCreate([
             'option_text' => 'The project was completed by Sarah.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
 
         $question3 = Question::firstOrCreate(
@@ -95,19 +95,19 @@ class QuestionSeeder extends BaseSeeder
 
         $question3->options()->firstOrCreate([
             'option_text' => 'The lesson is explained by the teacher.',
-            'is_correct' => true
+            'is_correct' => true,
         ]);
         $question3->options()->firstOrCreate([
             'option_text' => 'The lesson was explained by the teacher.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question3->options()->firstOrCreate([
             'option_text' => 'The teacher is explaining the lesson.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question3->options()->firstOrCreate([
             'option_text' => 'The teacher explained the lesson.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
 
         $question4 = Question::firstOrCreate(
@@ -122,19 +122,19 @@ class QuestionSeeder extends BaseSeeder
 
         $question4->options()->firstOrCreate([
             'option_text' => 'The report was reviewed by the manager.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question4->options()->firstOrCreate([
             'option_text' => 'The report has been reviewed by the manager.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question4->options()->firstOrCreate([
             'option_text' => 'The report is being reviewed by the manager.',
-            'is_correct' => true
+            'is_correct' => true,
         ]);
         $question4->options()->firstOrCreate([
             'option_text' => 'The report will be reviewed by the manager.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
 
         $question5 = Question::firstOrCreate(
@@ -149,19 +149,19 @@ class QuestionSeeder extends BaseSeeder
 
         $question5->options()->firstOrCreate([
             'option_text' => 'The book was read by her in one day.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question5->options()->firstOrCreate([
             'option_text' => 'The story has been told by the author.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
         $question5->options()->firstOrCreate([
             'option_text' => 'She read the book in one day.',
-            'is_correct' => true
+            'is_correct' => true,
         ]);
         $question5->options()->firstOrCreate([
             'option_text' => 'The poem was written by him.',
-            'is_correct' => false
+            'is_correct' => false,
         ]);
 
         $assessment = Assessment::find(1);
@@ -189,7 +189,7 @@ class QuestionSeeder extends BaseSeeder
                 'standard_id' => 1,
                 'subject_id' => $scienceSubject->id,
                 'book_id' => $scienceBook->id,
-                'duration' => "00:10:00"
+                'duration' => '00:10:00',
             ]
         );
 

@@ -12,13 +12,14 @@ abstract class Controller
             'error' => true,
             'message' => 'Restricted',
         ];
+
         return response()->json(compact('data'), 403);
     }
 
     /**
      * Generate data for a DataTable based on the provided repository.
      *
-     * @param mixed $repository The repository used to retrieve the data.
+     * @param  mixed  $repository  The repository used to retrieve the data.
      * @return array The generated data for the DataTable.
      */
     public function generateDataTableData($repository)
@@ -28,53 +29,54 @@ abstract class Controller
         $sortColumn = request()->get('order')[0]['name'] ?? 'id';
         $sortDirection = request()->get('order')[0]['dir'] ?? 'asc';
         $searchValue = request()->get('search')['value'];
-        $columns = array_map(fn($column) => $column['data'], request()->get('columns'));
+        $columns = array_map(fn ($column) => $column['data'], request()->get('columns'));
 
         $count = $repository->paginated($columns, $start, $length, $sortColumn, $sortDirection, $searchValue, true);
         $data = $repository->paginated($columns, $start, $length, $sortColumn, $sortDirection, $searchValue);
 
-        return $data = array(
-            "draw"            => intval(request()->input('draw')),
-            "recordsTotal"    => intval($count),
-            "recordsFiltered" => intval($count),
-            "data"            => $data
-        );
+        return $data = [
+            'draw' => intval(request()->input('draw')),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            'data' => $data,
+        ];
     }
 
     /**
      * Generates a JSON response with a boolean error flag and a message.
      *
-     * @param bool $action The action status.
-     * @param string $message The response message.
+     * @param  bool  $action  The action status.
+     * @param  string  $message  The response message.
      * @return \Illuminate\Http\JsonResponse The JSON response.
      */
     public function jsonResponse($action, $message)
     {
         return response()->json([
-            'error' => !$action,
-            'message' => !$action ? 'Error processing request' : $message,
+            'error' => ! $action,
+            'message' => ! $action ? 'Error processing request' : $message,
         ], $action ? 200 : 500);
     }
 
     /**
      * Uploads a file to the specified directory and returns the generated filename and file type.
      *
-     * @param \Illuminate\Http\UploadedFile $file The file to be uploaded.
-     * @param string $directory The directory where the file will be stored.
+     * @param  \Illuminate\Http\UploadedFile  $file  The file to be uploaded.
+     * @param  string  $directory  The directory where the file will be stored.
      * @return array The generated filename and file type.
      */
     protected function uploadFile($file, $directory)
     {
-        $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
+        $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
         $filetype = $this->getFiletype($file);
         $file->storeAs($directory, $filename, 'public');
+
         return ['name' => $filename, 'type' => $filetype];
     }
 
     /**
      * Returns the file type based on the file extension.
      *
-     * @param \Illuminate\Http\UploadedFile $file The file to determine the file type for.
+     * @param  \Illuminate\Http\UploadedFile  $file  The file to determine the file type for.
      * @return string The file type (img or vid).
      */
     protected function getFiletype($file)
@@ -97,7 +99,6 @@ abstract class Controller
         return 'other';
     }
 
-
     /**
      * success response method.
      *
@@ -107,7 +108,7 @@ abstract class Controller
     {
         $response = [
             'success' => true,
-            'data'    => $result,
+            'data' => $result,
             'message' => $message,
         ];
 
@@ -126,7 +127,7 @@ abstract class Controller
             'message' => $error,
         ];
 
-        if (!empty($errorMessages)) {
+        if (! empty($errorMessages)) {
             $response['data'] = $errorMessages;
         }
 

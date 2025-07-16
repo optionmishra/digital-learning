@@ -17,11 +17,11 @@ class EbookResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'img' => $this->img_type === 'file' ? asset('contents/img/' . $this->img) : $this->img,
-            'src' => $this->src_type === 'file' ? asset('contents/file/' . $this->src) : $this->src,
+            'img' => $this->img_type === 'file' ? asset('contents/img/'.$this->img) : $this->img,
+            'src' => $this->src_type === 'file' ? asset('contents/file/'.$this->src) : $this->src,
             'price' => $this->price,
             'tags' => explode(',', $this->tags),
-            'about' => $this->about
+            'about' => $this->about,
         ];
     }
 }

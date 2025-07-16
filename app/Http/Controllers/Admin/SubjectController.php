@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Subject;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\SubjectRepository;
 use App\Http\Requests\StoreSubjectRequest;
+use App\Models\Subject;
+use App\Repositories\SubjectRepository;
+use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
@@ -16,6 +16,7 @@ class SubjectController extends Controller
     {
         $this->subject = $subjectRepository;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -40,8 +41,9 @@ class SubjectController extends Controller
         $data = $request->validated();
         $subject = $this->subject->store($data, $request->input('id'));
 
-        return $this->jsonResponse((bool)$subject, 'Subject ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $subject, 'Subject '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
+
     /**
      * Display the specified resource.
      */
@@ -72,12 +74,14 @@ class SubjectController extends Controller
     public function destroy(Request $request, Subject $subject)
     {
         $subjectDeletion = $subject->delete();
-        return $this->jsonResponse((bool)$subjectDeletion, 'Subject deleted successfully');
+
+        return $this->jsonResponse((bool) $subjectDeletion, 'Subject deleted successfully');
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->subject);
+
         return response()->json($data);
     }
 }

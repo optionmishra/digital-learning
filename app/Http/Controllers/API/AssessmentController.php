@@ -2,21 +2,18 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AttemptAssessmentRequest;
+use App\Http\Resources\AssessmentsResource;
+use App\Http\Resources\QuestionsResource;
+use App\Http\Resources\ResultResource;
+use App\Http\Resources\SubjectsResource;
+use App\Models\Assessment;
+use App\Models\Attempt;
 use App\Models\Option;
 use App\Models\Subject;
-use App\Models\Question;
-use App\Models\Assessment;
 use App\Models\Submission;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\SubjectsResource;
-use App\Http\Resources\QuestionsResource;
-use App\Http\Resources\AssessmentsResource;
-use App\Http\Requests\AttemptAssessmentRequest;
-use App\Http\Resources\ResultResource;
-use App\Models\Attempt;
 
 class AssessmentController extends Controller
 {
@@ -31,7 +28,7 @@ class AssessmentController extends Controller
         return $this->sendAPIResponse([
             'newSeries' => AssessmentsResource::collection($mcqAssessments),
             'attemptedSeries' => AssessmentsResource::collection($attemptedMcqAssessments),
-            'subjects' => SubjectsResource::collection($subjects)
+            'subjects' => SubjectsResource::collection($subjects),
         ], 'Assessments fetched successfully.');
     }
 
@@ -41,6 +38,7 @@ class AssessmentController extends Controller
         if ($mcqAssessment->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
+
         return $this->sendAPIResponse(AssessmentsResource::collection($mcqAssessment), 'Assessments fetched successfully.');
     }
 
@@ -53,13 +51,13 @@ class AssessmentController extends Controller
         ], 'Assessments fetched successfully.');
     }
 
-
     public function getOlympiadAssessmentBySubjectId($id)
     {
         $olympiadAssessment = Assessment::where(['subject_id' => $id, 'type' => 'olympiad', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
         if ($olympiadAssessment->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
+
         return $this->sendAPIResponse(AssessmentsResource::collection($olympiadAssessment), 'Assessments fetched successfully.');
     }
 
@@ -67,7 +65,7 @@ class AssessmentController extends Controller
     {
         $assessment = Assessment::where('id', $id)->first();
 
-        if (!$assessment) {
+        if (! $assessment) {
             return $this->sendAPIError('Assessment not found.');
         }
 
@@ -76,6 +74,7 @@ class AssessmentController extends Controller
         if ($Questions->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
+
         return $this->sendAPIResponse(QuestionsResource::collection($Questions), 'Questions fetched successfully.');
     }
 
@@ -84,7 +83,7 @@ class AssessmentController extends Controller
         $assessmentId = $attemptAssessmentRequest->assessment_id;
         $assessment = Assessment::find($assessmentId);
 
-        if (!$assessment) {
+        if (! $assessment) {
             return $this->sendAPIError('Assessment not found.');
         }
 
@@ -130,7 +129,7 @@ class AssessmentController extends Controller
                 'total_questions' => $totalQuestions,
                 'correct_answers' => $correctAnswers,
                 'incorrect_answers' => $incorrectAnswers,
-                'score' => ($correctAnswers / $totalQuestions) * 100
+                'score' => ($correctAnswers / $totalQuestions) * 100,
             ]);
         } else {
             // Handle mismatch in the count of questions and answers

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Attempt;
-use App\Models\Assessment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\AssessmentsResource;
 use App\Http\Resources\ReportResource;
 use App\Http\Resources\SolutionsResource;
+use App\Models\Assessment;
+use App\Models\Attempt;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EvaluationController extends Controller
 {
@@ -42,12 +42,12 @@ class EvaluationController extends Controller
             [
                 'mcq' => [
                     'overallScore' => $mcqAttemptCount > 0 ? $mcqScoreSum / $mcqAttemptCount : 0,
-                    'assessments' => AssessmentsResource::collection($attemptedMcqAssessments)
+                    'assessments' => AssessmentsResource::collection($attemptedMcqAssessments),
                 ],
                 'olympiad' => [
                     'overallScore' => $olympiadAttemptCount > 0 ? $olympiadScoreSum / $olympiadAttemptCount : 0,
-                    'assessments' => AssessmentsResource::collection($attemptedOlympiadAssessments)
-                ]
+                    'assessments' => AssessmentsResource::collection($attemptedOlympiadAssessments),
+                ],
             ],
             'Scores fetched successfully.'
         );
@@ -57,7 +57,7 @@ class EvaluationController extends Controller
     {
         // Get the assessments attempted by the user in the specific subject
         $attemptDetails = Assessment::where('subject_id', $subject_id)
-            ->when($request->type, fn($query, $type) => $query->where('type', $type))
+            ->when($request->type, fn ($query, $type) => $query->where('type', $type))
             ->whereHas('attempts', function ($query) {
                 $query->where('user_id', Auth::user()->id);
             })
@@ -71,7 +71,7 @@ class EvaluationController extends Controller
                 // Get the latest attempt for this assessment
                 $latestAttempt = $assessment->attempts->first();
 
-                if (!$latestAttempt) {
+                if (! $latestAttempt) {
                     return null;
                 }
 
@@ -86,7 +86,7 @@ class EvaluationController extends Controller
                         'attempted_questions' => $result->correct_answers + $result->incorrect_answers,
                         'correct_answers' => $result->correct_answers,
                         'incorrect_answers' => $result->incorrect_answers,
-                        'score' => number_format($result->score, 2) . '%',
+                        'score' => number_format($result->score, 2).'%',
                     ],
                     'time_taken' => $latestAttempt->time_taken,
                     'total_duration' => $assessment->duration,
@@ -108,7 +108,7 @@ class EvaluationController extends Controller
         return $this->sendAPIResponse(
             [
                 'mcqAssessments' => AssessmentsResource::collection($mcqAssessments),
-                'olympiadAssessments' => AssessmentsResource::collection($olympiadAssessments)
+                'olympiadAssessments' => AssessmentsResource::collection($olympiadAssessments),
             ],
             'Assessments fetched successfully.'
         );
@@ -122,6 +122,7 @@ class EvaluationController extends Controller
 
             return $this->sendAPIResponse(ReportResource::make($report), 'Report fetched successfully.');
         }
+
         return $this->sendAPIError('Attempt not found.');
     }
 
@@ -134,6 +135,7 @@ class EvaluationController extends Controller
             if ($attempt) {
                 return $this->sendAPIResponse(SolutionsResource::make($assessment), 'Solutions fetched successfully.');
             }
+
             return $this->sendAPIError('Attempt not found.');
         } else {
             return $this->sendAPIResponse(SolutionsResource::make($assessment), 'Solutions fetched successfully.');

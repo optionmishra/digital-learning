@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Book extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     protected static function boot()
@@ -17,7 +18,7 @@ class Book extends Model
 
         static::deleting(function (self $book) {
             $mediaDirectory = 'books/img/';
-            Storage::disk('public')->delete($mediaDirectory . $book->img);
+            Storage::disk('public')->delete($mediaDirectory.$book->img);
         });
     }
 

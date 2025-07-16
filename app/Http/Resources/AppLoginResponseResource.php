@@ -2,13 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Subject;
 use App\Models\ContentType;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\BannerResource;
-use App\Http\Resources\VideosResource;
-use App\Http\Resources\SubjectsResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AppLoginResponseResource extends JsonResource

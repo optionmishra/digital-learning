@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Book;
-use App\Models\Board;
-use App\Models\Author;
-use App\Models\Subject;
-use App\Models\Standard;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\BookRepository;
 use App\Http\Requests\StoreBookRequest;
+use App\Models\Author;
+use App\Models\Board;
+use App\Models\Book;
+use App\Models\Standard;
+use App\Models\Subject;
+use App\Repositories\BookRepository;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
@@ -20,6 +20,7 @@ class BookController extends Controller
     {
         $this->book = $bookRepository;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -29,6 +30,7 @@ class BookController extends Controller
         $standards = Standard::all();
         $subjects = Subject::all();
         $authors = Author::all();
+
         return view('admin.books.index', compact('boards', 'standards', 'subjects', 'authors'));
     }
 
@@ -54,8 +56,9 @@ class BookController extends Controller
             $book->save();
         }
 
-        return $this->jsonResponse((bool)$book, 'Book ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $book, 'Book '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
+
     /**
      * Display the specified resource.
      */
@@ -86,12 +89,14 @@ class BookController extends Controller
     public function destroy(Request $request, Book $book)
     {
         $bookDeletion = $book->delete();
-        return $this->jsonResponse((bool)$bookDeletion, 'Book deleted successfully');
+
+        return $this->jsonResponse((bool) $bookDeletion, 'Book deleted successfully');
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->book);
+
         return response()->json($data);
     }
 }

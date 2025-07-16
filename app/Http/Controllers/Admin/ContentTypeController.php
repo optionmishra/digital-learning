@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\ContentType;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\ContentTypeRepository;
 use App\Http\Requests\StoreContentTypeRequest;
+use App\Models\ContentType;
+use App\Repositories\ContentTypeRepository;
+use Illuminate\Http\Request;
 
 class ContentTypeController extends Controller
 {
@@ -16,6 +16,7 @@ class ContentTypeController extends Controller
     {
         $this->contentType = $contentTypeRepository;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -47,8 +48,9 @@ class ContentTypeController extends Controller
         //     $contentType->save();
         // }
 
-        return $this->jsonResponse((bool)$contentType, 'ContentType ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $contentType, 'ContentType '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
+
     /**
      * Display the specified resource.
      */
@@ -79,12 +81,14 @@ class ContentTypeController extends Controller
     public function destroy(Request $request, ContentType $contentType)
     {
         $contentTypeDeletion = $contentType->delete();
-        return $this->jsonResponse((bool)$contentTypeDeletion, 'ContentType deleted successfully');
+
+        return $this->jsonResponse((bool) $contentTypeDeletion, 'ContentType deleted successfully');
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->contentType);
+
         return response()->json($data);
     }
 }

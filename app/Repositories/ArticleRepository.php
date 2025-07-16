@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\ArticleRepositoryInterface;
 use App\Models\Article;
+use App\Repositories\Contracts\ArticleRepositoryInterface;
 
 class ArticleRepository extends BaseRepository implements ArticleRepositoryInterface
 {
-
     public $article;
 
     public function __construct(Article $article)
@@ -20,7 +19,7 @@ class ArticleRepository extends BaseRepository implements ArticleRepositoryInter
     {
         $query = $this->article->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('title', 'LIKE', "%$searchValue%")
                     ->orWhere('content', 'LIKE', "%$searchValue%");
@@ -30,9 +29,9 @@ class ArticleRepository extends BaseRepository implements ArticleRepositoryInter
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -54,6 +53,7 @@ class ArticleRepository extends BaseRepository implements ArticleRepositoryInter
         $query->skip($start)->take($length);
         $articles = $query->get();
         $articles = $this->collectionModifier($columns, $articles, $start);
+
         return $articles;
     }
 
@@ -64,6 +64,7 @@ class ArticleRepository extends BaseRepository implements ArticleRepositoryInter
             $article->image = view('admin.articles.media', compact('article'))->render();
             $article->actions = view('admin.articles.actions', compact('article'))->render();
             $article->setVisible($columns);
+
             return $article;
         });
     }
