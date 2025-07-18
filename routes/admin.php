@@ -61,6 +61,8 @@ Route::group(['middleware' => ['auth']], function () {
     // Questions
     Route::resource('questions', QuestionController::class);
     Route::get('/questions-data', [QuestionController::class, 'dataTable'])->name('questions.datatable');
+    Route::get('/batch-questions-store-template', [QuestionController::class, 'downloadTemplate'])->name('questions.downloadTemplate');
+    Route::post('/batch-questions-store', [QuestionController::class, 'storeBatch'])->name('questions.storeBatch');
 
     // Users
     Route::resource('users', UserController::class);
