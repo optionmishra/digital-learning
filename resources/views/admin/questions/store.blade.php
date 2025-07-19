@@ -12,7 +12,8 @@
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-4 col-sm-12">
                             <label class="form-label" for="subject">Subject</label>
-                            <select class="form-control" name="subject_id" id="subject" onchange="updateBooks()">
+                            <select class="form-control" name="subject_id" id="subject"
+                                onchange="updateFormSelects()">
                                 @foreach ($subjects as $subject)
                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                 @endforeach
@@ -21,7 +22,7 @@
                         <div class="mb-3 col-lg-4 col-sm-12">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book"
-                                onchange="updateTopics(), updateAssessments()">
+                                onchange="updateFormSelects(null,'topics'), updateFormSelects(null,'assessments')">
                                 @foreach ($subjects[0]->books as $book)
                                     <option value="{{ $book->id }}">{{ $book->name }}</option>
                                 @endforeach

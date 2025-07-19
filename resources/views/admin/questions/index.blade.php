@@ -48,54 +48,42 @@
         const topics = @json($topics);
         const assessments = @json($assessments);
 
-        function updateBooks() {
-            const subject = document.getElementById("subject").value;
-            const bookSelect = document.getElementById("book");
-
-            bookSelect.innerHTML = '';
-            if (subject && books) {
-                books.forEach(book => {
-                    if (book.subject_id == subject) {
-                        const option = document.createElement("option");
-                        option.value = book.id;
-                        option.textContent = book.name;
-                        bookSelect.appendChild(option);
-                    }
-                });
-            }
-            updateTopics();
-            updateAssessments();
+        // Helper function to get element ID with form suffix
+        function getElementId(baseId, formNumber) {
+            return formNumber === 2 ? `${baseId}2` : baseId;
         }
 
-        function updateTopics() {
-            const book = document.getElementById("book").value;
-            const topicSelect = document.getElementById("topic");
-            topicSelect.innerHTML = '';
-            if (book && topics) {
-                topics.forEach(topic => {
-                    if (topic.book_id == book) {
+        // Helper function to populate select options
+        function populateSelect(selectElement, items, filterFn) {
+            selectElement.innerHTML = '';
+            if (items) {
+                items.forEach(item => {
+                    if (filterFn(item)) {
                         const option = document.createElement("option");
-                        option.value = topic.id;
-                        option.textContent = topic.name;
-                        topicSelect.appendChild(option);
+                        option.value = item.id;
+                        option.textContent = item.name;
+                        selectElement.appendChild(option);
                     }
                 });
             }
         }
 
-        function updateAssessments() {
-            const book = document.getElementById("book").value;
-            const assessmentSelect = document.getElementById("assessment");
-            assessmentSelect.innerHTML = '';
-            if (book && assessments) {
-                assessments.forEach(assessment => {
-                    if (assessment.book_id == book) {
-                        const option = document.createElement("option");
-                        option.value = assessment.id;
-                        option.textContent = assessment.name;
-                        assessmentSelect.appendChild(option);
-                    }
-                });
+        function updateFormSelects(formNumber = null, updateType = 'all') {
+            const getEl = (base) => document.getElementById(getElementId(base, formNumber));
+
+            if (updateType === 'all' || updateType === 'books') {
+                const subjectValue = getEl('subject').value;
+                populateSelect(getEl('book'), books, book => book.subject_id == subjectValue);
+            }
+
+            if (updateType === 'all' || updateType === 'topics') {
+                const bookValue = getEl('book').value;
+                populateSelect(getEl('topic'), topics, topic => topic.book_id == bookValue);
+            }
+
+            if (updateType === 'all' || updateType === 'assessments') {
+                const bookValue = getEl('book').value;
+                populateSelect(getEl('assessment'), assessments, assessment => assessment.book_id == bookValue);
             }
         }
     </script>

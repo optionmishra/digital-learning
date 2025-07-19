@@ -12,25 +12,26 @@
                     <input type="hidden" name="id" class="">
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-4 col-sm-12">
-                            <label class="form-label" for="subject">Subject</label>
-                            <select class="form-control" name="subject_id" id="subject" onchange="updateBooks()">
+                            <label class="form-label" for="subject2">Subject</label>
+                            <select class="form-control" name="subject_id" id="subject2"
+                                onchange="updateFormSelects(2)">
                                 @foreach ($subjects as $subject)
                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3 col-lg-4 col-sm-12">
-                            <label class="form-label" for="book">Book</label>
-                            <select class="form-control" name="book_id" id="book"
-                                onchange="updateTopics(), updateAssessments()">
+                            <label class="form-label" for="book2">Book</label>
+                            <select class="form-control" name="book_id" id="book2"
+                                onchange="updateFormSelects(2,'topics'), updateFormSelects(2,'assessments')">
                                 @foreach ($subjects[0]->books as $book)
                                     <option value="{{ $book->id }}">{{ $book->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3 col-lg-4 col-sm-12">
-                            <label class="form-label" for="topic">Topic</label>
-                            <select class="form-control" name="topic_id" id="topic">
+                            <label class="form-label" for="topic2">Topic</label>
+                            <select class="form-control" name="topic_id" id="topic2">
                                 @foreach ($books[0]->topics as $topic)
                                     <option value="{{ $topic->id }}">{{ $topic->name }}</option>
                                 @endforeach
@@ -38,8 +39,8 @@
                         </div>
                     </div>
                     <div class="mb-5">
-                        <label class="form-label" for="assessment">Assessment</label>
-                        <select class="form-control" name="assessment_id" id="assessment">
+                        <label class="form-label" for="assessment2">Assessment</label>
+                        <select class="form-control" name="assessment_id" id="assessment2">
                             @foreach ($books[0]->assessments as $assessment)
                                 <option value="{{ $assessment->id }}">{{ $assessment->name }}</option>
                             @endforeach
