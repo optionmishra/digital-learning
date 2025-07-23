@@ -40,6 +40,6 @@ class Subject extends Model
 
     public function standards()
     {
-        return $this->belongsToMany(Standard::class, 'standard_subjects');
+        return $this->belongsToMany(Standard::class, 'books');
     }
 }

@@ -17,6 +17,7 @@ class SubjectController extends Controller
         if ($request->has('standard_ids')) {
             $subjects = Subject::whereHas('standards', function ($query) use ($request) {
                 $query->whereIn('standards.id', explode(',', $request->standard_ids));
+                $query->where('subjects.status', true);
             })->get();
         } else {
             $subjects = Subject::where('status', true)->get();
