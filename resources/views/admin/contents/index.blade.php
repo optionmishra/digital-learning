@@ -44,50 +44,45 @@
         const books = @json($books);
         const topics = @json($topics);
 
-        function updateBooks() {
-            console.log('update books');
-            const standard = document.getElementById("standard").value;
-            const subject = document.getElementById("subject").value;
-            const bookSelect = document.getElementById("book");
+        // Helper function to get element ID with form suffix
+        function getElementId(baseId, formNumber) {
+            return formNumber === 2 ? `${baseId}2` : baseId;
+        }
 
-            // Clear previous options
-            bookSelect.innerHTML = '';
-
-            if (standard && subject && books) {
-                // Populate book options based on selected class and subject
-                books.forEach(book => {
-                    if (book.standard_id == standard && book.subject_id == subject) {
+        // Helper function to populate select options
+        function populateSelect(selectElement, items, filterFn) {
+            selectElement.innerHTML = '';
+            if (items) {
+                items.forEach(item => {
+                    if (filterFn(item)) {
                         const option = document.createElement("option");
-                        option.value = book.id;
-                        option.textContent = book.name;
-                        bookSelect.appendChild(option);
+                        option.value = item.id;
+                        option.textContent = item.name;
+                        selectElement.appendChild(option);
                     }
                 });
             }
-            updateTopics();
         }
 
-        function updateTopics() {
-            const book = document.getElementById("book").value;
-            const topicSelect = document.getElementById("topic");
-            topicSelect.innerHTML = '';
-            if (book && topics) {
-                topics.forEach(topic => {
-                    if (topic.book_id == book) {
-                        const option = document.createElement("option");
-                        option.value = topic.id;
-                        option.textContent = topic.name;
-                        topicSelect.appendChild(option);
-                    }
-                });
+        function updateFormSelects(formNumber = null, updateType = 'all') {
+            const getEl = (base) => document.getElementById(getElementId(base, formNumber));
+
+            if (updateType === 'all' || updateType === 'books') {
+                const subjectValue = getEl('subject').value;
+                populateSelect(getEl('book'), books, book => book.subject_id == subjectValue);
+            }
+
+            if (updateType === 'all' || updateType === 'topics') {
+                const bookValue = getEl('book').value;
+                populateSelect(getEl('topic'), topics, topic => topic.book_id == bookValue);
             }
         }
 
         const modalElement = document.querySelector(".modal");
 
         if (modalElement) {
-            modalElement.addEventListener("show.coreui.modal", function() {
-                updateBooks();
+            modalElement.addEventListener("shown.coreui.modal", function() {
+                updateFormSelects();
             });
         }
     </script>

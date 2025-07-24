@@ -86,5 +86,13 @@
                 populateSelect(getEl('assessment'), assessments, assessment => assessment.book_id == bookValue);
             }
         }
+
+        const modalElement = document.querySelector(".modal");
+
+        if (modalElement) {
+            modalElement.addEventListener("shown.coreui.modal", function() {
+                updateFormSelects();
+            });
+        }
     </script>
 @endsection
