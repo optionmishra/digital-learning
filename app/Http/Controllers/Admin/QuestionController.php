@@ -337,6 +337,9 @@ class QuestionController extends Controller
                 // 'question_type_id' => $questionData['question_type_id'],
             ]);
 
+            $assessment = Assessment::find($request->assessment_id);
+            $assessment->questions()->syncWithoutDetaching($question->id);
+
             // Create options
             $options = [];
             foreach ($questionData['options'] as $optionData) {
