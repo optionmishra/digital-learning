@@ -17,6 +17,7 @@ class QuestionsResource extends JsonResource
         return [
             'id' => $this->id,
             'question_text' => $this->question_text,
+            'question_img' => $this->question_img ? asset('questions/'.$this->question_img) : null,
             'options' => OptionsResource::collection($this->options),
             'correct_option' => OptionsResource::make($this->options->where('is_correct', true)->first()),
         ];
