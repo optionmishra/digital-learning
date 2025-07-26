@@ -77,6 +77,9 @@ class EvaluationController extends Controller
 
                 // Prepare the result details
                 $result = $latestAttempt->result;
+                if (! $result) {
+                    return $this->sendAPIError('Result not found for this attempt!');
+                }
 
                 return [
                     'id' => $assessment->id,
