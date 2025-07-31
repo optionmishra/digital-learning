@@ -17,6 +17,7 @@ class OptionsResource extends JsonResource
         return [
             'id' => $this->id,
             'option_text' => $this->option_text,
+            'option_img' => $this->option_img ? asset('questions/'.$this->option_img) : null,
         ];
     }
 }

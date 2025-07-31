@@ -56,9 +56,20 @@ class QuestionController extends Controller
     {
         $data = $request->validated();
         $question = $this->question->store($data, $request->input('id'));
+
+        if ($request->hasFile('question_img')) {
+            $uploadedFile = $this->uploadFile($request->file('question_img'), 'questions/');
+            $question->question_img = $uploadedFile['name'];
+            $question->save();
+        }
         foreach (range(1, 4) as $i) {
+            if ($request->hasFile("option_{$i}_img")) {
+                $uploadedFile = $this->uploadFile($request->file("option_{$i}_img"), 'questions/');
+                $option_img = $uploadedFile['name'];
+            }
             $question->options()->create([
                 'option_text' => $data["option_$i"],
+                'option_img' => isset($option_img) ? $option_img : null,
                 'is_correct' => $data['correct_option'] == $i,
             ]);
         }
@@ -207,7 +218,7 @@ class QuestionController extends Controller
         // Validate CSV headers
         $requiredHeaders = [
             'question_text', 'question_img',
-            'option_1', 'option_2', 'option_3', 'option_4',
+            'option_1', 'option_1_img', 'option_2', 'option_2_img', 'option_3', 'option_3_img', 'option_4', 'option_4_img',
             'correct_option',
         ];
 
@@ -238,10 +249,19 @@ class QuestionController extends Controller
             // Prepare options
             $options = [];
             for ($i = 1; $i <= 4; $i++) {
+                // Process option image if exists
+                $optionImage = null;
+                if ($imagesPath) {
+                    if (! empty($rowData["option_{$i}_img"])) {
+                        $optionImage = $this->processQuestionImage($rowData["option_{$i}_img"], $imagesPath);
+                    }
+                }
+
                 $optionText = trim($rowData["option_{$i}"]);
                 if (! empty($optionText)) {
                     $options[] = [
                         'option_text' => $optionText,
+                        'option_img' => $optionImage,
                         'is_correct' => ($i == (int) $rowData['correct_option']) ? 1 : 0,
                     ];
                 }
@@ -346,6 +366,7 @@ class QuestionController extends Controller
                 $option = Option::create([
                     'question_id' => $question->id,
                     'option_text' => $optionData['option_text'],
+                    'option_img' => $optionData['option_img'],
                     'is_correct' => $optionData['is_correct'],
                 ]);
                 $options[] = $option;
@@ -396,10 +417,10 @@ class QuestionController extends Controller
     public function downloadTemplate()
     {
         $csvContent = [
-            ['question_text', 'question_img',  'option_1', 'option_2', 'option_3', 'option_4', 'correct_option'],
-            ['What is the capital of France?', 'france_map.jpg', 'Paris', 'London', 'Berlin', 'Madrid', '1'],
-            ['Which planet is closest to the Sun?', '', 'Venus', 'Mercury', 'Earth', 'Mars', '2'],
-            ['What is 2 + 2?', 'math_problem.png', '3', '4', '5', '6', '2'],
+            ['question_text', 'question_img', 'option_1', 'option_1_img', 'option_2', 'option_2_img', 'option_3', 'option_3_img', 'option_4', 'option_4_img', 'correct_option'],
+            ['What is the capital of France?', 'france_map.jpg', 'Paris', '', 'London', '', 'Berlin', '', 'Madrid', '', '1'],
+            ['Which planet is closest to the Sun?', '', 'Venus', '', 'Mercury', '', 'Earth', '', 'Mars', '', '2'],
+            ['What is 2 + 2?', 'math_problem.png', '3', '', '4', '', '5', '', '6', '', '2'],
         ];
 
         $filename = 'questions_template.csv';

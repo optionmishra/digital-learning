@@ -17,16 +17,32 @@
             <td>First answer option</td>
         </tr>
         <tr>
+            <td>option_1_img</td>
+            <td>First answer option image (must exist in ZIP file)</td>
+        </tr>
+        <tr>
             <td>option_2</td>
             <td>Second answer option</td>
+        </tr>
+        <tr>
+            <td>option_2_img</td>
+            <td>Second answer option image (must exist in ZIP file)</td>
         </tr>
         <tr>
             <td>option_3</td>
             <td>Third answer option</td>
         </tr>
         <tr>
+            <td>option_3_img</td>
+            <td>Third answer option image (must exist in ZIP file)</td>
+        </tr>
+        <tr>
             <td>option_4</td>
             <td>Fourth answer option</td>
+        </tr>
+        <tr>
+            <td>option_4_img</td>
+            <td>Fourth answer option image (must exist in ZIP file)</td>
         </tr>
         <tr>
             <td>correct_option</td>

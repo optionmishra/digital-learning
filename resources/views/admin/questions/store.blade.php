@@ -50,11 +50,18 @@
                         <input class="form-control" id="question_text" type="text" placeholder="Question"
                             name="question_text">
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="question_img">Question Image</label>
+                        <input class="form-control" id="question_img" type="file" placeholder="Question Image"
+                            name="question_img">
+                    </div>
                     <div class="mb-3 row">
                         <div class="col-lg-6 col-sm-12">
                             <label for="option_1" class="form-label">Option 1</label>
-                            <input id="option_1" type="text" name="option_1" class="form-control"
-                                placeholder="Enter Option 1" required>
+                            <input id="option_1" type="text" name="option_1" class="mb-1 form-control"
+                                placeholder="Enter Option 1">
+                            <input id="option_1_img" type="file" name="option_1_img" class="form-control"
+                                placeholder="Enter Option 1">
                             <div class="mt-2 form-check">
                                 <input id="correct_option_1" type="radio" name="correct_option" value="1"
                                     class="form-check-input" required>
@@ -63,8 +70,10 @@
                         </div>
                         <div class="col-lg-6 col-sm-12">
                             <label for="option_2" class="form-label">Option 2</label>
-                            <input id="option_2" type="text" name="option_2" class="form-control"
-                                placeholder="Enter Option 2" required>
+                            <input id="option_2" type="text" name="option_2" class="mb-1 form-control"
+                                placeholder="Enter Option 2">
+                            <input id="option_2_img" type="file" name="option_2_img" class="form-control"
+                                placeholder="Enter Option 2">
                             <div class="mt-2 form-check">
                                 <input id="correct_option_2" type="radio" name="correct_option" value="2"
                                     class="form-check-input" required>
@@ -75,8 +84,10 @@
                     <div class="mb-3 row">
                         <div class="col-lg-6 col-sm-12">
                             <label for="option_3" class="form-label">Option 3</label>
-                            <input id="option_3" type="text" name="option_3" class="form-control"
-                                placeholder="Enter Option 3" required>
+                            <input id="option_3" type="text" name="option_3" class="mb-1 form-control"
+                                placeholder="Enter Option 3">
+                            <input id="option_3_img" type="file" name="option_3_img" class="form-control"
+                                placeholder="Enter Option 3">
                             <div class="mt-2 form-check">
                                 <input id="correct_option_3" type="radio" name="correct_option" value="3"
                                     class="form-check-input" required>
@@ -85,8 +96,10 @@
                         </div>
                         <div class="col-lg-6 col-sm-12">
                             <label for="option_4" class="form-label">Option 4</label>
-                            <input id="option_4" type="text" name="option_4" class="form-control"
-                                placeholder="Enter Option 4" required>
+                            <input id="option_4" type="text" name="option_4" class="mb-1 form-control"
+                                placeholder="Enter Option 4">
+                            <input id="option_4_img" type="file" name="option_4_img" class="form-control"
+                                placeholder="Enter Option 4">
                             <div class="mt-2 form-check">
                                 <input id="correct_option_4" type="radio" name="correct_option" value="4"
                                     class="form-check-input" required>
