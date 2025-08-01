@@ -57,5 +57,13 @@
                 });
             }
         }
+
+        const modalElement = document.querySelector(".modal");
+
+        if (modalElement) {
+            modalElement.addEventListener("shown.coreui.modal", function() {
+                updateBooks();
+            });
+        }
     </script>
 @endsection
