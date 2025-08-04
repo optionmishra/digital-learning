@@ -67,11 +67,31 @@ class QuestionController extends Controller
                 $uploadedFile = $this->uploadFile($request->file("option_{$i}_img"), 'questions/');
                 $option_img = $uploadedFile['name'];
             }
-            $question->options()->create([
+            $optionData = [
                 'option_text' => $data["option_$i"],
-                'option_img' => isset($option_img) ? $option_img : null,
+                'option_img' => $option_img ?? null,
                 'is_correct' => $data['correct_option'] == $i,
-            ]);
+            ];
+
+            if ($request->input('id')) {
+                // If the question is being updated, attempt to update the corresponding option.
+                // This approach assumes options can be reliably matched to option_1, option_2, etc.
+                // by their creation order or ID. A more robust solution for updating options
+                // without specific option IDs in the request often involves deleting all
+                // existing options for the question and then re-creating them,
+                // which would typically be done before this loop.
+                $option = $question->options()->orderBy('id')->skip($i - 1)->first();
+
+                if ($option) {
+                    $option->update($optionData);
+                } else {
+                    // If an existing option at this index isn't found, create a new one.
+                    $question->options()->create($optionData);
+                }
+            } else {
+                // If it's a new question (no ID in request), simply create the option.
+                $question->options()->create($optionData);
+            }
         }
 
         $assessment = Assessment::find($data['assessment_id']);
