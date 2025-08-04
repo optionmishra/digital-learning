@@ -107,6 +107,8 @@
                             </div>
                         </div>
                     </div>
+                    <span class="text-danger text-center">Please ensure all images are exactly 400x250 pixels in
+                        dimension.</span>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
