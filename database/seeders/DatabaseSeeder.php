@@ -10,18 +10,18 @@ class DatabaseSeeder extends BaseSeeder
     public function run(): void
     {
         $this->call([
-            // BoardSeeder::class,
-            // StandardSeeder::class,
-            // SubjectSeeder::class,
-            // AuthorSeeder::class,
-            // BookSeeder::class,
-            // AssessmentSeeder::class,
-            // TopicSeeder::class,
-            // ContentTypeSeeder::class,
-            // ContentSeeder::class,
-            // QuestionSeeder::class,
+            BoardSeeder::class,
+            StandardSeeder::class,
+            SubjectSeeder::class,
+            AuthorSeeder::class,
+            BookSeeder::class,
+            AssessmentSeeder::class,
+            TopicSeeder::class,
+            ContentTypeSeeder::class,
+            ContentSeeder::class,
+            QuestionSeeder::class,
             RoleSeeder::class,
-            // UserSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

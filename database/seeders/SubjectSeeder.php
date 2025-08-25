@@ -13,23 +13,23 @@ class SubjectSeeder extends BaseSeeder
     {
         self::$subject = Subject::firstOrCreate(
             ['name' => 'English'],
-            ['img' => 'English.png']
+            ['img' => 'English.png', 'status' => 1]
         );
         Subject::firstOrCreate(
             ['name' => 'Hindi'],
-            ['img' => 'Hindi.png']
+            ['img' => 'Hindi.png', 'status' => 1]
         );
         Subject::firstOrCreate(
             ['name' => 'Mathematics'],
-            ['img' => 'Maths.png']
+            ['img' => 'Maths.png', 'status' => 1]
         );
         Subject::firstOrCreate(
             ['name' => 'Science'],
-            ['img' => 'Science.png']
+            ['img' => 'Science.png', 'status' => 1]
         );
         Subject::firstOrCreate(
             ['name' => 'Social Science'],
-            ['img' => 'Social-Science.png']
+            ['img' => 'Social-Science.png', 'status' => 1]
         );
     }
 }

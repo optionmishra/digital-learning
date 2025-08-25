@@ -351,10 +351,5 @@ class QuestionSeeder extends BaseSeeder
                 ]);
             }
         }
-
-        Subject::firstOrCreate(
-            ['name' => 'Literature'],
-            ['img' => 'Social-Science.png']
-        );
     }
 }

@@ -15,7 +15,7 @@ class ContentTypeSeeder extends BaseSeeder
             'name' => 'Video',
         ]);
         self::$ebookContentType = ContentType::firstOrCreate([
-            'name' => 'Ebook',
+            'name' => 'E-Book \ Flipbook',
         ]);
     }
 }
