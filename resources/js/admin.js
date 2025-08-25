@@ -3,389 +3,594 @@ window.$ = window.jQuery = $;
 import toastr from "toastr";
 import "datatables.net-dt";
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.addEventListener("click", handleDeleteClick);
+/**
+ * Admin Panel Management System
+ * Handles CRUD operations, data tables, forms, and UI interactions
+ */
+class AdminPanel {
+  constructor() {
+    this.deleteBtn = null;
+    this.deleteRoute = null;
+    this.init();
+  }
 
-  var deleteBtn;
-  var deleteRoute;
+  /**
+   * Initialize all event listeners and components
+   */
+  init() {
+    this.bindEvents();
+    this.initializeDataTables();
+    this.initializeModals();
+  }
 
-  function handleDeleteClick(event) {
-    deleteBtn = event.target.closest("[data-delete-route]");
-    if (!deleteBtn) return;
+  /**
+   * Bind all event listeners
+   */
+  bindEvents() {
+    // Delete operations
+    document.addEventListener("click", this.handleDeleteClick.bind(this));
+    this.bindDeleteConfirmations();
+
+    // Update operations
+    document.addEventListener("click", this.handleUpdateClick.bind(this));
+
+    // Form submissions
+    $(".modal form").on("submit", this.handleFormSubmit.bind(this));
+
+    // Special form handlers
+    $("#enableArticlesForm input").on(
+      "change",
+      this.handleEnableArticlesChange.bind(this),
+    );
+
+    // Button route handlers
+    $(document).on(
+      "click",
+      "[data-btn-route]",
+      this.handleButtonRoute.bind(this),
+    );
+
+    // Dropdown change handlers
+    this.bindDropdownHandlers();
+
+    // Image/source type handlers
+    this.bindFileTypeHandlers();
+  }
+
+  /**
+   * DELETE OPERATIONS
+   */
+  handleDeleteClick(event) {
+    this.deleteBtn = event.target.closest("[data-delete-route]");
+    if (!this.deleteBtn) return;
+
     event.preventDefault();
-    deleteRoute = deleteBtn.dataset.deleteRoute;
+    this.deleteRoute = this.deleteBtn.dataset.deleteRoute;
   }
 
-  // Block User
-  // const confirmBlockBtn = document.getElementById("confirmBlockBtn");
-  // if (confirmBlockBtn) {
-  //     confirmBlockBtn.addEventListener("click", () => {
-  //         fetch(deleteRoute, {
-  //             method: "post",
-  //             headers: {
-  //                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-  //                     "content"
-  //                 ),
-  //             },
-  //         })
-  //             .then((response) => {
-  //                 if (response.ok) {
-  //                     return response.json();
-  //                 } else {
-  //                     throw new Error(response.statusText);
-  //                 }
-  //             })
-  //             .then((data) => {
-  //                 if (data.error == true) {
-  //                     toastr.error(data.message, "Admin Panel");
-  //                 } else {
-  //                     toastr.success(data.message, "Admin Panel");
-  //                     $(".dataTable").DataTable().draw();
-  //                 }
-  //             })
-  //             .catch((error) => {
-  //                 toastr.error("Something went wrong!", "Admin Panel");
-  //                 console.error("Error:", error);
-  //             });
-  //     });
-  // }
+  bindDeleteConfirmations() {
+    const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+    const confirmDemoteBtn = document.getElementById("confirmDemoteBtn");
 
-  // Delete
-  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
-  if (confirmDeleteBtn) {
-    confirmDeleteBtn.addEventListener("click", () => {
-      deleteRow();
-    });
+    if (confirmDeleteBtn) {
+      confirmDeleteBtn.addEventListener("click", () => this.executeDelete());
+    }
+
+    if (confirmDemoteBtn) {
+      confirmDemoteBtn.addEventListener("click", () => this.executeDelete());
+    }
   }
 
-  const confirmDemoteBtn = document.getElementById("confirmDemoteBtn");
-  if (confirmDemoteBtn) {
-    confirmDemoteBtn.addEventListener("click", () => {
-      deleteRow();
-    });
-  }
-  function deleteRow() {
-    fetch(deleteRoute, {
-      method: "delete",
-      headers: {
-        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error(response.statusText);
-        }
-      })
-      .then((data) => {
-        if (data.error == true) {
-          toastr.error(data.message, "Admin Panel");
-        } else {
-          toastr.success(data.message, "Admin Panel");
-          $(".dataTable").DataTable().draw();
-        }
-      })
-      .catch((error) => {
-        toastr.error("Something went wrong!", "Admin Panel");
-        console.error("Error:", error);
+  async executeDelete() {
+    try {
+      const response = await fetch(this.deleteRoute, {
+        method: "DELETE",
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
       });
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const data = await response.json();
+
+      if (data.error) {
+        toastr.error(data.message, "Admin Panel");
+      } else {
+        toastr.success(data.message, "Admin Panel");
+        $(".dataTable").DataTable().draw();
+      }
+    } catch (error) {
+      toastr.error("Something went wrong!", "Admin Panel");
+      console.error("Error:", error);
+    }
   }
 
-  // Update
-  document.addEventListener("click", function (e) {
+  /**
+   * UPDATE OPERATIONS
+   */
+  handleUpdateClick(event) {
     const el =
-      e.target.closest("[data-row-data]") ||
-      e.target.closest("[data-restricted-permissions]");
-    if (!el) return;
-    e.preventDefault();
-    const updateRoute = el.dataset.updateRoute;
+      event.target.closest("[data-row-data]") ||
+      event.target.closest("[data-restricted-permissions]");
 
-    let rowData;
+    if (!el) return;
+
+    event.preventDefault();
+    const updateRoute = el.dataset.updateRoute;
+    let rowData = {};
+
     if (el.dataset.rowData) {
       rowData = JSON.parse(el.dataset.rowData);
     }
+
+    // Make this async to handle the async populateUpdateForm
+    this.populateUpdateForm(updateRoute, rowData).catch((error) => {
+      console.error("Error populating update form:", error);
+      toastr.error("Error loading form data", "Admin Panel");
+    });
+  }
+
+  async populateUpdateForm(updateRoute, rowData) {
     const form = document.getElementById("updateDataForm");
     form.setAttribute("action", updateRoute);
 
-    // if (rowData.length > 0) {
-    Array.from(document.querySelectorAll("form [name]")).forEach((el) => {
+    // Process form fields sequentially to handle dependencies
+    const formFields = Array.from(document.querySelectorAll("form [name]"));
+
+    for (const el of formFields) {
       if (el.name in rowData) {
-        if (el.name == "correct_option") {
-          const correctOption = rowData[el.name];
-          Array.from(
-            document.querySelectorAll(`input[name="${el.name}"]`),
-          ).forEach((radio) => {
-            if (radio.value == correctOption) {
-              radio.checked = true;
-            }
-          });
-        }
-        if (el.name == "books[]") {
-          const bookIds = rowData[el.name];
-          bookIds.forEach((bookId) => {
-            Array.from(
-              document.querySelectorAll(
-                `input[name="${el.name}"][value="${bookId}"]`,
-              ),
-            ).forEach((checkbox) => {
-              checkbox.checked = true;
-            });
-          });
-        } else {
-          el.value = rowData[el.name];
-        }
+        await this.setFormFieldValue(el, rowData);
       }
-    });
-    // }
-  });
+    }
+  }
 
-  $("#enableArticlesForm input").on("change", function () {
-    const form = $(this).closest("form");
-    const route = form.attr("action");
-    const method = form.attr("method");
-    const formData = new FormData(form[0]);
-    formData.append("enableArticles", $(this).is(":checked"));
+  async setFormFieldValue(element, rowData) {
+    const fieldName = element.name;
+    const value = rowData[fieldName];
 
-    fetch(route, {
-      method: method,
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error == true) {
-          toastr.error(data.message, "Admin Panel");
-        } else {
-          toastr.success(data.message, "Admin Panel");
+    switch (fieldName) {
+      case "correct_option":
+        this.setRadioValue(fieldName, value);
+        break;
+
+      case "books[]":
+        this.setCheckboxValues(fieldName, value);
+        break;
+
+      case "subject_id":
+        await this.updateBooks(rowData["standard_id"], value);
+        element.value = value;
+        break;
+
+      case "book_id":
+        await this.updateTopics(value);
+        element.value = value;
+        // If topic_id exists in rowData, set it after books are loaded
+        if ("topic_id" in rowData) {
+          const topicSelect = document.getElementById("topic");
+          if (topicSelect) {
+            topicSelect.value = rowData["topic_id"];
+          }
         }
+        break;
+
+      case "topic_id":
+        // Skip setting topic_id here as it's handled in book_id case
+        // This prevents setting the value before topics are loaded
+        break;
+
+      default:
+        element.value = value;
+        break;
+    }
+  }
+
+  setRadioValue(fieldName, value) {
+    Array.from(document.querySelectorAll(`input[name="${fieldName}"]`)).forEach(
+      (radio) => {
+        radio.checked = radio.value == value;
+      },
+    );
+  }
+
+  setCheckboxValues(fieldName, values) {
+    values.forEach((value) => {
+      Array.from(
+        document.querySelectorAll(
+          `input[name="${fieldName}"][value="${value}"]`,
+        ),
+      ).forEach((checkbox) => {
+        checkbox.checked = true;
       });
-  });
-
-  // Submit form
-  $(".modal form").on("submit", function (e) {
-    $("#loading").toggleClass("d-none");
-    $("body").css("overflow", "hidden");
-    e.preventDefault();
-    const form = $(this);
-    const submitUrl = form.attr("action");
-    const method = form.attr("method");
-    const reload = form.attr("reload");
-    const formData = new FormData(this);
-
-    $.ajax({
-      url: submitUrl,
-      type: method,
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (data) {
-        $("#loading").toggleClass("d-none");
-        $("body").css("overflow", "auto");
-        if (data.error == true) {
-          toastr.error(data.message, "Admin Panel");
-        } else {
-          toastr.success(data.message, "Admin Panel");
-          if (form.parents(".modal").length > 0) {
-            form[0].reset();
-            const hiddenInputs = document.querySelectorAll(
-              'form input[type="hidden"]',
-            );
-            hiddenInputs.forEach((input) => {
-              if (input.name !== "_token") {
-                input.value = ""; // Clears hidden fields
-              }
-            });
-          }
-          $(".modal").modal("hide");
-          if (reload == "true") {
-            location.reload();
-          }
-          $(".dataTable").DataTable().draw();
-        }
-      },
-      error: function (error) {
-        $("#loading").toggleClass("d-none");
-        $("body").css("overflow", "auto");
-        toastr.error(error.responseJSON.message, "Admin Panel");
-        console.error("Error:", error);
-      },
     });
-  });
+  }
 
-  // Reset form on modal hidden
-  $(".modal").on("hide.coreui.modal", function () {
-    $(this).find("form").trigger("reset");
+  /**
+   * FORM OPERATIONS
+   */
+  handleFormSubmit(event) {
+    event.preventDefault();
+
+    const form = $(event.target);
+    this.toggleLoading(true);
+
+    const formData = {
+      url: form.attr("action"),
+      method: form.attr("method"),
+      reload: form.attr("reload"),
+      data: new FormData(event.target),
+    };
+
+    this.submitForm(form, formData);
+  }
+
+  async submitForm(form, formData) {
+    try {
+      const response = await $.ajax({
+        url: formData.url,
+        type: formData.method,
+        data: formData.data,
+        contentType: false,
+        processData: false,
+      });
+
+      this.handleFormResponse(form, response, formData.reload);
+    } catch (error) {
+      this.handleFormError(error);
+    } finally {
+      this.toggleLoading(false);
+    }
+  }
+
+  handleFormResponse(form, data, reload) {
+    if (data.error) {
+      toastr.error(data.message, "Admin Panel");
+    } else {
+      toastr.success(data.message, "Admin Panel");
+      this.resetForm(form);
+      $(".modal").modal("hide");
+
+      if (reload === "true") {
+        location.reload();
+      }
+
+      $(".dataTable").DataTable().draw();
+    }
+  }
+
+  handleFormError(error) {
+    toastr.error(
+      error.responseJSON?.message || "Something went wrong!",
+      "Admin Panel",
+    );
+    console.error("Error:", error);
+  }
+
+  resetForm(form) {
+    if (form.parents(".modal").length > 0) {
+      form[0].reset();
+      this.clearHiddenFields();
+    }
+  }
+
+  clearHiddenFields() {
     const hiddenInputs = document.querySelectorAll('form input[type="hidden"]');
     hiddenInputs.forEach((input) => {
       if (input.name !== "_token") {
-        input.value = ""; // Clears hidden fields
+        input.value = "";
       }
     });
-  });
+  }
 
-  // DataTable
-  $("[data-table-route]").each(function (e) {
-    const table = $(this);
-    const route = table.attr("data-table-route");
+  toggleLoading(show) {
+    $("#loading").toggleClass("d-none", !show);
+    $("body").css("overflow", show ? "hidden" : "auto");
+  }
 
-    const columns = $(this)
+  /**
+   * SPECIAL FORM HANDLERS
+   */
+  async handleEnableArticlesChange(event) {
+    const form = $(event.target).closest("form");
+    const formData = new FormData(form[0]);
+    formData.append("enableArticles", $(event.target).is(":checked"));
+
+    try {
+      const response = await fetch(form.attr("action"), {
+        method: form.attr("method"),
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        toastr.error(data.message, "Admin Panel");
+      } else {
+        toastr.success(data.message, "Admin Panel");
+      }
+    } catch (error) {
+      toastr.error("Something went wrong!", "Admin Panel");
+      console.error("Error:", error);
+    }
+  }
+
+  handleButtonRoute(event) {
+    const route = $(event.target).data("btn-route");
+    const formId = $(event.target).data("form");
+    const form = document.getElementById(formId);
+
+    if (form) {
+      form.setAttribute("action", route);
+    }
+  }
+
+  /**
+   * DROPDOWN MANAGEMENT
+   */
+  bindDropdownHandlers() {
+    // Category topics
+    $("#categoryPostCategory").on(
+      "change",
+      this.handleCategoryChange.bind(this),
+    );
+
+    // Standard-Subject-Book-Topic chain
+    const chainSets = [
+      { standard: "standard", subject: "subject", book: "book" },
+      { standard: "standard2", subject: "subject2", book: "book2" },
+    ];
+
+    chainSets.forEach(({ standard, subject, book }) => {
+      const standardSelect = document.getElementById(standard);
+      const subjectSelect = document.getElementById(subject);
+      const bookSelect = document.getElementById(book);
+
+      const updateBooksAndTopics = async () => {
+        await this.updateBooks();
+        await this.updateTopics();
+      };
+
+      if (standardSelect) {
+        standardSelect.addEventListener("change", updateBooksAndTopics);
+      }
+
+      if (subjectSelect) {
+        subjectSelect.addEventListener("change", updateBooksAndTopics);
+      }
+
+      if (bookSelect) {
+        bookSelect.addEventListener("change", () => this.updateTopics());
+      }
+    });
+  }
+
+  async handleCategoryChange(event) {
+    const selected = $(event.target).find("option:selected");
+    const url = selected.data("topics-route");
+    const topicSelect = document.getElementById("categoryPostTopic");
+
+    if (!topicSelect || !url) return;
+
+    // Clear existing options
+    topicSelect.innerHTML = "";
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.length > 0) {
+        data.forEach((option) => {
+          const optionElement = document.createElement("option");
+          optionElement.value = option.id;
+          optionElement.textContent = option.name;
+          topicSelect.appendChild(optionElement);
+        });
+      } else {
+        const optionElement = document.createElement("option");
+        optionElement.value = "";
+        optionElement.textContent = "No topics found for this category!";
+        topicSelect.appendChild(optionElement);
+      }
+    } catch (error) {
+      console.error("Error fetching topics:", error);
+      topicSelect.innerHTML = "<option value=''>Error loading topics</option>";
+    }
+  }
+
+  async updateBooks(standardId, subjectId) {
+    const standardSelect = document.getElementById("standard");
+    const subjectSelect = document.getElementById("subject");
+    const bookSelect = document.getElementById("book");
+
+    if (!bookSelect) return;
+
+    if (!standardId && standardSelect) standardId = standardSelect.value;
+    if (!subjectId && subjectSelect) subjectId = subjectSelect.value;
+
+    bookSelect.innerHTML = "<option value=''>Loading...</option>";
+
+    try {
+      const response = await fetch(
+        `/api/books?standard_ids=${standardId}&subject_ids=${subjectId}`,
+      );
+      const books = await response.json();
+
+      if (books.data.length == 0) {
+        bookSelect.disabled = true;
+        bookSelect.innerHTML = "<option value=''>No Books Found</option>";
+        return;
+      }
+      bookSelect.innerHTML = "";
+      bookSelect.disabled = false;
+      books.data.forEach((book) => {
+        const option = document.createElement("option");
+        option.value = book.id;
+        option.textContent = book.name;
+        bookSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      bookSelect.innerHTML = "<option value=''>Error loading books</option>";
+    }
+  }
+
+  async updateTopics(bookId) {
+    const bookSelect = document.getElementById("book");
+    const topicSelect = document.getElementById("topic");
+
+    if (!topicSelect) return;
+
+    if (!bookId && bookSelect) bookId = bookSelect.value;
+    if (!bookId) {
+      topicSelect.disabled = true;
+      topicSelect.innerHTML = "<option value=''>No Books Selected</option>";
+      return;
+    }
+
+    topicSelect.innerHTML = "<option value=''>Loading...</option>";
+
+    try {
+      const response = await fetch(`/api/topics/${bookId}`);
+      const topics = await response.json();
+
+      if (topics.data.length == 0) {
+        topicSelect.disabled = true;
+        topicSelect.innerHTML = "<option value=''>No Topics Found</option>";
+        return;
+      }
+
+      topicSelect.innerHTML = "";
+      topicSelect.disabled = false;
+      topics.data.forEach((topic) => {
+        const option = document.createElement("option");
+        option.value = topic.id;
+        option.textContent = topic.name;
+        topicSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error fetching topics:", error);
+      topicSelect.innerHTML = "<option value=''>Error loading topics</option>";
+    }
+  }
+
+  /**
+   * FILE TYPE HANDLERS
+   */
+  bindFileTypeHandlers() {
+    $("#img_type").on("change", (e) => this.handleFileTypeChange(e, "img"));
+    $("#src_type").on("change", (e) => this.handleFileTypeChange(e, "src"));
+  }
+
+  handleFileTypeChange(event, type) {
+    const isUrl = $(event.target).val() === "url";
+    const urlContainer = $(`#${type}UrlInputContainer`);
+    const fileContainer = $(`#${type}FileInputContainer`);
+
+    if (isUrl) {
+      urlContainer.removeClass("d-none").find("input").prop("disabled", false);
+      fileContainer.addClass("d-none").find("input").prop("disabled", true);
+    } else {
+      urlContainer.addClass("d-none").find("input").prop("disabled", true);
+      fileContainer.removeClass("d-none").find("input").prop("disabled", false);
+    }
+  }
+
+  /**
+   * MODAL MANAGEMENT
+   */
+  initializeModals() {
+    // Reset forms when modals are hidden
+    $(".modal").on("hide.coreui.modal", () => {
+      $(".modal form").trigger("reset");
+      this.clearHiddenFields();
+    });
+
+    // Handle modal shown event
+    $(".modal").on("shown.coreui.modal", this.handleModalShown.bind(this));
+  }
+
+  handleModalShown() {
+    const self = this;
+    // Set initial file type states
+    ["img", "src"].forEach((type) => {
+      const typeSelect = $(`#${type}_type`);
+      if (typeSelect.length) {
+        self.handleFileTypeChange({ target: typeSelect[0] }, type);
+      }
+    });
+  }
+
+  /**
+   * DATA TABLE MANAGEMENT
+   */
+  initializeDataTables() {
+    const self = this;
+    $("[data-table-route]").each(function (index, element) {
+      const table = $(element);
+      const route = table.attr("data-table-route");
+      const columns = self.buildTableColumns(table);
+
+      table.DataTable({
+        language: {
+          zeroRecords: "No record(s) found.",
+        },
+        processing: true,
+        serverSide: true,
+        lengthChange: true,
+        order: [0, "asc"],
+        searchable: true,
+        bStateSave: false,
+        ajax: {
+          url: route,
+          data: function (d) {
+            // Additional data can be added here
+          },
+        },
+        columns: columns,
+      });
+    });
+  }
+
+  buildTableColumns(table) {
+    const self = this;
+    return table
       .find("th")
-      .map(function (val, index) {
+      .map(function () {
+        const headerText = $(this).text();
         return {
-          data:
-            $(this).text() === "#"
-              ? "serial"
-              : $(this).text() === "Board"
-                ? "board_name"
-                : $(this).text() === "Standard"
-                  ? "standard_name"
-                  : $(this).text() === "Subject"
-                    ? "subject_name"
-                    : $(this).text() === "Book"
-                      ? "book_name"
-                      : $(this).text() === "Topic"
-                        ? "topic_name"
-                        : $(this).text() === "Assessment"
-                          ? "assessment_name"
-                          : $(this).text() === "Author"
-                            ? "author_name"
-                            : $(this).text() === "Teacher Code"
-                              ? "teacherCode"
-                              : $(this).text() === "Student Code"
-                                ? "studentCode"
-                                : $(this).text() === "Serial No."
-                                  ? "serialNo"
-                                  : $(this).text().toLowerCase(),
-          name: $(this).text(),
-          searchable: $(this).text() !== "#" && $(this).text() !== "Actions",
-          orderable: $(this).text() !== "Actions",
+          data: self.getColumnDataName(headerText),
+          name: headerText,
+          searchable: headerText !== "#" && headerText !== "Actions",
+          orderable: headerText !== "Actions",
           defaultContent: "NA",
         };
-      });
+      })
+      .get();
+  }
 
-    $("[data-table-route]").DataTable({
-      language: {
-        zeroRecords: "No record(s) found.",
-      },
-      processing: true,
-      serverSide: true,
-      lengthChange: true,
-      order: [0, "asc"],
-      searchable: true,
-      bStateSave: false,
+  getColumnDataName(headerText) {
+    const columnMap = {
+      "#": "serial",
+      Board: "board_name",
+      Standard: "standard_name",
+      Subject: "subject_name",
+      Book: "book_name",
+      Topic: "topic_name",
+      Assessment: "assessment_name",
+      Author: "author_name",
+      "Teacher Code": "teacherCode",
+      "Student Code": "studentCode",
+      "Serial No.": "serialNo",
+    };
 
-      ajax: {
-        url: route,
-        data: function (d) {},
-      },
-      columns: columns,
-    });
-  });
+    return columnMap[headerText] || headerText.toLowerCase();
+  }
+}
 
-  // Reset User's Password
-  $(document).on("click", "[data-btn-route]", function (e) {
-    const route = $(this).data("btn-route");
-    const formId = $(this).data("form");
-    const form = document.getElementById(formId);
-    form.setAttribute("action", route);
-    // fetch(route)
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //         if (data.error == true) {
-    //             toastr.error(data.message, "Admin Panel");
-    //         } else {
-    //             toastr.success(data.message, "Admin Panel");
-    //         }
-    //     });
-  });
-
-  // Category Topics Options
-  $("#categoryPostCategory").on("change", function () {
-    // Get selected option element
-    const selected = $(this).find("option:selected");
-    const url = selected.data("topics-route");
-    const el = document.getElementById("categoryPostTopic");
-    // Remove existing options
-    while (el.firstChild) {
-      el.removeChild(el.firstChild);
-    }
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        // Add new options
-        if (data.length > 0) {
-          data.forEach((option) => {
-            const optionElement = document.createElement("option");
-            optionElement.value = option.id;
-            optionElement.textContent = option.name;
-            el.appendChild(optionElement);
-          });
-        } else {
-          const optionElement = document.createElement("option");
-          optionElement.value = "";
-          optionElement.textContent = "No topics found for this category!";
-          el.appendChild(optionElement);
-        }
-      });
-  });
-
-  $("#img_type").on("change", function (e) {
-    if ($(this).val() == "url") {
-      $("#imgUrlInputContainer").removeClass("d-none");
-      $("#imgFileInputContainer").addClass("d-none");
-      // Enable URL input, disable file input
-      $("#imgUrlInputContainer input").prop("disabled", false);
-      $("#imgFileInputContainer input").prop("disabled", true);
-    } else {
-      $("#imgUrlInputContainer").addClass("d-none");
-      $("#imgFileInputContainer").removeClass("d-none");
-      // Enable file input, disable URL input
-      $("#imgFileInputContainer input").prop("disabled", false);
-      $("#imgUrlInputContainer input").prop("disabled", true);
-    }
-  });
-
-  $(".modal").on("shown.coreui.modal", function () {
-    if ($("#img_type").val() == "url") {
-      $("#imgUrlInputContainer").removeClass("d-none");
-      $("#imgFileInputContainer").addClass("d-none");
-      $("#imgUrlInputContainer input").prop("disabled", false);
-      $("#imgFileInputContainer input").prop("disabled", true);
-    } else {
-      $("#imgUrlInputContainer").addClass("d-none");
-      $("#imgFileInputContainer").removeClass("d-none");
-      $("#imgFileInputContainer input").prop("disabled", false);
-      $("#imgUrlInputContainer input").prop("disabled", true);
-    }
-  });
-
-  $("#src_type").on("change", function (e) {
-    if ($(this).val() == "url") {
-      $("#srcUrlInputContainer").removeClass("d-none");
-      $("#srcFileInputContainer").addClass("d-none");
-      $("#srcUrlInputContainer input").prop("disabled", false);
-      $("#srcFileInputContainer input").prop("disabled", true);
-    } else {
-      $("#srcUrlInputContainer").addClass("d-none");
-      $("#srcFileInputContainer").removeClass("d-none");
-      $("#srcFileInputContainer input").prop("disabled", false);
-      $("#srcUrlInputContainer input").prop("disabled", true);
-    }
-  });
-
-  $(".modal").on("shown.coreui.modal", function () {
-    if ($("#src_type").val() == "url") {
-      $("#srcUrlInputContainer").removeClass("d-none");
-      $("#srcFileInputContainer").addClass("d-none");
-      $("#srcUrlInputContainer input").prop("disabled", false);
-      $("#srcFileInputContainer input").prop("disabled", true);
-    } else {
-      $("#srcUrlInputContainer").addClass("d-none");
-      $("#srcFileInputContainer").removeClass("d-none");
-      $("#srcFileInputContainer input").prop("disabled", false);
-      $("#srcUrlInputContainer input").prop("disabled", true);
-    }
-  });
-
-  // DOMContentLoaded
+// Initialize the admin panel when DOM is ready
+document.addEventListener("DOMContentLoaded", function () {
+  new AdminPanel();
 });

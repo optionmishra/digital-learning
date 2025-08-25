@@ -1,5 +1,5 @@
 <div class="modal fade" id="topicStore" tabindex="-1" aria-labelledby="topicStoreLabel">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title h4" id="topicStoreLabel">Topic Details</h5>
@@ -10,15 +10,23 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" class="">
                     <div class="row mb-3">
-                        <div class="col-lg-6 col-sm-12 mb-3">
+                        <div class="mb-3 col-lg-4 col-sm-12">
+                            <label class="form-label" for="standard">Standard</label>
+                            <select class="form-control" name="standard_id" id="standard">
+                                @foreach ($standards as $standard)
+                                    <option value="{{ $standard->id }}">{{ $standard->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-4 col-sm-12 mb-3">
                             <label class="form-label" for="subject">Subject</label>
-                            <select class="form-control" name="subject_id" id="subject" onchange="updateBooks()">
+                            <select class="form-control" name="subject_id" id="subject">
                                 @foreach ($subjects as $subject)
                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-lg-6 col-sm-12 mb-3">
+                        <div class="col-lg-4 col-sm-12 mb-3">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book">
                                 @foreach ($subjects[0]->books as $book)

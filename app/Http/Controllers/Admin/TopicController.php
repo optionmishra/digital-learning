@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTopicRequest;
 use App\Models\Book;
+use App\Models\Standard;
 use App\Models\Subject;
 use App\Models\Topic;
 use App\Repositories\TopicRepository;
-use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 
 class TopicController extends Controller
@@ -25,10 +25,11 @@ class TopicController extends Controller
      */
     public function index()
     {
+        $standards = Standard::all();
         $subjects = Subject::all();
         $books = Book::all();
 
-        return view('admin.topics.index', compact('subjects', 'books'));
+        return view('admin.topics.index', compact('standards', 'subjects', 'books'));
     }
 
     /**

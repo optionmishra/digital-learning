@@ -34,6 +34,3 @@
     </div>
     @include('admin.books.store')
 @endsection
-{{-- @section('bottom-scripts')
-    @vite(['resources/js/quill.js'])
-@endsection --}}

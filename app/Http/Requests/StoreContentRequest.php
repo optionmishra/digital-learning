@@ -40,6 +40,7 @@ class StoreContentRequest extends FormRequest
             'url' => 'url|nullable',
             'creator' => '',
             'price' => '',
+            'duration' => '',
         ];
     }
 }

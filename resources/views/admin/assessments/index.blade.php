@@ -32,38 +32,3 @@
     </div>
     @include('admin.assessments.store')
 @endsection
-
-@section('bottom-scripts')
-    <script>
-        const books = @json($books);
-
-        function updateBooks() {
-            const standard = document.getElementById("standard").value;
-            const subject = document.getElementById("subject").value;
-            const bookSelect = document.getElementById("book");
-
-            // Clear previous options
-            bookSelect.innerHTML = '';
-
-            if (standard && subject && books) {
-                // Populate book options based on selected class and subject
-                books.forEach(book => {
-                    if (book.standard_id == standard && book.subject_id == subject) {
-                        const option = document.createElement("option");
-                        option.value = book.id;
-                        option.textContent = book.name;
-                        bookSelect.appendChild(option);
-                    }
-                });
-            }
-        }
-
-        const modalElement = document.querySelector(".modal");
-
-        if (modalElement) {
-            modalElement.addEventListener("shown.coreui.modal", function() {
-                updateBooks();
-            });
-        }
-    </script>
-@endsection

@@ -50,6 +50,11 @@
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
                 </svg> Books</a></li>
 
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.topics.index') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                </svg> Topics</a></li>
+
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.articles.index') }}">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
@@ -74,10 +79,6 @@
                 @endforeach
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="{{ route('admin.topics.index') }}">
-                <svg class="nav-icon">
-                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
-                </svg> Topics</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.assessments.index') }}">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>

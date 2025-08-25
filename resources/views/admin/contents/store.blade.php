@@ -15,8 +15,7 @@
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-3 col-sm-12">
                             <label class="form-label" for="standard">Standard</label>
-                            <select class="form-control" name="standard_id" id="standard"
-                                onchange="updateFormSelects()">
+                            <select class="form-control" name="standard_id" id="standard">
                                 @foreach ($standards as $standard)
                                     <option value="{{ $standard->id }}">{{ $standard->name }}</option>
                                 @endforeach
@@ -24,8 +23,7 @@
                         </div>
                         <div class="mb-3 col-lg-3 col-sm-12">
                             <label class="form-label" for="subject">Subject</label>
-                            <select class="form-control" name="subject_id" id="subject"
-                                onchange="updateFormSelects()">
+                            <select class="form-control" name="subject_id" id="subject">
                                 @foreach ($subjects as $subject)
                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                 @endforeach
@@ -117,6 +115,13 @@
                             <label class="form-label" for="price">Price</label>
                             <input class="form-control" id="price" type="number" placeholder="Price"
                                 name="price">
+                        </div>
+                    @endif
+                    @if ($contentType->name == 'Video')
+                        <div class="mb-3">
+                            <label class="form-label" for="duration">Duration</label>
+                            <input class="form-control" id="duration" type="text" placeholder="00:00:00"
+                                name="duration">
                         </div>
                     @endif
                 </div>
