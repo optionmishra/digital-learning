@@ -10,9 +10,9 @@
                         <div class="pb-0 card-body d-flex justify-content-between align-items-start">
                             <div>
                                 <div class="fs-3 fw-semibold">
-                                    {{ $usersCount }}
+                                    {{ $adminsCount }}
                                 </div>
-                                <div>Users</div>
+                                <div>Admins</div>
                             </div>
                         </div>
                         <div class="mx-3 mt-3 c-chart-wrapper" style="height: 70px">
@@ -20,7 +20,38 @@
                         </div>
                     </div>
                 </div>
-                {{-- <!-- /.col-->
+                <div class="col-sm-6 col-xl-3">
+                    <div class="text-white card bg-info">
+                        <div class="pb-0 card-body d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="fs-3 fw-semibold">
+                                    {{ $teachersCount }}
+                                </div>
+                                <div>Teachers</div>
+                            </div>
+                        </div>
+                        <div class="mx-3 mt-3 c-chart-wrapper" style="height: 70px">
+                            <canvas class="chart" id="card-chart2" height="70"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="text-white card bg-warning">
+                        <div class="pb-0 card-body d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="fs-3 fw-semibold">
+                                    {{ $studentsCount }}
+                                </div>
+                                <div>Students</div>
+                            </div>
+                        </div>
+                        <div class="mx-3 mt-3 c-chart-wrapper" style="height: 70px">
+                            <canvas class="chart" id="card-chart3" height="70"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- <!-- /.col-->
                 <div class="col-sm-6 col-xl-3">
                     <div class="text-white card bg-info">
                         <div class="pb-0 card-body d-flex justify-content-between align-items-start">
@@ -69,7 +100,6 @@
                     </div>
                 </div>
                 <!-- /.col--> --}}
-            </div>
         </div>
     </div>
 @endsection
