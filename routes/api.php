@@ -44,7 +44,7 @@ Route::get('configs', [ConfigController::class, 'index']);
 // Forgot Password
 Route::post('forgot-password', [PasswordResetLinkController::class, 'store']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum', 'check.approval.trial')->group(function () {
 
     // Profile
     Route::get('profile', [AuthController::class, 'profile']);
