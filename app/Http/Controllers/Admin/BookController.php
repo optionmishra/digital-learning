@@ -7,6 +7,8 @@ use App\Http\Requests\StoreBookRequest;
 use App\Models\Author;
 use App\Models\Board;
 use App\Models\Book;
+use App\Models\Config;
+use App\Models\Series;
 use App\Models\Standard;
 use App\Models\Subject;
 use App\Repositories\BookRepository;
@@ -24,14 +26,28 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(): \Illuminate\Contracts\View\View
     {
         $boards = Board::all();
         $standards = Standard::all();
         $subjects = Subject::all();
-        $authors = Author::all();
+        $series = null;
+        $authors = null;
 
-        return view('admin.books.index', compact('boards', 'standards', 'subjects', 'authors'));
+        $seriesEnabled = Config::where('key', '=', 'series')->first()?->value === 'true';
+        $authorEnabled = Config::where('key', '=', 'author')->first()?->value === 'true';
+
+        if ($seriesEnabled) {
+            $series = Series::all();
+        }
+        if ($authorEnabled) {
+            $authors = Author::all();
+        }
+
+        return view('admin.books.index', compact('boards', 'standards', 'subjects', 'seriesEnabled', 'authorEnabled', 'series', 'authors'));
     }
 
     /**

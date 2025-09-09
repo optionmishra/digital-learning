@@ -12,8 +12,7 @@
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-3 col-sm-1">
                             <label class="form-label" for="board">Board</label>
-                            <Select class="form-control updateSelectedValue" id="board" name="board_id"
-                                @disabled(!$boards->count())>
+                            <Select class="form-control" id="board" name="board_id" @disabled(!$boards->count())>
                                 @forelse ($boards as $board)
                                     <option value="{{ $board->id }}">{{ $board->name }}</option>
                                 @empty
@@ -23,8 +22,7 @@
                         </div>
                         <div class="mb-3 col-lg-3 col-sm-1">
                             <label class="form-label" for="standard">Standard</label>
-                            <Select class="form-control updateSelectedValue" id="standard" name="standard_id"
-                                @disabled(!$standards->count())>
+                            <Select class="form-control" id="standard" name="standard_id" @disabled(!$standards->count())>
                                 @forelse ($standards as $standard)
                                     <option value="{{ $standard->id }}">{{ $standard->name }}</option>
                                 @empty
@@ -34,8 +32,7 @@
                         </div>
                         <div class="mb-3 col-lg-3 col-sm-1">
                             <label class="form-label" for="subject">Subject</label>
-                            <Select class="form-control updateSelectedValue" id="subject" name="subject_id"
-                                @disabled(!$subjects->count())>
+                            <Select class="form-control" id="subject" name="subject_id" @disabled(!$subjects->count())>
                                 @forelse ($subjects as $subject)
                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                 @empty
@@ -43,17 +40,32 @@
                                 @endforelse
                             </Select>
                         </div>
-                        <div class="mb-3 col-lg-3 col-sm-1">
-                            <label class="form-label" for="author">Author</label>
-                            <Select class="form-control updateSelectedValue" id="author" name="author_id"
-                                @disabled(!$authors->count())>
-                                @forelse ($authors as $author)
-                                    <option value="{{ $author->id }}">{{ $author->name }}</option>
-                                @empty
-                                    <option value="">Please add a Author first</option>
-                                @endforelse
-                            </Select>
-                        </div>
+                        @if ($seriesEnabled)
+                            <div class="mb-3 col-lg-3 col-sm-1">
+                                <label class="form-label" for="series">Series</label>
+                                <Select class="form-control" id="series" name="series_id"
+                                    @disabled(!$series->count())>
+                                    @forelse ($series as $seriesItem)
+                                        <option value="{{ $seriesItem->id }}">{{ $seriesItem->name }}</option>
+                                    @empty
+                                        <option value="">Please add a Series first</option>
+                                    @endforelse
+                                </Select>
+                            </div>
+                        @endif
+                        @if ($authorEnabled)
+                            <div class="mb-3 col-lg-3 col-sm-1">
+                                <label class="form-label" for="author">Author</label>
+                                <Select class="form-control" id="author" name="author_id"
+                                    @disabled(!$authors->count())>
+                                    @forelse ($authors as $author)
+                                        <option value="{{ $author->id }}">{{ $author->name }}</option>
+                                    @empty
+                                        <option value="">Please add a Author first</option>
+                                    @endforelse
+                                </Select>
+                            </div>
+                        @endif
                     </div>
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-6 col-sm-1">

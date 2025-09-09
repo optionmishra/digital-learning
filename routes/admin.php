@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\ContentTypeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\Admin\SeriesController;
 use App\Http\Controllers\Admin\StandardController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TopicController;
@@ -83,4 +84,9 @@ Route::group(['middleware' => ['auth']], function () {
     );
 
     Route::post('/extend-trial/{user}', [UserController::class, 'extendTrial'])->name('users.extend.trial');
+
+    // Series
+    Route::resource('series', SeriesController::class);
+    Route::get('/seriess-data', [SeriesController::class, 'dataTable'])->name('series.datatable');
+
 });
