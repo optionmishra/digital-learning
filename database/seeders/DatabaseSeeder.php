@@ -22,6 +22,7 @@ class DatabaseSeeder extends BaseSeeder
             QuestionSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            ConfigSeeder::class,
         ]);
     }
 }
