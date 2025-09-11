@@ -318,12 +318,20 @@ class AdminPanel {
   }
 
   handleButtonRoute(event) {
-    const route = $(event.target).data("btn-route");
-    const formId = $(event.target).data("form");
-    const form = document.getElementById(formId);
+    const button = $(event.currentTarget);
+    const route = button.data("btn-route");
+    const formId = button.data("form");
 
+    if (!route || !formId) {
+      console.warn("Missing required data attributes");
+      return;
+    }
+
+    const form = document.getElementById(formId);
     if (form) {
       form.setAttribute("action", route);
+    } else {
+      console.warn(`Form with ID '${formId}' not found`);
     }
   }
 
