@@ -31,7 +31,7 @@ class StoreContentRequest extends FormRequest
             'topic_id' => '',
             'title' => 'required',
             'tags' => 'required',
-            'img_type' => 'required',
+            'img_type' => '',
             'img' => 'file|mimes:jpeg,png,jpg',
             'img_url' => 'url|nullable',
             'about' => 'required',

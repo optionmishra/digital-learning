@@ -40,6 +40,7 @@
                         <div class="mb-3 col-lg-3 col-sm-12">
                             <label class="form-label" for="topic">Topic</label>
                             <select class="form-control" name="topic_id" id="topic">
+                                <option value="">N/A</option>
                                 @foreach ($books[0]->topics as $topic)
                                     <option value="{{ $topic->id }}">{{ $topic->name }}</option>
                                 @endforeach
@@ -58,25 +59,28 @@
                                 placeholder="Tags (separated by comma)" name="tags">
                         </div>
                     </div>
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-6 col-sm-12">
-                            <label class="form-label" for="img_type">Image Upload Type</label>
-                            <select class="form-control" name="img_type" id="img_type">
-                                <option value="file">File</option>
-                                <option value="url">URL</option>
-                            </select>
+                    @if ($contentType->name !== 'Answer key' && $contentType->name !== 'Worksheet')
+                        <div class="mb-3 row">
+                            <div class="mb-3 col-lg-6 col-sm-12">
+                                <label class="form-label" for="img_type">Image Upload Type</label>
+                                <select class="form-control" name="img_type" id="img_type">
+                                    <option value="file">File</option>
+                                    <option value="url">URL</option>
+                                </select>
+                            </div>
+                            <div id="imgFileInputContainer" class="mb-3 col-lg-6 col-sm-12">
+                                <label class="form-label" for="img">File</label>
+                                <input class="form-control" id="img" type="file" name="img"
+                                    accept="image/*">
+                            </div>
+                            <div id="imgUrlInputContainer" class="mb-3 col-lg-6 col-sm-12 d-none">
+                                <label class="form-label" for="img_url">URL</label>
+                                <input class="form-control" id="img_url" type="url" name="img_url"
+                                    placeholder="https://www.example.com/">
+                            </div>
                         </div>
-                        <div id="imgFileInputContainer" class="mb-3 col-lg-6 col-sm-12">
-                            <label class="form-label" for="img">File</label>
-                            <input class="form-control" id="img" type="file" name="img" accept="image/*">
-                        </div>
-                        <div id="imgUrlInputContainer" class="mb-3 col-lg-6 col-sm-12 d-none">
-                            <label class="form-label" for="img_url">URL</label>
-                            <input class="form-control" id="img_url" type="url" name="img_url"
-                                placeholder="https://www.example.com/">
-                        </div>
-                    </div>
-                    @if ($contentType->name == 'Video')
+                    @endif
+                    {{-- @if ($contentType->name == 'Video')
                         <div class="mb-3 row">
                             <div class="mb-3 col-lg-6 col-sm-12">
                                 <label class="form-label" for="creator">Creator</label>
@@ -84,7 +88,7 @@
                                     name="creator">
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
                     <div class="mb-3 row">
                         <div class="mb-3 col-lg-6 col-sm-12">
                             <label class="form-label" for="src_type">Source Upload Type</label>

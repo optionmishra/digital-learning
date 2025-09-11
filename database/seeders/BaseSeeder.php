@@ -24,6 +24,10 @@ abstract class BaseSeeder extends Seeder
 
     public static $videoContentType;
 
+    public static $answerKeyContentType;
+
+    public static $worksheetContentType;
+
     public static $adminRole;
 
     public static $teacherRole;

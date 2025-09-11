@@ -17,5 +17,12 @@ class ContentTypeSeeder extends BaseSeeder
         self::$ebookContentType = ContentType::firstOrCreate([
             'name' => 'E-Book \ Flipbook',
         ]);
+        self::$answerKeyContentType = ContentType::firstOrCreate([
+            'name' => 'Answer key',
+        ]);
+        self::$worksheetContentType = ContentType::firstOrCreate([
+            'name' => 'Worksheet',
+        ]);
+
     }
 }

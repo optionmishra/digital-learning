@@ -52,7 +52,7 @@ class ContentController extends Controller
     {
         $data = $request->validated();
         $data['src'] = $data['src_type'] === 'file' ? '' : $data['url'];
-        $data['img'] = $data['img_type'] === 'file' ? '' : $data['img_url'];
+        $data['img'] = (isset($data['img_type']) && $data['img_type'] === 'file') ? '' : ($data['img_url'] ?? '');
         $content = $this->content->store($data, $request->input('id'));
 
         if ($request->hasFile('img')) {
