@@ -592,6 +592,8 @@ class AdminPanel {
       "Teacher Code": "teacherCode",
       "Student Code": "studentCode",
       "Serial No.": "serialNo",
+      "Start Date": "start_date",
+      "End Date": "end_date",
     };
 
     return columnMap[headerText] || headerText.toLowerCase();

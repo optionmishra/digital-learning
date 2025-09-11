@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\ContentTypeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\SeriesController;
 use App\Http\Controllers\Admin\StandardController;
@@ -88,5 +89,9 @@ Route::group(['middleware' => ['auth']], function () {
     // Series
     Route::resource('series', SeriesController::class);
     Route::get('/seriess-data', [SeriesController::class, 'dataTable'])->name('series.datatable');
+
+    // Notifications
+    Route::resource('notifications', NotificationController::class);
+    Route::get('/notifications-data', [NotificationController::class, 'dataTable'])->name('notifications.datatable');
 
 });

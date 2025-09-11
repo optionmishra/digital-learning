@@ -113,6 +113,12 @@
             </ul>
         </li>
 
+
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.notifications.index') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                </svg> Notifications</a></li>
+
         {{-- @if (!$user->hasRestriction('can_manage_infopages')) --}}
         {{-- <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
                 <svg class="nav-icon">
