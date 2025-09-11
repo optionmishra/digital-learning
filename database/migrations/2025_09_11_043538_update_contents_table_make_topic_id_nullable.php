@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('contents', function (Blueprint $table) {
             $table->foreignId('topic_id')->nullable()->change();
+            $table->string('src')->nullable()->change();
+            $table->string('tags')->nullable()->change();
         });
     }
 

@@ -7,6 +7,7 @@ use App\Http\Resources\BannerResource;
 use App\Http\Resources\EbookResource;
 use App\Http\Resources\EbooksResource;
 use App\Http\Resources\SubjectsResource;
+use App\Http\Resources\TeacherResource;
 use App\Http\Resources\VideoResource;
 use App\Http\Resources\VideosResource;
 use App\Models\ContentType;
@@ -143,8 +144,8 @@ class ContentController extends Controller
 
         return $this->sendAPIResponse(
             [
-                'answer_keys' => $answerKeys,
-                'worksheets' => $worksheets,
+                'answer_keys' => TeacherResource::collection($answerKeys),
+                'worksheets' => TeacherResource::collection($worksheets),
             ],
             'Teacher resources fetched successfully.'
         );

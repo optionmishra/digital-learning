@@ -30,7 +30,7 @@ class StoreContentRequest extends FormRequest
             'book_id' => 'required',
             'topic_id' => '',
             'title' => 'required',
-            'tags' => 'required',
+            'tags' => '',
             'img_type' => '',
             'img' => 'file|mimes:jpeg,png,jpg',
             'img_url' => 'url|nullable',
