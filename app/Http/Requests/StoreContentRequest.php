@@ -28,19 +28,19 @@ class StoreContentRequest extends FormRequest
             'standard_id' => 'required',
             'subject_id' => 'required',
             'book_id' => 'required',
-            'topic_id' => '',
+            'topic_id' => 'nullable',
             'title' => 'required',
-            'tags' => '',
-            'img_type' => '',
-            'img' => 'file|mimes:jpeg,png,jpg',
-            'img_url' => 'url|nullable',
+            'tags' => 'nullable',
+            'img_type' => 'nullable',
+            'img' => 'nullable|file|mimes:jpeg,png,jpg|max:2048', // Add max size
+            'img_url' => 'nullable|url',
             'about' => 'required',
             'src_type' => 'required',
-            'file' => 'file',
-            'url' => 'url|nullable',
-            'creator' => '',
-            'price' => '',
-            'duration' => '',
+            'file' => 'nullable|file|max:10240', // Add max size and nullable
+            'url' => 'nullable|url',
+            'creator' => 'nullable',
+            'price' => 'nullable',
+            'duration' => 'nullable',
         ];
     }
 }
