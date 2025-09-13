@@ -22,6 +22,10 @@ class BookController extends Controller
             $query->whereIn('subject_id', explode(',', $request->subject_ids));
         }
 
+        if ($request->has('series_ids')) {
+            $query->whereIn('series_id', explode(',', $request->series_ids));
+        }
+
         if ($request->has('standard_ids')) {
             $query->whereIn('standard_id', explode(',', $request->standard_ids))
                 ->whereHas('subject', function ($query) {

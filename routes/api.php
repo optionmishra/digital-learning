@@ -9,6 +9,7 @@ use App\Http\Controllers\API\ContentController;
 use App\Http\Controllers\API\EvaluationController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\QuestionController;
+use App\Http\Controllers\API\SeriesController;
 use App\Http\Controllers\API\StandardController;
 use App\Http\Controllers\API\SubjectController;
 use App\Http\Controllers\API\TopicController;
@@ -24,6 +25,9 @@ Route::resource('standards', StandardController::class);
 
 // Subjects
 Route::resource('subjects', SubjectController::class);
+
+// Series
+Route::resource('series', SeriesController::class);
 
 // Books
 Route::resource('books', BookController::class);
@@ -59,10 +63,11 @@ Route::middleware('auth:sanctum', 'check.approval.trial')->group(function () {
     Route::resource('articles', ArticleController::class);
 
     // Contents
-    Route::get('videos', [ContentController::class, 'getThreeRandomVideos']);
+    Route::get('videos', [ContentController::class, 'indexVideos']);
     Route::get('videos/{video}', [ContentController::class, 'showVideo']);
     Route::get('videos/subject/{subject}', [ContentController::class, 'getVideosBySubjectId']);
 
+    Route::get('ebooks', [ContentController::class, 'indexEbooks']);
     Route::get('ebooks/{ebook}', [ContentController::class, 'showEbook']);
     Route::get('ebooks/subject/{subject}', [ContentController::class, 'getEbooksBySubjectId']);
 
