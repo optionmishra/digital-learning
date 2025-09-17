@@ -7,6 +7,7 @@ use App\Http\Requests\StoreContentRequest;
 use App\Models\Book;
 use App\Models\Content;
 use App\Models\ContentType;
+use App\Models\Series;
 use App\Models\Standard;
 use App\Models\Subject;
 use App\Models\Topic;
@@ -31,10 +32,11 @@ class ContentController extends Controller
         session(['type' => $request->input('type')]);
         $standards = Standard::all();
         $subjects = Subject::all();
+        $series = Series::all();
         $books = Book::all();
         $topics = Topic::all();
 
-        return view('admin.contents.index', compact('contentType', 'standards', 'subjects', 'books', 'topics'));
+        return view('admin.contents.index', compact('contentType', 'standards', 'subjects', 'series', 'books', 'topics'));
     }
 
     /**

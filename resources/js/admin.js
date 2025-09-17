@@ -161,7 +161,21 @@ class AdminPanel {
         break;
 
       case "subject_id":
-        await this.updateBooks(rowData["standard_id"], value);
+        await this.updateSeries(value);
+        await this.updateBooks(
+          rowData["standard_id"],
+          value,
+          rowData["series_id"],
+        );
+        element.value = value;
+        break;
+
+      case "series_id":
+        await this.updateBooks(
+          rowData["standard_id"],
+          rowData["subject_id"],
+          value,
+        );
         element.value = value;
         break;
 
@@ -345,18 +359,35 @@ class AdminPanel {
       this.handleCategoryChange.bind(this),
     );
 
-    // Standard-Subject-Book-Topic chain
+    // Standard-Subject-Series-Book-Topic chain
     const chainSets = [
-      { standard: "standard", subject: "subject", book: "book" },
-      { standard: "standard2", subject: "subject2", book: "book2" },
+      {
+        standard: "standard",
+        subject: "subject",
+        series: "series",
+        book: "book",
+      },
+      {
+        standard: "standard2",
+        subject: "subject2",
+        series: "series2",
+        book: "book2",
+      },
     ];
 
-    chainSets.forEach(({ standard, subject, book }) => {
+    chainSets.forEach(({ standard, subject, series, book }) => {
       const standardSelect = document.getElementById(standard);
       const subjectSelect = document.getElementById(subject);
+      const seriesSelect = document.getElementById(series);
       const bookSelect = document.getElementById(book);
 
       const updateBooksAndTopics = async () => {
+        await this.updateBooks();
+        await this.updateTopics();
+      };
+
+      const updateSeriesAndBooks = async () => {
+        await this.updateSeries();
         await this.updateBooks();
         await this.updateTopics();
       };
@@ -366,7 +397,11 @@ class AdminPanel {
       }
 
       if (subjectSelect) {
-        subjectSelect.addEventListener("change", updateBooksAndTopics);
+        subjectSelect.addEventListener("change", updateSeriesAndBooks);
+      }
+
+      if (seriesSelect) {
+        seriesSelect.addEventListener("change", updateBooksAndTopics);
       }
 
       if (bookSelect) {
@@ -408,22 +443,27 @@ class AdminPanel {
     }
   }
 
-  async updateBooks(standardId, subjectId) {
+  async updateBooks(standardId, subjectId, seriesId) {
     const standardSelect = document.getElementById("standard");
     const subjectSelect = document.getElementById("subject");
+    const seriesSelect = document.getElementById("series");
     const bookSelect = document.getElementById("book");
 
     if (!bookSelect) return;
 
     if (!standardId && standardSelect) standardId = standardSelect.value;
     if (!subjectId && subjectSelect) subjectId = subjectSelect.value;
+    if (!seriesId && seriesSelect) seriesId = seriesSelect.value;
 
     bookSelect.innerHTML = "<option value=''>Loading...</option>";
 
     try {
-      const response = await fetch(
-        `/api/books?standard_ids=${standardId}&subject_ids=${subjectId}`,
-      );
+      let url = `/api/books?standard_ids=${standardId}&subject_ids=${subjectId}`;
+      if (seriesId) {
+        url += `&series_ids=${seriesId}`;
+      }
+
+      const response = await fetch(url);
       const books = await response.json();
 
       if (books.data.length == 0) {
@@ -442,6 +482,45 @@ class AdminPanel {
     } catch (error) {
       console.error("Error fetching books:", error);
       bookSelect.innerHTML = "<option value=''>Error loading books</option>";
+    }
+  }
+
+  async updateSeries(subjectId) {
+    const subjectSelect = document.getElementById("subject");
+    const seriesSelect = document.getElementById("series");
+
+    if (!seriesSelect) return;
+
+    if (!subjectId && subjectSelect) subjectId = subjectSelect.value;
+    if (!subjectId) {
+      seriesSelect.disabled = true;
+      seriesSelect.innerHTML = "<option value=''>No Subject Selected</option>";
+      return;
+    }
+
+    seriesSelect.innerHTML = "<option value=''>Loading...</option>";
+
+    try {
+      const response = await fetch(`/api/series?subject_ids=${subjectId}`);
+      const series = await response.json();
+
+      if (series.data.length == 0) {
+        seriesSelect.disabled = true;
+        seriesSelect.innerHTML = "<option value=''>No Series Found</option>";
+        return;
+      }
+
+      seriesSelect.innerHTML = "";
+      seriesSelect.disabled = false;
+      series.data.forEach((serie) => {
+        const option = document.createElement("option");
+        option.value = serie.id;
+        option.textContent = serie.name;
+        seriesSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error fetching series:", error);
+      seriesSelect.innerHTML = "<option value=''>Error loading series</option>";
     }
   }
 
