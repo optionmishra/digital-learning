@@ -64,6 +64,9 @@ class ContentRepository extends BaseRepository implements ContentRepositoryInter
             $content->serial = $start + 1 + $key;
             $content->image = $content->img ? view('admin.contents.media', compact('content'))->render() : null;
             $content->url = $content->src ? view('admin.contents.url', compact('content'))->render() : null;
+            $content->standard_name = $content->standard?->name;
+            $content->subject_name = $content->subject?->name;
+            $content->series_name = $content->series?->name;
             $content->actions = view('admin.contents.actions', compact('content'))->render();
             $content->setVisible($columns);
 

@@ -22,12 +22,15 @@
                                 <th scope="col">Tags</th>
                                 <th scope="col">URL</th>
                                 @if ($contentType->name == 'Video')
-                                    <th scope="col">Creator</th>
+                                    {{-- <th scope="col">Creator</th> --}}
                                     <th scope="col">Duration</th>
                                 @elseif ($contentType->name == 'Ebook')
-                                    <th scope="col">Price</th>
+                                    {{-- <th scope="col">Price</th> --}}
                                     <th scope="col">About</th>
                                 @endif
+                                <th scope="col">Standard</th>
+                                <th scope="col">Subject</th>
+                                <th scope="col">Series</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>

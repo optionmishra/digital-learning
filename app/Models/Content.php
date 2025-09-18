@@ -18,6 +18,21 @@ class Content extends Model
         static::addGlobalScope(new UserContentScope);
     }
 
+    public function standard()
+    {
+        return $this->belongsTo(Standard::class);
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function series()
+    {
+        return $this->belongsTo(Series::class);
+    }
+
     public function topic()
     {
         return $this->belongsTo(Topic::class);
