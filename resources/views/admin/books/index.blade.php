@@ -23,7 +23,7 @@
                                 <th scope="col">Board</th>
                                 <th scope="col">Standard</th>
                                 <th scope="col">Subject</th>
-                                <th scope="col">Author</th>
+                                <th scope="col">Series</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>

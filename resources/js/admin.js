@@ -664,6 +664,7 @@ class AdminPanel {
       Board: "board_name",
       Standard: "standard_name",
       Subject: "subject_name",
+      Series: "series_name",
       Book: "book_name",
       Topic: "topic_name",
       Assessment: "assessment_name",

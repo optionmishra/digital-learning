@@ -84,6 +84,7 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
             $book->board_name = $book->board?->name;
             $book->standard_name = $book->standard?->name;
             $book->subject_name = $book->subject?->name;
+            $book->series_name = $book->series?->name;
             $book->author_name = $book->author?->name;
             $book->setVisible($columns);
 
