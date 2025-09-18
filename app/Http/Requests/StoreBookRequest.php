@@ -30,6 +30,7 @@ class StoreBookRequest extends FormRequest
             'board_id' => 'required',
             'standard_id' => 'required',
             'subject_id' => 'required',
+            'series_id' => 'required',
             // 'author_id' => 'required',
         ];
     }
