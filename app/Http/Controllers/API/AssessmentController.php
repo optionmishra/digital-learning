@@ -10,11 +10,12 @@ use App\Http\Resources\ResultResource;
 use App\Models\Assessment;
 use App\Models\Option;
 use App\Models\Submission;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AssessmentController extends Controller
 {
-    public function mcq(\Illuminate\Http\Request $request): \Illuminate\Http\JsonResponse
+    public function mcq(Request $request): \Illuminate\Http\JsonResponse
     {
         $query = Assessment::query()
             ->where('type', 'mcq')
@@ -57,7 +58,7 @@ class AssessmentController extends Controller
         return $this->sendAPIResponse(AssessmentsResource::collection($mcqAssessment), 'Assessments fetched successfully.');
     }
 
-    public function olympiad()
+    public function olympiad(Request $request)
     {
         $query = Assessment::query()
             ->where('type', 'olympiad')

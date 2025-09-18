@@ -104,7 +104,7 @@ abstract class Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendAPIResponse($result, $message)
+    public function sendAPIResponse($result, $message): \Illuminate\Http\JsonResponse
     {
         $response = [
             'success' => true,
