@@ -22,3 +22,6 @@ yarn-error.log
 .env.main
 .env.mms
 .env.orange
+.env.oliver.prod
+.env.sophy.prod
+.htaccess
