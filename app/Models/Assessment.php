@@ -11,11 +11,6 @@ class Assessment extends Model
 
     protected $guarded = ['id'];
 
-    public function subject()
-    {
-        return $this->belongsTo(Subject::class);
-    }
-
     public function questions()
     {
         return $this->belongsToMany(
@@ -37,6 +32,16 @@ class Assessment extends Model
     public function standard()
     {
         return $this->belongsTo(Standard::class);
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function series()
+    {
+        return $this->belongsTo(Series::class);
     }
 
     public function book()

@@ -21,6 +21,7 @@
                                 <th scope="col">Type</th>
                                 <th scope="col">Standard</th>
                                 <th scope="col">Subject</th>
+                                <th scope="col">Series</th>
                                 <th scope="col">Book</th>
                                 <th scope="col">Actions</th>
                             </tr>

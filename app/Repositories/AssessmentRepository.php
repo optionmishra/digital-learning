@@ -64,6 +64,7 @@ class AssessmentRepository extends BaseRepository implements AssessmentRepositor
             // $assessment->image = view('admin.assessments.media', compact('assessment'))->render();
             $assessment->standard_name = $assessment->standard->name;
             $assessment->subject_name = $assessment->subject->name;
+            $assessment->series_name = $assessment->series?->name;
             $assessment->book_name = $assessment->book->name;
             $assessment->actions = view('admin.assessments.actions', compact('assessment'))->render();
             $assessment->setVisible($columns);
