@@ -14,71 +14,96 @@ use Illuminate\Support\Facades\DB;
 
 class EvaluationController extends Controller
 {
-    public function scoreIndex()
+    // public function scoreIndex()
+    // {
+    //     $attemptedAssessmentsArr = Attempt::select('assessment_id', DB::raw('max(created_at) as latest_attempt'))
+    //         ->where('user_id', Auth::user()->id)
+    //         ->groupBy('assessment_id')
+    //         ->orderBy('latest_attempt', 'desc')
+    //         ->pluck('assessment_id')->toArray();
+
+    //     $attemptedMcqAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'mcq')->latest()->get();
+    //     $attemptedOlympiadAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'olympiad')->latest()->get();
+
+    //     $mcqScoreSum = $attemptedMcqAssessments->sum(function ($assessment) {
+    // // Sum of scores for only the latest attempt of each assessment, for the current user
+    //         return $assessment->results()->where('user_id', Auth::user()->id)->latest('results.created_at')->value('score');
+    //     });
+    //     $mcqAttemptCount = $attemptedMcqAssessments->count();
+
+    //     $olympiadScoreSum = $attemptedOlympiadAssessments->sum(function ($assessment) {
+    //         return $assessment->results->sum('score');
+    //     });
+    //     $olympiadAttemptCount = $attemptedOlympiadAssessments->count();
+
+    //     // $totalScoreSum = $mcqScoreSum + $olympiadScoreSum;
+    //     // $totalAttemptCount = $mcqAttemptCount + $olympiadAttemptCount;
+
+    //     return $this->sendAPIResponse(
+    //         [
+    //             'mcq' => [
+    //                 'overallScore' => $mcqAttemptCount > 0 ? $mcqScoreSum / $mcqAttemptCount : 0,
+    //                 'assessments' => AssessmentsResource::collection($attemptedMcqAssessments),
+    //             ],
+    //             'olympiad' => [
+    //                 'overallScore' => $olympiadAttemptCount > 0 ? $olympiadScoreSum / $olympiadAttemptCount : 0,
+    //                 'assessments' => AssessmentsResource::collection($attemptedOlympiadAssessments),
+    //             ],
+    //         ],
+    //         'Scores fetched successfully.'
+    //     );
+    // }
+
+    public function scoreIndex(Request $request): \Illuminate\Http\JsonResponse
     {
-        $attemptedAssessmentsArr = Attempt::select('assessment_id', DB::raw('max(created_at) as latest_attempt'))
-            ->where('user_id', Auth::user()->id)
-            ->groupBy('assessment_id')
-            ->orderBy('latest_attempt', 'desc')
-            ->pluck('assessment_id')->toArray();
+        $assessmentQuery = Assessment::query();
 
-        $attemptedMcqAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'mcq')->latest()->get();
-        $attemptedOlympiadAssessments = Assessment::whereIn('id', $attemptedAssessmentsArr)->where('type', 'olympiad')->latest()->get();
+        // Apply filters based on request parameters
+        if ($request->has('subject_ids')) {
+            $assessmentQuery->whereIn('subject_id', (array) $request->input('subject_ids'));
+        }
 
-        $mcqScoreSum = $attemptedMcqAssessments->sum(function ($assessment) {
-            return $assessment->results()->where('user_id', Auth::user()->id)->latest('results.created_at')->value('score'); // Sum of scores for only the latest attempt of each assessment, for the current user
+        if ($request->has('series_ids')) {
+            $assessmentQuery->whereIn('series_id', (array) $request->input('series_ids'));
+        }
+
+        if ($request->has('type')) {
+            $assessmentQuery->where('type', $request->input('type'));
+        }
+
+        if ($request->has('search')) {
+            $assessmentQuery->where('name', 'like', "%{$request->search}%");
+        }
+
+        // Filter assessments to only include those attempted by the current user
+        $assessmentQuery->whereHas('attempts', function ($query) {
+            $query->where('user_id', Auth::user()->id);
         });
-        $mcqAttemptCount = $attemptedMcqAssessments->count();
 
-        $olympiadScoreSum = $attemptedOlympiadAssessments->sum(function ($assessment) {
-            return $assessment->results->sum('score');
-        });
-        $olympiadAttemptCount = $attemptedOlympiadAssessments->count();
-
-        // $totalScoreSum = $mcqScoreSum + $olympiadScoreSum;
-        // $totalAttemptCount = $mcqAttemptCount + $olympiadAttemptCount;
-
-        return $this->sendAPIResponse(
-            [
-                'mcq' => [
-                    'overallScore' => $mcqAttemptCount > 0 ? $mcqScoreSum / $mcqAttemptCount : 0,
-                    'assessments' => AssessmentsResource::collection($attemptedMcqAssessments),
-                ],
-                'olympiad' => [
-                    'overallScore' => $olympiadAttemptCount > 0 ? $olympiadScoreSum / $olympiadAttemptCount : 0,
-                    'assessments' => AssessmentsResource::collection($attemptedOlympiadAssessments),
-                ],
-            ],
-            'Scores fetched successfully.'
-        );
-    }
-
-    public function getAttemptsBySubjectId(Request $request, $subject_id)
-    {
-        // Get the assessments attempted by the user in the specific subject
-        $attemptDetails = Assessment::where('subject_id', $subject_id)
-            ->when($request->type, fn ($query, $type) => $query->where('type', $type))
-            ->whereHas('attempts', function ($query) {
-                $query->where('user_id', Auth::user()->id);
-            })
-            ->with(['attempts' => function ($query) {
-                $query->where('user_id', Auth::user()->id)
-                    ->with(['result', 'submissions'])
-                    ->latest();
-            }])
+        // Eager load attempts for the current user, including their results and submissions,
+        // and order attempts by latest for each assessment
+        $attemptDetails = $assessmentQuery->with(['attempts' => function ($query) {
+            $query->where('user_id', Auth::user()->id)
+                ->with(['result', 'submissions'])
+                ->latest();
+        }])
             ->get()
             ->map(function ($assessment) {
-                // Get the latest attempt for this assessment
+                // Get the latest attempt for this assessment by the current user
                 $latestAttempt = $assessment->attempts->first();
 
                 if (! $latestAttempt) {
+                    // This should ideally not happen if whereHas('attempts') worked,
+                    // but it's a safeguard if the eager loading gets no attempts.
                     return null;
                 }
 
                 // Prepare the result details
                 $result = $latestAttempt->result;
                 if (! $result) {
-                    return $this->sendAPIError('Result not found for this attempt!');
+                    // If a result is missing for an attempt, return null for this assessment
+                    // This is better than returning an API error from inside a map callback
+                    return null;
                 }
 
                 return [
@@ -95,11 +120,11 @@ class EvaluationController extends Controller
                     'total_duration' => $assessment->duration,
                 ];
             })
-            ->filter() // Remove null values
+            ->filter() // Remove null values (assessments with no latest attempt or result)
             ->values(); // Reset array keys
 
         return $this->sendAPIResponse([
-            'attemptedSeries' => $attemptDetails,
+            'attemptedAssessments' => $attemptDetails,
         ], 'Attempted assessments fetched successfully.');
     }
 

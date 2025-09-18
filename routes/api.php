@@ -85,7 +85,7 @@ Route::middleware('auth:sanctum', 'check.approval.trial')->group(function () {
 
     // Evaluations
     Route::get('score', [EvaluationController::class, 'scoreIndex']);
-    Route::get('score/{subject}', [EvaluationController::class, 'getAttemptsBySubjectId']);
+    // Route::get('score/{subject}', [EvaluationController::class, 'getAttemptsBySubjectId']);
     Route::get('answer-keys', [EvaluationController::class, 'answerKeyIndex']);
     Route::get('report/{assessment}', [EvaluationController::class, 'report']);
     Route::get('solutions/{assessment}', [EvaluationController::class, 'solutions']);
