@@ -50,25 +50,58 @@ class ContentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreContentRequest $request)
+    public function store(StoreContentRequest $request): \Illuminate\Http\JsonResponse
     {
         $data = $request->validated();
-        $data['src'] = $data['src_type'] === 'file' ? '' : $data['url'];
-        $data['img'] = (isset($data['img_type']) && $data['img_type'] === 'file') ? '' : ($data['img_url'] ?? '');
+        $isUpdate = $request->input('id') !== null; // Determine if it's an update operation
+
+        // --- Handle 'src' field (content file/url) ---
+        // If src_type is 'file', we avoid saving 'src' in the initial $data payload.
+        // It will either remain unchanged (if no new file uploaded), or be updated later
+        // after a new file is uploaded.
+        if (($data['src_type'] ?? null) === 'file') {
+            unset($data['src']);
+        } else { // src_type is 'url' or not explicitly set (defaults to URL behavior)
+            // Use $data['url'] directly, falling back to an empty string if not present.
+            $data['src'] = $data['url'] ?? '';
+        }
+        // 'url' is a temporary request field used to populate 'src', not a model attribute itself.
+        unset($data['url']);
+
+        // --- Handle 'img' field (image file/url) ---
+        // If img_type is 'file', we avoid saving 'img' in the initial $data payload.
+        // It will either remain unchanged (if no new image uploaded), or be updated later
+        // after a new image is uploaded.
+        if (($data['img_type'] ?? null) === 'file') {
+            unset($data['img']);
+        } else { // img_type is 'url' or not explicitly set (defaults to URL behavior)
+            // Original code used $data['img_url'] ?? ''. Maintaining this.
+            $data['img'] = $data['img_url'] ?? '';
+        }
+        // 'img_url' is a temporary request field used to populate 'img', not a model attribute itself.
+        unset($data['img_url']);
+
+        // Store/update the content model in the database using the repository.
+        // By unsetting 'src' and 'img' when their type is 'file' and no new file/image is provided,
+        // we ensure the repository does not overwrite existing values with empty strings.
         $content = $this->content->store($data, $request->input('id'));
 
+        // --- Handle actual file uploads and update content model ---
+        // If a new image file was provided, upload it and update the 'img' field.
         if ($request->hasFile('img')) {
             $uploadedFile = $this->uploadFile($request->file('img'), 'contents/img/');
             $content->img = $uploadedFile['name'];
             $content->save();
         }
+        // If a new content file was provided, upload it and update the 'src' field.
         if ($request->hasFile('file')) {
             $uploadedFile = $this->uploadFile($request->file('file'), 'contents/file/');
             $content->src = $uploadedFile['name'];
             $content->save();
         }
 
-        return $this->jsonResponse((bool) $content, 'Content '.($request->input('id') ? 'updated' : 'created').' successfully');
+        // Return a JSON response indicating success.
+        return $this->jsonResponse((bool) $content, 'Content '.($isUpdate ? 'updated' : 'created').' successfully');
     }
 
     /**
