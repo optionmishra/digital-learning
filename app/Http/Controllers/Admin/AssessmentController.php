@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAssessmentRequest;
 use App\Models\Assessment;
 use App\Models\Book;
+use App\Models\Series;
 use App\Models\Standard;
 use App\Models\Subject;
 use App\Repositories\AssessmentRepository;
@@ -28,9 +29,10 @@ class AssessmentController extends Controller
     {
         $standards = Standard::all();
         $subjects = Subject::all();
+        $series = Series::all();
         $books = Book::all();
 
-        return view('admin.assessments.index', compact('standards', 'subjects', 'books'));
+        return view('admin.assessments.index', compact('standards', 'subjects', 'series', 'books'));
     }
 
     /**

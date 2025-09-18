@@ -9,6 +9,7 @@ use App\Models\Assessment;
 use App\Models\Book;
 use App\Models\Option;
 use App\Models\Question;
+use App\Models\Series;
 use App\Models\Standard;
 use App\Models\Subject;
 use App\Models\Topic;
@@ -36,11 +37,12 @@ class QuestionController extends Controller
     {
         $standards = Standard::all();
         $subjects = Subject::all();
+        $series = Series::all();
         $books = Book::all();
         $topics = Topic::all();
         $assessments = Assessment::all();
 
-        return view('admin.questions.index', compact('standards', 'subjects', 'books', 'topics', 'assessments'));
+        return view('admin.questions.index', compact('standards', 'subjects', 'series', 'books', 'topics', 'assessments'));
     }
 
     /**

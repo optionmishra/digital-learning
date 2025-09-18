@@ -27,6 +27,14 @@
                             </select>
                         </div>
                         <div class="mb-3 col-lg-3 col-sm-12">
+                            <label class="form-label" for="series">Series</label>
+                            <select class="form-control" name="series_id" id="series">
+                                @foreach ($series as $s)
+                                    <option value="{{ $s->id }}">{{ $s->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3 col-lg-3 col-sm-12">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book">
                                 @foreach ($subjects[0]->books as $book)

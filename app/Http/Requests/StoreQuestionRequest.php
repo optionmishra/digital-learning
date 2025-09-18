@@ -23,6 +23,7 @@ class StoreQuestionRequest extends FormRequest
     {
         return [
             'subject_id' => 'required|exists:subjects,id',
+            'series_id' => 'required|exists:series,id',
             'book_id' => 'required|exists:books,id',
             'topic_id' => 'required|exists:topics,id',
             'assessment_id' => 'required|exists:assessments,id',
