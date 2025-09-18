@@ -7,29 +7,44 @@ use App\Http\Requests\AttemptAssessmentRequest;
 use App\Http\Resources\AssessmentsResource;
 use App\Http\Resources\QuestionsResource;
 use App\Http\Resources\ResultResource;
-use App\Http\Resources\SubjectsResource;
 use App\Models\Assessment;
-use App\Models\Attempt;
 use App\Models\Option;
-use App\Models\Subject;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Auth;
 
 class AssessmentController extends Controller
 {
-    public function mcq()
+    public function mcq(\Illuminate\Http\Request $request): \Illuminate\Http\JsonResponse
     {
-        $subjects = Subject::all();
-        $mcqAssessments = Assessment::where(['type' => 'mcq', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
+        $query = Assessment::query()
+            ->where('type', 'mcq')
+            ->where('standard_id', Auth::user()->profile->standard_id);
 
-        $attemptedSeriesArr = Attempt::where('user_id', Auth::user()->id)->get()->pluck('assessment_id')->toArray();
-        $attemptedMcqAssessments = Assessment::whereIn('id', $attemptedSeriesArr)->where('type', 'mcq')->latest()->get();
+        if ($request->has('subject_ids')) {
+            $subjectIds = array_map('intval', array_filter(explode(',', $request->input('subject_ids'))));
+            if (! empty($subjectIds)) {
+                $query->whereIn('subject_id', $subjectIds);
+            }
+        }
 
-        return $this->sendAPIResponse([
-            'newSeries' => AssessmentsResource::collection($mcqAssessments),
-            'attemptedSeries' => AssessmentsResource::collection($attemptedMcqAssessments),
-            'subjects' => SubjectsResource::collection($subjects),
-        ], 'Assessments fetched successfully.');
+        if ($request->has('series_ids')) {
+            $seriesIds = array_map('intval', array_filter(explode(',', $request->input('series_ids'))));
+            if (! empty($seriesIds)) {
+                $query->whereIn('series_id', $seriesIds);
+            }
+        }
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%'.$request->input('search').'%');
+        }
+
+        $mcqAssessments = $query->latest()->get();
+
+        if ($mcqAssessments->isEmpty()) {
+            return $this->sendAPIResponse([], 'Assessments not found.');
+        }
+
+        return $this->sendAPIResponse(AssessmentsResource::collection($mcqAssessments), 'Assessments fetched successfully.');
     }
 
     public function getMcqAssessmentBySubjectId($id)
@@ -44,11 +59,35 @@ class AssessmentController extends Controller
 
     public function olympiad()
     {
-        $olympiadAssessments = Assessment::where(['type' => 'olympiad', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
+        $query = Assessment::query()
+            ->where('type', 'olympiad')
+            ->where('standard_id', Auth::user()->profile->standard_id);
 
-        return $this->sendAPIResponse([
-            'olympiads' => AssessmentsResource::collection($olympiadAssessments),
-        ], 'Assessments fetched successfully.');
+        if ($request->has('subject_ids')) {
+            $subjectIds = array_map('intval', array_filter(explode(',', $request->input('subject_ids'))));
+            if (! empty($subjectIds)) {
+                $query->whereIn('subject_id', $subjectIds);
+            }
+        }
+
+        if ($request->has('series_ids')) {
+            $seriesIds = array_map('intval', array_filter(explode(',', $request->input('series_ids'))));
+            if (! empty($seriesIds)) {
+                $query->whereIn('series_id', $seriesIds);
+            }
+        }
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%'.$request->input('search').'%');
+        }
+
+        $olympiadAssessments = $query->latest()->get();
+
+        if ($olympiadAssessments->isEmpty()) {
+            return $this->sendAPIResponse([], 'Assessments not found.');
+        }
+
+        return $this->sendAPIResponse(AssessmentsResource::collection($olympiadAssessments), 'Assessments fetched successfully.');
     }
 
     public function getOlympiadAssessmentBySubjectId($id)
