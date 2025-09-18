@@ -27,6 +27,7 @@ class StoreContentRequest extends FormRequest
             'content_type_id' => 'required',
             'standard_id' => 'required',
             'subject_id' => 'required',
+            'series_id' => 'required',
             'book_id' => 'required',
             'topic_id' => 'nullable',
             'title' => 'required',
