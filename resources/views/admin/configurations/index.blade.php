@@ -16,34 +16,44 @@
                             <div class="col-md-4 col-sm-12">
                                 <label for="series" class="form-label">Series</label>
                                 <select class="form-select" name="series" id="series">
-                                    <option value="true" {{ $configs->series == 'true' ? 'selected' : '' }}>Active
+                                    <option value="">Select Status</option>
+                                    <option value="true" {{ ($configs->series ?? null) == 'true' ? 'selected' : '' }}>
+                                        Active
                                     </option>
-                                    <option value="false" {{ $configs->series == 'false' ? 'selected' : '' }}>Inactive
+                                    <option value="false" {{ ($configs->series ?? null) == 'false' ? 'selected' : '' }}>
+                                        Inactive
                                     </option>
                                 </select>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <label for="author" class="form-label">Author</label>
                                 <select class="form-select" name="author" id="author">
-                                    <option value="true" {{ $configs->author == 'true' ? 'selected' : '' }}>Active
+                                    <option value="">Select Status</option>
+                                    <option value="true" {{ ($configs->author ?? null) == 'true' ? 'selected' : '' }}>
+                                        Active
                                     </option>
-                                    <option value="false" {{ $configs->author == 'false' ? 'selected' : '' }}>Inactive
+                                    <option value="false" {{ ($configs->author ?? null) == 'false' ? 'selected' : '' }}>
+                                        Inactive
                                     </option>
                                 </select>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <label for="olympiad" class="form-label">Olympiad</label>
                                 <select class="form-select" name="olympiad" id="olympiad">
-                                    <option value="true" {{ $configs->olympiad == 'true' ? 'selected' : '' }}>Active
+                                    <option value="">Select Status</option>
+                                    <option value="true" {{ ($configs->olympiad ?? 'true') == 'true' ? 'selected' : '' }}>
+                                        Active
                                     </option>
-                                    <option value="false" {{ $configs->olympiad == 'false' ? 'selected' : '' }}>Inactive
+                                    <option value="false"
+                                        {{ ($configs->olympiad ?? 'true') == 'false' ? 'selected' : '' }}>
+                                        Inactive
                                     </option>
                                 </select>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="aboutus" class="form-label">About Us</label>
-                            <textarea class="form-control" id="aboutus" name="aboutus" rows="10">{{ $configs->aboutus }}</textarea>
+                            <textarea class="form-control" id="aboutus" name="aboutus" rows="10">{{ $configs->aboutus ?? '' }}</textarea>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
