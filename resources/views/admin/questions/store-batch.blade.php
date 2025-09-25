@@ -44,7 +44,7 @@
                             </select>
                         </div>
                         <div class="mb-3 col-lg-3 col-sm-12">
-                            <label class="form-label" for="topic2">Topic</label>
+                            <label class="form-label" for="topic2">Chapter</label>
                             <select class="form-control" name="topic_id" id="topic2">
                                 @foreach ($books[0]->topics as $topic)
                                     <option value="{{ $topic->id }}">{{ $topic->name }}</option>

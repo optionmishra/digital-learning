@@ -46,7 +46,7 @@
                             </select>
                         </div>
                         <div class="mb-3 col-lg-3 col-sm-12">
-                            <label class="form-label" for="topic">Topic</label>
+                            <label class="form-label" for="topic">Chapter</label>
                             <select class="form-control" name="topic_id" id="topic">
                                 <option value="">N/A</option>
                                 @foreach ($books[0]->topics as $topic)

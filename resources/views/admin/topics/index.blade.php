@@ -6,7 +6,7 @@
             <div class="row card mb-4">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title">Topics</h5>
+                        <h5 class="card-title">Chapters</h5>
                         <button class="btn btn-primary px-2 py-2" type="button" title="Edit" data-coreui-toggle="modal"
                             data-coreui-target="#topicStore">Create</button>
                     </div>
