@@ -9,9 +9,10 @@
                         <h5 class="card-title">Questions</h5>
                         <div>
                             <button class="px-2 py-2 btn btn-primary" type="button" title="Edit" data-coreui-toggle="modal"
-                                data-coreui-target="#questionStore">Create</button>
+                                data-coreui-target="#questionStore" id="create-question">Create</button>
                             <button class="px-2 py-2 btn btn-primary" type="button" title="Edit"
-                                data-coreui-toggle="modal" data-coreui-target="#questionStoreBatch">Create Multiple</button>
+                                data-coreui-toggle="modal" data-coreui-target="#questionStore"
+                                id="create-multiple-question">Create Multiple</button>
                         </div>
                     </div>
                 </div>
@@ -40,5 +41,5 @@
         </div>
     </div>
     @include('admin.questions.store')
-    @include('admin.questions.store-batch')
+    {{-- @include('admin.questions.store-batch') --}}
 @endsection

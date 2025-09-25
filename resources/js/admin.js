@@ -55,6 +55,9 @@ class AdminPanel {
 
     // Image/source type handlers
     this.bindFileTypeHandlers();
+
+    // Question store method handler
+    this.questionStoreMethodHandler();
   }
 
   /**
@@ -367,12 +370,6 @@ class AdminPanel {
         series: "series",
         book: "book",
       },
-      {
-        standard: "standard2",
-        subject: "subject2",
-        series: "series2",
-        book: "book2",
-      },
     ];
 
     chainSets.forEach(({ standard, subject, series, book }) => {
@@ -583,6 +580,23 @@ class AdminPanel {
       urlContainer.addClass("d-none").find("input").prop("disabled", true);
       fileContainer.removeClass("d-none").find("input").prop("disabled", false);
     }
+  }
+
+  questionStoreMethodHandler() {
+    $("#create-question").on("click", function (e) {
+      $(".batch-question").hide();
+      $(".single-question").show();
+      const form = $(".question-store-form");
+      const actionUrl = form.data("single-route");
+      form.attr("action", actionUrl);
+    });
+    $("#create-multiple-question").on("click", function (e) {
+      $(".single-question").hide();
+      $(".batch-question").show();
+      const form = $(".question-store-form");
+      const actionUrl = form.data("batch-route");
+      form.attr("action", actionUrl);
+    });
   }
 
   /**
