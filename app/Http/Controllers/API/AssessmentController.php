@@ -9,6 +9,7 @@ use App\Http\Resources\QuestionsResource;
 use App\Http\Resources\ResultResource;
 use App\Models\Assessment;
 use App\Models\Option;
+use App\Models\Question;
 use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -177,5 +178,28 @@ class AssessmentController extends Controller
         }
 
         return $this->sendAPIResponse(['result' => ResultResource::make($result)], 'Assessment attempted successfully.');
+    }
+
+    public function quiz(Request $request)
+    {
+        $query = Question::query();
+
+        if ($request->has('subject_ids')) {
+            $query->whereIn('subject_id', explode(',', $request->subject_ids));
+        }
+        if ($request->has('series_ids')) {
+            $query->whereIn('series_id', explode(',', $request->series_ids));
+        }
+        if ($request->has('book_ids')) {
+            $query->whereIn('book_id', explode(',', $request->book_ids));
+        }
+        if ($request->has('topic_ids')) {
+            $query->whereIn('topic_id', explode(',', $request->topic_ids));
+        }
+
+        $questions = $query->inRandomOrder()->take($request->count ?? 10)->get();
+
+        return $this->sendAPIResponse(QuestionsResource::collection($questions), 'Questions fetched successfully.');
+
     }
 }

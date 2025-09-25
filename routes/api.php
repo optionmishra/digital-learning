@@ -80,6 +80,8 @@ Route::middleware('auth:sanctum', 'check.approval.trial')->group(function () {
     Route::get('olympiad', [AssessmentController::class, 'olympiad']);
     // Route::get('olympiad/subject/{subject}', [AssessmentController::class, 'getOlympiadAssessmentBySubjectId']);
 
+    Route::get('quiz', [AssessmentController::class, 'quiz']);
+
     Route::get('assessment/questions/{assessment}', [AssessmentController::class, 'getQuestionsByAssessmentId']);
     Route::post('assessment/attempt', [AssessmentController::class, 'attemptAssessment']);
 
