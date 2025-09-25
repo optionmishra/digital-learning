@@ -52,7 +52,9 @@
                             <label class="form-label" for="type">Type</label>
                             <select class="form-control" name="type" id="type">
                                 <option value="mcq">MCQ</option>
-                                <option value="olympiad">Olympiad</option>
+                                @if (App\Models\Config::where('key', '=', 'olympiad')->first()?->value === 'true')
+                                    <option value="olympiad">Olympiad</option>
+                                @endif
                             </select>
                         </div>
                         <div class="mb-3 col-lg-6 col-sm-12">

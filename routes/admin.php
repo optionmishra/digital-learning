@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AssessmentController;
 use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\BoardController;
 use App\Http\Controllers\Admin\BookController;
+use App\Http\Controllers\Admin\ConfigurationController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\ContentTypeController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -93,5 +94,8 @@ Route::group(['middleware' => ['auth']], function () {
     // Notifications
     Route::resource('notifications', NotificationController::class);
     Route::get('/notifications-data', [NotificationController::class, 'dataTable'])->name('notifications.datatable');
+
+    // Configurations
+    Route::resource('configurations', ConfigurationController::class);
 
 });

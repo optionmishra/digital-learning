@@ -20,5 +20,10 @@ class ConfigSeeder extends BaseSeeder
             ['key' => 'author'],
             ['value' => 'false']
         );
+
+        Config::firstOrCreate(
+            ['key' => 'olympiad'],
+            ['value' => 'true']
+        );
     }
 }
