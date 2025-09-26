@@ -28,6 +28,8 @@ abstract class BaseSeeder extends Seeder
 
     public static $worksheetContentType;
 
+    public static $exerciseContentType;
+
     public static $adminRole;
 
     public static $teacherRole;

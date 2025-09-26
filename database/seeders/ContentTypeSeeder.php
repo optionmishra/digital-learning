@@ -23,6 +23,9 @@ class ContentTypeSeeder extends BaseSeeder
         self::$worksheetContentType = ContentType::firstOrCreate([
             'name' => 'Worksheet',
         ]);
+        self::$exerciseContentType = ContentType::firstOrCreate([
+            'name' => 'Exercise',
+        ]);
 
     }
 }
