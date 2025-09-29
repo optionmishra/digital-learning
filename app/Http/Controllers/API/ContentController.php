@@ -218,7 +218,7 @@ class ContentController extends Controller
         );
     }
 
-    public function exercises()
+    public function exercises(Request $request)
     {
 
         $exerciseContentType = ContentType::whereName('Exercise')->first();
