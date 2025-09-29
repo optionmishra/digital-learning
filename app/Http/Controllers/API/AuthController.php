@@ -38,6 +38,7 @@ class AuthController extends Controller
             'mobile' => $attributes['mobile'],
             'school' => $attributes['school'],
             'dob' => $attributes['dob'] ?? null,
+            'trial_end' => now()->addWeek(),
         ]);
 
         $newUser->assignBooks(explode(',', $attributes['books']));
