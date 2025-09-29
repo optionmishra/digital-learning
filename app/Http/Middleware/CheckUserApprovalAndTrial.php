@@ -40,16 +40,15 @@ class CheckUserApprovalAndTrial
         }
 
         // Check if user is approved
-        if ($userProfile->status !== 'approved') {
-            $message = match ($userProfile->status) {
-                'pending' => 'Your account is pending approval',
-                'rejected' => 'Your account has been rejected',
-                default => 'Your account is not approved'
-            };
+        if ($userProfile->status === 'approved') {
+            return $next($request);
+        }
 
+        // Check if user is rejected
+        if ($userProfile->status === 'rejected') {
             return response()->json([
                 'success' => false,
-                'message' => $message,
+                'message' => 'Your account has been rejected',
                 'error_code' => 'ACCOUNT_NOT_APPROVED',
                 'status' => $userProfile->status,
             ], 403);
