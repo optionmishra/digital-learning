@@ -72,6 +72,7 @@ Route::middleware('auth:sanctum', 'check.approval.trial')->group(function () {
     Route::get('ebooks/subject/{subject}', [ContentController::class, 'getEbooksBySubjectId']);
 
     Route::get('teacher-resource', [ContentController::class, 'teacherResource']);
+    Route::get('exercises', [ContentController::class, 'exercises']);
 
     // Assessments
     Route::get('mcq', [AssessmentController::class, 'mcq']);

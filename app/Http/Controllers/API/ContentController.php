@@ -217,4 +217,38 @@ class ContentController extends Controller
             'Teacher resources fetched successfully.'
         );
     }
+
+    public function exercises()
+    {
+
+        $exerciseContentType = ContentType::whereName('Exercise')->first();
+        $exercisesQuery = $exerciseContentType ? $exerciseContentType->classContents() : null;
+
+        // Apply filters to Exercises query
+        if ($exercisesQuery) {
+            if ($request->has('standard_ids')) {
+                $exercisesQuery->whereIn('standard_id', (array) $request->input('standard_ids'));
+            }
+            if ($request->has('subject_ids')) {
+                $exercisesQuery->whereIn('subject_id', (array) $request->input('subject_ids'));
+            }
+            if ($request->has('series_ids')) {
+                $exercisesQuery->whereIn('series_id', (array) $request->input('series_ids'));
+            }
+            if ($request->has('book_ids')) {
+                $exercisesQuery->whereIn('book_id', (array) $request->input('book_ids'));
+            }
+            if ($request->has('search')) {
+                $exercisesQuery->where('title', 'like', '%'.$request->search.'%');
+            }
+        }
+
+        // Get results or empty collection if content type was not found
+        $exercises = $exercisesQuery ? $exercisesQuery->get() : collect();
+
+        return $this->sendAPIResponse(
+            EbookResource::collection($exercises),
+            'Exercises fetched successfully.'
+        );
+    }
 }
