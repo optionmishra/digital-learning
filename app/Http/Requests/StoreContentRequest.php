@@ -37,7 +37,7 @@ class StoreContentRequest extends FormRequest
             'img_url' => 'nullable|url',
             'about' => 'required',
             'src_type' => 'required',
-            'file' => 'nullable|file|max:10240', // Add max size and nullable
+            'file' => 'nullable|file|max:1024000', // Add max size and nullable
             'url' => 'nullable|url',
             'creator' => 'nullable',
             'price' => 'nullable',
