@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function options()
@@ -44,6 +45,7 @@ class Question extends Model
     {
         return $this->belongsTo(Topic::class);
     }
+
     public function assessment()
     {
         return $this->belongsToMany(Assessment::class, 'assessment_questions')->withTimestamps();

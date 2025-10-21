@@ -1,20 +1,20 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\ArticleController;
+use App\Http\Controllers\API\AssessmentController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookController;
-use App\Http\Controllers\API\TopicController;
 use App\Http\Controllers\API\ConfigController;
-use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\ContentController;
-use App\Http\Controllers\API\SubjectController;
-use App\Http\Controllers\API\QuestionController;
-use App\Http\Controllers\API\StandardController;
-use App\Http\Controllers\API\AssessmentController;
 use App\Http\Controllers\API\EvaluationController;
 use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\QuestionController;
+use App\Http\Controllers\API\SeriesController;
+use App\Http\Controllers\API\StandardController;
+use App\Http\Controllers\API\SubjectController;
+use App\Http\Controllers\API\TopicController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
@@ -25,6 +25,9 @@ Route::resource('standards', StandardController::class);
 
 // Subjects
 Route::resource('subjects', SubjectController::class);
+
+// Series
+Route::resource('series', SeriesController::class);
 
 // Books
 Route::resource('books', BookController::class);
@@ -45,7 +48,7 @@ Route::get('configs', [ConfigController::class, 'index']);
 // Forgot Password
 Route::post('forgot-password', [PasswordResetLinkController::class, 'store']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum', 'check.approval.trial')->group(function () {
 
     // Profile
     Route::get('profile', [AuthController::class, 'profile']);
@@ -60,26 +63,32 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('articles', ArticleController::class);
 
     // Contents
-    Route::get('videos', [ContentController::class, 'getThreeRandomVideos']);
+    Route::get('videos', [ContentController::class, 'indexVideos']);
     Route::get('videos/{video}', [ContentController::class, 'showVideo']);
     Route::get('videos/subject/{subject}', [ContentController::class, 'getVideosBySubjectId']);
 
+    Route::get('ebooks', [ContentController::class, 'indexEbooks']);
     Route::get('ebooks/{ebook}', [ContentController::class, 'showEbook']);
     Route::get('ebooks/subject/{subject}', [ContentController::class, 'getEbooksBySubjectId']);
 
+    Route::get('teacher-resource', [ContentController::class, 'teacherResource']);
+    Route::get('exercises', [ContentController::class, 'exercises']);
+
     // Assessments
     Route::get('mcq', [AssessmentController::class, 'mcq']);
-    Route::get('mcq/subject/{subject}', [AssessmentController::class, 'getMcqAssessmentBySubjectId']);
+    // Route::get('mcq/subject/{subject}', [AssessmentController::class, 'getMcqAssessmentBySubjectId']);
 
     Route::get('olympiad', [AssessmentController::class, 'olympiad']);
-    Route::get('olympiad/subject/{subject}', [AssessmentController::class, 'getOlympiadAssessmentBySubjectId']);
+    // Route::get('olympiad/subject/{subject}', [AssessmentController::class, 'getOlympiadAssessmentBySubjectId']);
+
+    Route::get('quiz', [AssessmentController::class, 'quiz']);
 
     Route::get('assessment/questions/{assessment}', [AssessmentController::class, 'getQuestionsByAssessmentId']);
     Route::post('assessment/attempt', [AssessmentController::class, 'attemptAssessment']);
 
     // Evaluations
     Route::get('score', [EvaluationController::class, 'scoreIndex']);
-    Route::get('score/{subject}', [EvaluationController::class, 'getAttemptsBySubjectId']);
+    // Route::get('score/{subject}', [EvaluationController::class, 'getAttemptsBySubjectId']);
     Route::get('answer-keys', [EvaluationController::class, 'answerKeyIndex']);
     Route::get('report/{assessment}', [EvaluationController::class, 'report']);
     Route::get('solutions/{assessment}', [EvaluationController::class, 'solutions']);

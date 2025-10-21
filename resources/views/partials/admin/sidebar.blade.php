@@ -40,15 +40,29 @@
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
                 </svg> Subjects</a></li>
 
-        <li class="nav-item"><a class="nav-link" href="{{ route('admin.authors.index') }}">
-                <svg class="nav-icon">
-                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
-                </svg> Authors</a></li>
+        @if (App\Models\Config::where('key', '=', 'series')->first()?->value === 'true')
+            <li class="nav-item"><a class="nav-link" href="{{ route('admin.series.index') }}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                    </svg> Series</a></li>
+        @endif
+
+        @if (App\Models\Config::where('key', '=', 'author')->first()?->value === 'true')
+            <li class="nav-item"><a class="nav-link" href="{{ route('admin.authors.index') }}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                    </svg> Authors</a></li>
+        @endif
 
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.books.index') }}">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
                 </svg> Books</a></li>
+
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.topics.index') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                </svg> Chapters</a></li>
 
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.articles.index') }}">
                 <svg class="nav-icon">
@@ -74,10 +88,6 @@
                 @endforeach
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="{{ route('admin.topics.index') }}">
-                <svg class="nav-icon">
-                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
-                </svg> Topics</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('admin.assessments.index') }}">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
@@ -102,6 +112,12 @@
                 @endforeach
             </ul>
         </li>
+
+
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.notifications.index') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-list-rich') }}"></use>
+                </svg> Notifications</a></li>
 
         {{-- @if (!$user->hasRestriction('can_manage_infopages')) --}}
         {{-- <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">

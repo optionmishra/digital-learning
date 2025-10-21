@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Subject;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SubjectsResource;
+use App\Models\Subject;
+use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
@@ -17,9 +17,10 @@ class SubjectController extends Controller
         if ($request->has('standard_ids')) {
             $subjects = Subject::whereHas('standards', function ($query) use ($request) {
                 $query->whereIn('standards.id', explode(',', $request->standard_ids));
+                $query->where('subjects.status', true);
             })->get();
         } else {
-            $subjects = Subject::all();
+            $subjects = Subject::where('status', true)->get();
         }
 
         return $this->sendAPIResponse(SubjectsResource::collection($subjects), 'Subjects fetched successfully.');

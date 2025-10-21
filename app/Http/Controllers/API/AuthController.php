@@ -2,22 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\User;
-use App\Models\Content;
-use App\Models\Subject;
-use App\Models\ContentType;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\BannerResource;
-use App\Http\Resources\VideosResource;
-use App\Http\Resources\SubjectsResource;
-use App\Http\Resources\UserProfileResource;
 use App\Http\Requests\Auth\UserRegistrationRequest;
 use App\Http\Requests\PasswordUpdateRequest;
 use App\Http\Requests\UserProfileUpdateRequest;
 use App\Http\Resources\AppLoginResponseResource;
+use App\Http\Resources\UserProfileResource;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -45,6 +38,7 @@ class AuthController extends Controller
             'mobile' => $attributes['mobile'],
             'school' => $attributes['school'],
             'dob' => $attributes['dob'] ?? null,
+            'trial_end' => now()->addWeek(),
         ]);
 
         $newUser->assignBooks(explode(',', $attributes['books']));
@@ -90,6 +84,7 @@ class AuthController extends Controller
     public function profile()
     {
         $user = Auth::user();
+
         return $this->sendAPIResponse(UserProfileResource::make($user), 'Profile fetched successfully.');
     }
 
@@ -105,6 +100,7 @@ class AuthController extends Controller
             $user->profile->img = $uploadedFile['name'];
             $user->profile->save();
         }
+
         return $this->sendAPIResponse(UserProfileResource::make($user), 'Profile Updated successfully.');
     }
 
@@ -114,6 +110,7 @@ class AuthController extends Controller
         $attributes = $request->validated();
         $user->password = bcrypt($attributes['password']);
         $user->save();
+
         return $this->sendAPIResponse(UserProfileResource::make($user), 'Password updated successfully.');
     }
 }

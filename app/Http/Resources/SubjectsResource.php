@@ -17,7 +17,7 @@ class SubjectsResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'img' => $this->img ? asset('subjects/img/' . $this->img) : null,
+            'img' => $this->img ? asset('subjects/img/'.$this->img) : null,
         ];
     }
 }

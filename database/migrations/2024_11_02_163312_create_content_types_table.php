@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('content_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('img')->nullable();
+            $table->foreignId('role_id')->nullable()->constrained()->onDelete('restrict')->onUpdate('cascade');
+            $table->integer('order')->nullable();
             $table->timestamps();
         });
     }

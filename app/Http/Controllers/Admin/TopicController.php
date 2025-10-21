@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Book;
-use App\Models\Topic;
-use App\Models\Subject;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\TopicRepository;
-use Illuminate\Contracts\Cache\Store;
 use App\Http\Requests\StoreTopicRequest;
+use App\Models\Book;
+use App\Models\Standard;
+use App\Models\Subject;
+use App\Models\Topic;
+use App\Repositories\TopicRepository;
+use Illuminate\Http\Request;
 
 class TopicController extends Controller
 {
@@ -19,14 +19,17 @@ class TopicController extends Controller
     {
         $this->topic = $topic;
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $standards = Standard::all();
         $subjects = Subject::all();
         $books = Book::all();
-        return view('admin.topics.index', compact('subjects', 'books'));
+
+        return view('admin.topics.index', compact('standards', 'subjects', 'books'));
     }
 
     /**
@@ -45,7 +48,7 @@ class TopicController extends Controller
         $data = $request->validated();
         $topic = $this->topic->store($data, $request->input('id'));
 
-        return $this->jsonResponse((bool)$topic, 'Topic ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $topic, 'Topic '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
 
     /**
@@ -78,12 +81,14 @@ class TopicController extends Controller
     public function destroy(Request $request, Topic $topic)
     {
         $topicDeletion = $topic->delete();
-        return $this->jsonResponse((bool)$topicDeletion, 'Topic deleted successfully');
+
+        return $this->jsonResponse((bool) $topicDeletion, 'Topic deleted successfully');
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->topic);
+
         return response()->json($data);
     }
 }

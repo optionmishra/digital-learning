@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Board;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\BoardRepository;
 use App\Http\Requests\StoreBoardRequest;
+use App\Models\Board;
+use App\Repositories\BoardRepository;
+use Illuminate\Http\Request;
 
 class BoardController extends Controller
 {
@@ -16,6 +16,7 @@ class BoardController extends Controller
     {
         $this->board = $boardRepository;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -45,8 +46,9 @@ class BoardController extends Controller
             $board->media()->create(['file' => $uploadedFile['name'], 'type' => $uploadedFile['type']]);
         }
 
-        return $this->jsonResponse((bool)$board, 'Board ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $board, 'Board '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
+
     /**
      * Display the specified resource.
      */
@@ -77,12 +79,14 @@ class BoardController extends Controller
     public function destroy(Request $request, Board $board)
     {
         $boardDeletion = $board->delete();
-        return $this->jsonResponse((bool)$boardDeletion, 'Board deleted successfully');
+
+        return $this->jsonResponse((bool) $boardDeletion, 'Board deleted successfully');
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->board);
+
         return response()->json($data);
     }
 }

@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\TopicRepositoryInterface;
 use App\Models\Topic;
+use App\Repositories\Contracts\TopicRepositoryInterface;
 
 class TopicRepository extends BaseRepository implements TopicRepositoryInterface
 {
-
     public $topic;
 
     public function __construct(Topic $topic)
@@ -20,7 +19,7 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
     {
         $query = $this->topic->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('name', 'LIKE', "%$searchValue%");
                 // ->orWhere('type', 'LIKE', "%$searchValue%");
@@ -30,9 +29,9 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -54,18 +53,21 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
         $query->skip($start)->take($length);
         $topics = $query->get();
         $topics = $this->collectionModifier($columns, $topics, $start);
+
         return $topics;
     }
 
     public function collectionModifier($columns, $topics, $start)
     {
         return $topics->map(function ($topic, $key) use ($columns, $start) {
+            $topic->serialNo = $topic->serial;
+            $topic->actions = view('admin.topics.actions', compact('topic'))->render();
             $topic->serial = $start + 1 + $key;
             // $topic->image = view('admin.topics.media', compact('topic'))->render();
             $topic->subject_name = $topic->subject->name;
             $topic->book_name = $topic->book->name;
-            $topic->actions = view('admin.topics.actions', compact('topic'))->render();
             $topic->setVisible($columns);
+
             return $topic;
         });
     }

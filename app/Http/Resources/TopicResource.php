@@ -16,7 +16,7 @@ class TopicResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'serial' => $this->serial
+            'serial' => $this->serial,
         ];
     }
 }

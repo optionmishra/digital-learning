@@ -1,4 +1,4 @@
-<div class="modal fade" id="topicStore" tabindex="-1" aria-labelledby="topicStoreLabel" aria-hidden="true">
+<div class="modal fade" id="topicStore" tabindex="-1" aria-labelledby="topicStoreLabel">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,16 +9,24 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id" class="">
-                    <div class="mb-3 row">
-                        <div class="mb-3 col-lg-6 col-sm-12">
+                    <div class="row mb-3">
+                        <div class="mb-3 col-lg-4 col-sm-12">
+                            <label class="form-label" for="standard">Standard</label>
+                            <select class="form-control" name="standard_id" id="standard">
+                                @foreach ($standards as $standard)
+                                    <option value="{{ $standard->id }}">{{ $standard->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-4 col-sm-12 mb-3">
                             <label class="form-label" for="subject">Subject</label>
-                            <select class="form-control" name="subject_id" id="subject" onchange="updateBooks()">
+                            <select class="form-control" name="subject_id" id="subject">
                                 @foreach ($subjects as $subject)
                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 col-lg-6 col-sm-12">
+                        <div class="col-lg-4 col-sm-12 mb-3">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book">
                                 @foreach ($subjects[0]->books as $book)
@@ -27,15 +35,21 @@
                             </select>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="name">Name</label>
-                        <input class="form-control" id="name" type="text" placeholder="Name" name="name">
+                    <div class="row mb-3">
+                        <div class="col-lg-2 col-sm-12 mb-3">
+                            <label class="form-label" for="serial">Serial No.</label>
+                            <input class="form-control" id="serial" type="number" placeholder="Serial"
+                                name="serial">
+                        </div>
+                        <div class="col-lg-10 col-sm-12 mb-3">
+                            <label class="form-label" for="name">Name</label>
+                            <input class="form-control" id="name" type="text" placeholder="Name" name="name">
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" type="submit">Save</button>
-                </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
             </form>
         </div>
     </div>

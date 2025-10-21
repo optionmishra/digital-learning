@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Article;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ArticlesResource;
+use App\Models\Article;
+use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
@@ -15,9 +15,10 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = Article::all();
-        if (!$articles) {
+        if (! $articles) {
             return $this->sendAPIError('Articles not found.');
         }
+
         return $this->sendAPIResponse(ArticlesResource::collection($articles), 'Articles fetched successfully.');
     }
 
@@ -43,9 +44,10 @@ class ArticleController extends Controller
     public function show(string $id)
     {
         $article = Article::find($id);
-        if (!$article) {
+        if (! $article) {
             return $this->sendAPIError('Article not found.');
         }
+
         return $this->sendAPIResponse(ArticlesResource::make($article), 'Article fetched successfully.');
     }
 

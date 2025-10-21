@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\StandardRepositoryInterface;
 use App\Models\Standard;
+use App\Repositories\Contracts\StandardRepositoryInterface;
 
 class StandardRepository extends BaseRepository implements StandardRepositoryInterface
 {
-
     public $standard;
 
     public function __construct(Standard $standard)
@@ -20,7 +19,7 @@ class StandardRepository extends BaseRepository implements StandardRepositoryInt
     {
         $query = $this->standard->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('name', 'LIKE', "%$searchValue%");
                 // ->orWhere('content', 'LIKE', "%$searchValue%");
@@ -30,9 +29,9 @@ class StandardRepository extends BaseRepository implements StandardRepositoryInt
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -54,6 +53,7 @@ class StandardRepository extends BaseRepository implements StandardRepositoryInt
         $query->skip($start)->take($length);
         $standards = $query->get();
         $standards = $this->collectionModifier($columns, $standards, $start);
+
         return $standards;
     }
 
@@ -63,6 +63,7 @@ class StandardRepository extends BaseRepository implements StandardRepositoryInt
             $standard->serial = $start + 1 + $key;
             $standard->actions = view('admin.standards.actions', compact('standard'))->render();
             $standard->setVisible($columns);
+
             return $standard;
         });
     }

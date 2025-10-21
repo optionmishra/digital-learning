@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\SubjectRepositoryInterface;
 use App\Models\Subject;
+use App\Repositories\Contracts\SubjectRepositoryInterface;
 
 class SubjectRepository extends BaseRepository implements SubjectRepositoryInterface
 {
-
     public $subject;
 
     public function __construct(Subject $subject)
@@ -20,7 +19,7 @@ class SubjectRepository extends BaseRepository implements SubjectRepositoryInter
     {
         $query = $this->subject->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('name', 'LIKE', "%$searchValue%");
                 // ->orWhere('content', 'LIKE', "%$searchValue%");
@@ -30,9 +29,9 @@ class SubjectRepository extends BaseRepository implements SubjectRepositoryInter
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -54,6 +53,7 @@ class SubjectRepository extends BaseRepository implements SubjectRepositoryInter
         $query->skip($start)->take($length);
         $subjects = $query->get();
         $subjects = $this->collectionModifier($columns, $subjects, $start);
+
         return $subjects;
     }
 
@@ -63,6 +63,7 @@ class SubjectRepository extends BaseRepository implements SubjectRepositoryInter
             $subject->serial = $start + 1 + $key;
             $subject->actions = view('admin.subjects.actions', compact('subject'))->render();
             $subject->setVisible($columns);
+
             return $subject;
         });
     }

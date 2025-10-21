@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\BoardRepositoryInterface;
 use App\Models\Board;
+use App\Repositories\Contracts\BoardRepositoryInterface;
 
 class BoardRepository extends BaseRepository implements BoardRepositoryInterface
 {
-
     public $board;
 
     public function __construct(Board $board)
@@ -20,7 +19,7 @@ class BoardRepository extends BaseRepository implements BoardRepositoryInterface
     {
         $query = $this->board->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('name', 'LIKE', "%$searchValue%");
                 // ->orWhere('content', 'LIKE', "%$searchValue%");
@@ -30,9 +29,9 @@ class BoardRepository extends BaseRepository implements BoardRepositoryInterface
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -54,6 +53,7 @@ class BoardRepository extends BaseRepository implements BoardRepositoryInterface
         $query->skip($start)->take($length);
         $boards = $query->get();
         $boards = $this->collectionModifier($columns, $boards, $start);
+
         return $boards;
     }
 
@@ -63,6 +63,7 @@ class BoardRepository extends BaseRepository implements BoardRepositoryInterface
             $board->serial = $start + 1 + $key;
             $board->actions = view('admin.boards.actions', compact('board'))->render();
             $board->setVisible($columns);
+
             return $board;
         });
     }
