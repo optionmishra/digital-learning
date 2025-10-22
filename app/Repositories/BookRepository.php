@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\BookRepositoryInterface;
 use App\Models\Book;
+use App\Repositories\Contracts\BookRepositoryInterface;
 
 class BookRepository extends BaseRepository implements BookRepositoryInterface
 {
-
     public $book;
 
     public function __construct(Book $book)
@@ -16,11 +15,18 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
         $this->book = $book;
     }
 
-    public function paginated($columns, $start, $length, $sortColumn, $sortDirection, $searchValue, $countOnly = false)
-    {
+    public function paginated(
+        $columns,
+        $start,
+        $length,
+        $sortColumn,
+        $sortDirection,
+        $searchValue,
+        $countOnly = false
+    ) {
         $query = $this->book->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('name', 'LIKE', "%$searchValue%")
                     ->orWhere('about', 'LIKE', "%$searchValue%")
@@ -39,9 +45,9 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -63,6 +69,7 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
         $query->skip($start)->take($length);
         $books = $query->get();
         $books = $this->collectionModifier($columns, $books, $start);
+
         return $books;
     }
 
@@ -70,13 +77,17 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
     {
         return $books->map(function ($book, $key) use ($columns, $start) {
             $book->serial = $start + 1 + $key;
-            if ($book->img) $book->image = view('admin.books.media', compact('book'))->render();
+            if ($book->img) {
+                $book->image = view('admin.books.media', compact('book'))->render();
+            }
             $book->actions = view('admin.books.actions', compact('book'))->render();
-            $book->board_name = $book->board->name;
-            $book->standard_name = $book->standard->name;
-            $book->subject_name = $book->subject->name;
-            $book->author_name = $book->author->name;
+            $book->board_name = $book->board?->name;
+            $book->standard_name = $book->standard?->name;
+            $book->subject_name = $book->subject?->name;
+            $book->series_name = $book->series?->name;
+            $book->author_name = $book->author?->name;
             $book->setVisible($columns);
+
             return $book;
         });
     }

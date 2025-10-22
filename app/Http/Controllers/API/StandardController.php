@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Standard;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StandardsResource;
+use App\Models\Standard;
+use Illuminate\Http\Request;
 
 class StandardController extends Controller
 {
@@ -14,10 +14,11 @@ class StandardController extends Controller
      */
     public function index()
     {
-        $standards = Standard::all();
-        if (!$standards) {
+        $standards = Standard::where('status', true)->get();
+        if (! $standards) {
             return $this->sendAPIResponse([], 'Standards not found.');
         }
+
         return $this->sendAPIResponse(StandardsResource::collection($standards), 'Standards fetched successfully.');
     }
 
@@ -43,9 +44,10 @@ class StandardController extends Controller
     public function show(string $id)
     {
         $standard = Standard::find($id);
-        if (!$standard) {
+        if (! $standard) {
             return $this->sendAPIResponse([], 'Standard not found.');
         }
+
         return $this->sendAPIResponse(StandardsResource::make($standard), 'Standard fetched successfully.');
     }
 
@@ -78,9 +80,10 @@ class StandardController extends Controller
         $user = auth()->user();
         $standards = $user->standards;
 
-        if (!$standards) {
+        if (! $standards) {
             return $this->sendAPIResponse([], 'Standards not found.');
         }
+
         return $this->sendAPIResponse(StandardsResource::collection($standards), 'Standards fetched successfully.');
     }
 
@@ -91,8 +94,10 @@ class StandardController extends Controller
         if ($user->hasRole('teacher')) {
             $user->profile->standard_id = $request->standard_id;
             $user->profile->save();
+
             return $this->sendAPIResponse(['subjects' => $user->subjects], 'Standard set successfully.');
         }
+
         return $this->sendAPIError('You are not a teacher.', [], 401);
     }
 }

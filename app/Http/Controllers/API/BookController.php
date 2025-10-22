@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Book;
-use App\Models\Subject;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BookResource;
 use App\Http\Resources\BooksResource;
-use App\Http\Resources\BookCollection;
+use App\Models\Book;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
@@ -24,15 +22,23 @@ class BookController extends Controller
             $query->whereIn('subject_id', explode(',', $request->subject_ids));
         }
 
+        if ($request->has('series_ids')) {
+            $query->whereIn('series_id', explode(',', $request->series_ids));
+        }
+
         if ($request->has('standard_ids')) {
-            $query->whereIn('standard_id', explode(',', $request->standard_ids));
+            $query->whereIn('standard_id', explode(',', $request->standard_ids))
+                ->whereHas('subject', function ($query) {
+                    $query->where('status', 1);
+                });
         }
 
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         $books = $query->get();
+
         return $this->sendAPIResponse(BooksResource::collection($books), 'Books fetched successfully.');
     }
 
@@ -61,6 +67,7 @@ class BookController extends Controller
         if ($book) {
             return $this->sendAPIResponse(BookResource::make($book, false), 'Book fetched successfully.');
         }
+
         return $this->sendAPIError('Book not found.');
     }
 
@@ -70,6 +77,7 @@ class BookController extends Controller
         if ($books->count()) {
             return $this->sendAPIResponse(BooksResource::collection($books), 'Books fetched successfully.');
         }
+
         return $this->sendAPIError('Books not found.');
     }
 

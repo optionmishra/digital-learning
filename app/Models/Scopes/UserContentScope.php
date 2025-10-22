@@ -3,9 +3,9 @@
 namespace App\Models\Scopes;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Database\Eloquent\Builder;
 
 class UserContentScope implements Scope
 {
@@ -15,15 +15,16 @@ class UserContentScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         // Skip if no authenticated user
-        if (!auth()->check() || auth()->user()->hasRole('admin')) {
+        if (! auth()->check() || auth()->user()->hasRole('admin')) {
             return;
         }
 
         $user = auth()->user();
         $profile = $user->profile;
 
-        if (!$profile) {
+        if (! $profile) {
             $builder->whereRaw('1 = 0');
+
             return;
         }
 

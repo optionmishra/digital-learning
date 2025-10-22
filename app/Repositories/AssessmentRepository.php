@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\AssessmentRepositoryInterface;
 use App\Models\Assessment;
+use App\Repositories\Contracts\AssessmentRepositoryInterface;
 
 class AssessmentRepository extends BaseRepository implements AssessmentRepositoryInterface
 {
-
     public $assessment;
 
     public function __construct(Assessment $assessment)
@@ -20,7 +19,7 @@ class AssessmentRepository extends BaseRepository implements AssessmentRepositor
     {
         $query = $this->assessment->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('name', 'LIKE', "%$searchValue%")
                     ->orWhere('type', 'LIKE', "%$searchValue%");
@@ -30,9 +29,9 @@ class AssessmentRepository extends BaseRepository implements AssessmentRepositor
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -54,6 +53,7 @@ class AssessmentRepository extends BaseRepository implements AssessmentRepositor
         $query->skip($start)->take($length);
         $assessments = $query->get();
         $assessments = $this->collectionModifier($columns, $assessments, $start);
+
         return $assessments;
     }
 
@@ -64,9 +64,11 @@ class AssessmentRepository extends BaseRepository implements AssessmentRepositor
             // $assessment->image = view('admin.assessments.media', compact('assessment'))->render();
             $assessment->standard_name = $assessment->standard->name;
             $assessment->subject_name = $assessment->subject->name;
+            $assessment->series_name = $assessment->series?->name;
             $assessment->book_name = $assessment->book->name;
             $assessment->actions = view('admin.assessments.actions', compact('assessment'))->render();
             $assessment->setVisible($columns);
+
             return $assessment;
         });
     }

@@ -26,6 +26,14 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="mb-3 col-lg-3 col-sm-12">
+                            <label class="form-label" for="series">Series</label>
+                            <select class="form-control" name="series_id" id="series">
+                                @foreach ($series as $s)
+                                    <option value="{{ $s->id }}">{{ $s->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="mb-3 col-lg-4 col-sm-12">
                             <label class="form-label" for="book">Book</label>
                             <select class="form-control" name="book_id" id="book">
@@ -44,7 +52,9 @@
                             <label class="form-label" for="type">Type</label>
                             <select class="form-control" name="type" id="type">
                                 <option value="mcq">MCQ</option>
-                                <option value="olympiad">Olympiad</option>
+                                @if (App\Models\Config::where('key', '=', 'olympiad')->first()?->value === 'true')
+                                    <option value="olympiad">Olympiad</option>
+                                @endif
                             </select>
                         </div>
                         <div class="mb-3 col-lg-6 col-sm-12">

@@ -23,14 +23,20 @@ class StoreQuestionRequest extends FormRequest
     {
         return [
             'subject_id' => 'required|exists:subjects,id',
+            'series_id' => 'required|exists:series,id',
             'book_id' => 'required|exists:books,id',
             'topic_id' => 'required|exists:topics,id',
             'assessment_id' => 'required|exists:assessments,id',
-            'question_text' => 'required|string',
-            'option_1' => 'required|string',
-            'option_2' => 'required|string',
-            'option_3' => 'required|string',
-            'option_4' => 'required|string',
+            'question_text' => 'string',
+            'question_img' => 'file',
+            'option_1' => 'string',
+            'option_1_img' => 'file',
+            'option_2' => 'string',
+            'option_2_img' => 'file',
+            'option_3' => 'string',
+            'option_3_img' => 'file',
+            'option_4' => 'string',
+            'option_4_img' => 'file',
             'correct_option' => 'required|numeric|between:1,4',
         ];
     }

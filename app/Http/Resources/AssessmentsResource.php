@@ -18,7 +18,7 @@ class AssessmentsResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'subject' => $this->subject->name,
-            'img' => $this->subject->img ? asset('subjects/img/' . $this->subject->img) : null,
+            'img' => $this->subject->img ? asset('subjects/img/'.$this->subject->img) : null,
             'questions_count' => $this->questions()->count(),
             'duration' => $this->duration,
         ];

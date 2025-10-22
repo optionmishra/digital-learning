@@ -2,37 +2,51 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Option;
-use App\Models\Subject;
-use App\Models\Question;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AttemptAssessmentRequest;
+use App\Http\Resources\AssessmentsResource;
+use App\Http\Resources\QuestionsResource;
+use App\Http\Resources\ResultResource;
 use App\Models\Assessment;
+use App\Models\Option;
+use App\Models\Question;
 use App\Models\Submission;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\SubjectsResource;
-use App\Http\Resources\QuestionsResource;
-use App\Http\Resources\AssessmentsResource;
-use App\Http\Requests\AttemptAssessmentRequest;
-use App\Http\Resources\ResultResource;
-use App\Models\Attempt;
 
 class AssessmentController extends Controller
 {
-    public function mcq()
+    public function mcq(Request $request): \Illuminate\Http\JsonResponse
     {
-        $subjects = Subject::all();
-        $mcqAssessments = Assessment::where(['type' => 'mcq', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
+        $query = Assessment::query()
+            ->where('type', 'mcq')
+            ->where('standard_id', Auth::user()->profile->standard_id);
 
-        $attemptedSeriesArr = Attempt::where('user_id', Auth::user()->id)->get()->pluck('assessment_id')->toArray();
-        $attemptedMcqAssessments = Assessment::whereIn('id', $attemptedSeriesArr)->where('type', 'mcq')->latest()->get();
+        if ($request->has('subject_ids')) {
+            $subjectIds = array_map('intval', array_filter(explode(',', $request->input('subject_ids'))));
+            if (! empty($subjectIds)) {
+                $query->whereIn('subject_id', $subjectIds);
+            }
+        }
 
-        return $this->sendAPIResponse([
-            'newSeries' => AssessmentsResource::collection($mcqAssessments),
-            'attemptedSeries' => AssessmentsResource::collection($attemptedMcqAssessments),
-            'subjects' => SubjectsResource::collection($subjects)
-        ], 'Assessments fetched successfully.');
+        if ($request->has('series_ids')) {
+            $seriesIds = array_map('intval', array_filter(explode(',', $request->input('series_ids'))));
+            if (! empty($seriesIds)) {
+                $query->whereIn('series_id', $seriesIds);
+            }
+        }
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%'.$request->input('search').'%');
+        }
+
+        $mcqAssessments = $query->latest()->get();
+
+        if ($mcqAssessments->isEmpty()) {
+            return $this->sendAPIResponse([], 'Assessments not found.');
+        }
+
+        return $this->sendAPIResponse(AssessmentsResource::collection($mcqAssessments), 'Assessments fetched successfully.');
     }
 
     public function getMcqAssessmentBySubjectId($id)
@@ -41,18 +55,42 @@ class AssessmentController extends Controller
         if ($mcqAssessment->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
+
         return $this->sendAPIResponse(AssessmentsResource::collection($mcqAssessment), 'Assessments fetched successfully.');
     }
 
-    public function olympiad()
+    public function olympiad(Request $request)
     {
-        $olympiadAssessments = Assessment::where(['type' => 'olympiad', 'standard_id' => Auth::user()->profile->standard_id])->latest()->get();
+        $query = Assessment::query()
+            ->where('type', 'olympiad')
+            ->where('standard_id', Auth::user()->profile->standard_id);
 
-        return $this->sendAPIResponse([
-            'olympiads' => AssessmentsResource::collection($olympiadAssessments),
-        ], 'Assessments fetched successfully.');
+        if ($request->has('subject_ids')) {
+            $subjectIds = array_map('intval', array_filter(explode(',', $request->input('subject_ids'))));
+            if (! empty($subjectIds)) {
+                $query->whereIn('subject_id', $subjectIds);
+            }
+        }
+
+        if ($request->has('series_ids')) {
+            $seriesIds = array_map('intval', array_filter(explode(',', $request->input('series_ids'))));
+            if (! empty($seriesIds)) {
+                $query->whereIn('series_id', $seriesIds);
+            }
+        }
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%'.$request->input('search').'%');
+        }
+
+        $olympiadAssessments = $query->latest()->get();
+
+        if ($olympiadAssessments->isEmpty()) {
+            return $this->sendAPIResponse([], 'Assessments not found.');
+        }
+
+        return $this->sendAPIResponse(AssessmentsResource::collection($olympiadAssessments), 'Assessments fetched successfully.');
     }
-
 
     public function getOlympiadAssessmentBySubjectId($id)
     {
@@ -60,6 +98,7 @@ class AssessmentController extends Controller
         if ($olympiadAssessment->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
+
         return $this->sendAPIResponse(AssessmentsResource::collection($olympiadAssessment), 'Assessments fetched successfully.');
     }
 
@@ -67,7 +106,7 @@ class AssessmentController extends Controller
     {
         $assessment = Assessment::where('id', $id)->first();
 
-        if (!$assessment) {
+        if (! $assessment) {
             return $this->sendAPIError('Assessment not found.');
         }
 
@@ -76,6 +115,7 @@ class AssessmentController extends Controller
         if ($Questions->count() == 0) {
             return $this->sendAPIResponse([], 'Assessment not found.');
         }
+
         return $this->sendAPIResponse(QuestionsResource::collection($Questions), 'Questions fetched successfully.');
     }
 
@@ -84,7 +124,7 @@ class AssessmentController extends Controller
         $assessmentId = $attemptAssessmentRequest->assessment_id;
         $assessment = Assessment::find($assessmentId);
 
-        if (!$assessment) {
+        if (! $assessment) {
             return $this->sendAPIError('Assessment not found.');
         }
 
@@ -130,7 +170,7 @@ class AssessmentController extends Controller
                 'total_questions' => $totalQuestions,
                 'correct_answers' => $correctAnswers,
                 'incorrect_answers' => $incorrectAnswers,
-                'score' => ($correctAnswers / $totalQuestions) * 100
+                'score' => ($correctAnswers / $totalQuestions) * 100,
             ]);
         } else {
             // Handle mismatch in the count of questions and answers
@@ -138,5 +178,28 @@ class AssessmentController extends Controller
         }
 
         return $this->sendAPIResponse(['result' => ResultResource::make($result)], 'Assessment attempted successfully.');
+    }
+
+    public function quiz(Request $request)
+    {
+        $query = Question::query();
+
+        if ($request->has('subject_ids')) {
+            $query->whereIn('subject_id', explode(',', $request->subject_ids));
+        }
+        if ($request->has('series_ids')) {
+            $query->whereIn('series_id', explode(',', $request->series_ids));
+        }
+        if ($request->has('book_ids')) {
+            $query->whereIn('book_id', explode(',', $request->book_ids));
+        }
+        if ($request->has('topic_ids')) {
+            $query->whereIn('topic_id', explode(',', $request->topic_ids));
+        }
+
+        $questions = $query->inRandomOrder()->take($request->count ?? 10)->get();
+
+        return $this->sendAPIResponse(QuestionsResource::collection($questions), 'Questions fetched successfully.');
+
     }
 }

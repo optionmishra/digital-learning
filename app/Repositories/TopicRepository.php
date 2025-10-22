@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\TopicRepositoryInterface;
 use App\Models\Topic;
+use App\Repositories\Contracts\TopicRepositoryInterface;
 
 class TopicRepository extends BaseRepository implements TopicRepositoryInterface
 {
-
     public $topic;
 
     public function __construct(Topic $topic)
@@ -20,7 +19,7 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
     {
         $query = $this->topic->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('name', 'LIKE', "%$searchValue%");
                 // ->orWhere('type', 'LIKE', "%$searchValue%");
@@ -30,14 +29,14 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
-                // case "category":
-                //     $sortColumn = 'category_id';
-                //     break;
+                    // case "category":
+                    //     $sortColumn = 'category_id';
+                    //     break;
                 default:
                     $sortColumn = strtolower($sortColumn);
                     break;
@@ -54,6 +53,7 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
         $query->skip($start)->take($length);
         $topics = $query->get();
         $topics = $this->collectionModifier($columns, $topics, $start);
+
         return $topics;
     }
 
@@ -67,6 +67,7 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
             $topic->subject_name = $topic->subject->name;
             $topic->book_name = $topic->book->name;
             $topic->setVisible($columns);
+
             return $topic;
         });
     }

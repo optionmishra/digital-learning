@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BookResource extends JsonResource
@@ -17,7 +16,7 @@ class BookResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'img' => $this->img ? asset('books/img/' . $this->img) : null,
+            'img' => $this->img ? asset('books/img/'.$this->img) : null,
             'about' => $this->about,
             'board' => $this->board ? $this->board->name : null,
             'standard' => $this->standard ? $this->standard->name : null,

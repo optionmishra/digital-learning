@@ -8,7 +8,7 @@
                 </use>
             </svg>
         </button>
-        @if ($user->profile->status == 'approved')
+        @if ($user->profile?->status == 'approved')
             <button class="px-2 py-2 btn btn-link nav-link d-flex align-items-center" type="button" title="Reject"
                 data-coreui-toggle="modal" data-coreui-target="#blockModal"
                 data-btn-route="{{ route('admin.users.reject', $user->id) }}" data-form="blockUser">

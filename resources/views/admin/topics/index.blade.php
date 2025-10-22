@@ -6,7 +6,7 @@
             <div class="row card mb-4">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title">Topics</h5>
+                        <h5 class="card-title">Chapters</h5>
                         <button class="btn btn-primary px-2 py-2" type="button" title="Edit" data-coreui-toggle="modal"
                             data-coreui-target="#topicStore">Create</button>
                     </div>
@@ -30,30 +30,4 @@
         </div>
     </div>
     @include('admin.topics.store')
-@endsection
-@section('bottom-scripts')
-    <script>
-        const books = @json($books);
-
-        function updateBooks() {
-            // const standard = document.getElementById("standard").value;
-            const subject = document.getElementById("subject").value;
-            const bookSelect = document.getElementById("book");
-
-            // Clear previous options
-            bookSelect.innerHTML = '';
-
-            if (subject && books) {
-                // Populate book options based on selected class and subject
-                books.forEach(book => {
-                    if (book.subject_id == subject) {
-                        const option = document.createElement("option");
-                        option.value = book.id;
-                        option.textContent = book.name;
-                        bookSelect.appendChild(option);
-                    }
-                });
-            }
-        }
-    </script>
 @endsection

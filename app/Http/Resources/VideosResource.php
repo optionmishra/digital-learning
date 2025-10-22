@@ -27,15 +27,15 @@ class VideosResource extends JsonResource
             elseif (preg_match('~^https?://(?:www\.)?vimeo\.com/(?:channels/(?:\w+/)?|groups/([^/]*)/videos/|)(\d+)(?:|/\?)~', $this->src, $match)) {
                 $urlType = 'vimeo';
             }
-        } else if ($this->src_type === 'file') {
-            $src = asset('contents/file/' . $this->src);
+        } elseif ($this->src_type === 'file') {
+            $src = asset('contents/file/'.$this->src);
         }
 
         return [
             'id' => $this->id,
             'title' => $this->title,
             'topic' => TopicResource::make($this->topic),
-            'img' => $this->img_type === 'file' ? asset('contents/img/' . $this->img) : $this->img,
+            'img' => $this->img_type === 'file' ? asset('contents/img/'.$this->img) : $this->img,
             'src' => $src,
             'url_type' => $urlType,
             'duration' => $this->duration,

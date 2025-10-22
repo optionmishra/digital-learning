@@ -22,7 +22,7 @@ class UserProfileResource extends JsonResource
             'dob' => $this->profile->dob,
             'school' => $this->profile->school,
             'standard' => StandardsResource::make($this->standard),
-            'img' => asset('users/profile/img/' . $this->profile->img),
+            'img' => asset('users/profile/img/'.$this->profile->img),
         ];
     }
 }

@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Contracts\QuestionRepositoryInterface;
 use App\Models\Question;
+use App\Repositories\Contracts\QuestionRepositoryInterface;
 
 class QuestionRepository extends BaseRepository implements QuestionRepositoryInterface
 {
-
     public $question;
 
     public function __construct(Question $question)
@@ -20,7 +19,7 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
     {
         $query = $this->question->select('*');
 
-        if (!empty($searchValue)) {
+        if (! empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->orWhere('title', 'LIKE', "%$searchValue%")
                     ->orWhere('content', 'LIKE', "%$searchValue%");
@@ -30,9 +29,9 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
             });
         }
 
-        if (!empty($sortColumn)) {
+        if (! empty($sortColumn)) {
             switch (strtolower($sortColumn)) {
-                case "#":
+                case '#':
                     $sortColumn = 'id';
                     break;
                     // case "category":
@@ -54,12 +53,14 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
         $query->skip($start)->take($length);
         $questions = $query->get();
         $questions = $this->collectionModifier($columns, $questions, $start);
+
         return $questions;
     }
 
     public function collectionModifier($columns, $questions, $start)
     {
         array_push($columns, 'correct_option,assessment_id');
+
         return $questions->map(function ($question, $key) use ($columns, $start) {
             $question->serial = $start + 1 + $key;
             // $question->image = view('admin.questions.media', compact('question'))->render();
@@ -77,6 +78,7 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
             $question->correct_option = $question->options[0]->is_correct ? 1 : ($question->options[1]->is_correct ? 2 : ($question->options[2]->is_correct ? 3 : 4));
             $question->actions = view('admin.questions.actions', compact('question'))->render();
             $question->setVisible($columns);
+
             return $question;
         });
     }

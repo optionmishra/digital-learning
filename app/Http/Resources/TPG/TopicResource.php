@@ -12,7 +12,6 @@ class TopicResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-
     private $question_types;
 
     public function __construct($resource, $question_types = null)

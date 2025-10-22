@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\QuestionType;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class TopicController extends Controller
 {
@@ -13,7 +13,7 @@ class TopicController extends Controller
     {
         $book = Book::find($bookId);
 
-        if (!$book) {
+        if (! $book) {
             return $this->sendAPIError('Book not found.');
         }
 
@@ -24,7 +24,7 @@ class TopicController extends Controller
 
     public function getQuestionTypesByTopicIds(Request $request)
     {
-        if (!$request->has('topic_ids')) {
+        if (! $request->has('topic_ids')) {
             return $this->sendAPIError('Topic ids are required.');
         }
 

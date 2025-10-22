@@ -18,7 +18,7 @@ class ArticlesResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'img' => asset('articles/img/' . $this->img),
+            'img' => asset('articles/img/'.$this->img),
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

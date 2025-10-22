@@ -19,3 +19,9 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
+.env.main
+.env.mms
+.env.orange
+.env.oliver.prod
+.env.sophy.prod
+.htaccess

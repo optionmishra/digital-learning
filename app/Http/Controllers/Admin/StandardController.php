@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Standard;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Repositories\StandardRepository;
 use App\Http\Requests\StoreStandardRequest;
+use App\Models\Standard;
+use App\Repositories\StandardRepository;
+use Illuminate\Http\Request;
 
 class StandardController extends Controller
 {
@@ -16,6 +16,7 @@ class StandardController extends Controller
     {
         $this->standard = $standardRepository;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -45,8 +46,9 @@ class StandardController extends Controller
             $standard->media()->create(['file' => $uploadedFile['name'], 'type' => $uploadedFile['type']]);
         }
 
-        return $this->jsonResponse((bool)$standard, 'Standard ' . ($request->input('id') ? 'updated' : 'created') . ' successfully');
+        return $this->jsonResponse((bool) $standard, 'Standard '.($request->input('id') ? 'updated' : 'created').' successfully');
     }
+
     /**
      * Display the specified resource.
      */
@@ -77,12 +79,14 @@ class StandardController extends Controller
     public function destroy(Request $request, Standard $standard)
     {
         $standardDeletion = $standard->delete();
-        return $this->jsonResponse((bool)$standardDeletion, 'Standard deleted successfully');
+
+        return $this->jsonResponse((bool) $standardDeletion, 'Standard deleted successfully');
     }
 
     public function dataTable()
     {
         $data = $this->generateDataTableData($this->standard);
+
         return response()->json($data);
     }
 }

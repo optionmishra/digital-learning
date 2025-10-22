@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Subject extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function books()
@@ -33,12 +34,12 @@ class Subject extends Model
         static::deleting(function ($subject) {
             $dir = 'subjects/img/';
             // Delete the file from storage
-            Storage::disk('public')->delete($dir . $subject->img);
+            Storage::disk('public')->delete($dir.$subject->img);
         });
     }
 
     public function standards()
     {
-        return $this->belongsToMany(Standard::class, 'standard_subjects');
+        return $this->belongsToMany(Standard::class, 'books');
     }
 }

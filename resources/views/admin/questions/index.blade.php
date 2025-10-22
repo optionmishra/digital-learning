@@ -9,9 +9,10 @@
                         <h5 class="card-title">Questions</h5>
                         <div>
                             <button class="px-2 py-2 btn btn-primary" type="button" title="Edit" data-coreui-toggle="modal"
-                                data-coreui-target="#questionStore">Create</button>
-                            {{-- <button class="px-2 py-2 btn btn-primary" type="button" title="Edit"
-                                data-coreui-toggle="modal" data-coreui-target="#questionStore">Create Multiple</button> --}}
+                                data-coreui-target="#questionStore" id="create-question">Create</button>
+                            <button class="px-2 py-2 btn btn-primary" type="button" title="Edit"
+                                data-coreui-toggle="modal" data-coreui-target="#questionStore"
+                                id="create-multiple-question">Create Multiple</button>
                         </div>
                     </div>
                 </div>
@@ -40,62 +41,5 @@
         </div>
     </div>
     @include('admin.questions.store')
-@endsection
-@section('bottom-scripts')
-    <script>
-        const books = @json($books);
-        const topics = @json($topics);
-        const assessments = @json($assessments);
-
-        function updateBooks() {
-            const subject = document.getElementById("subject").value;
-            const bookSelect = document.getElementById("book");
-
-            bookSelect.innerHTML = '';
-            if (subject && books) {
-                books.forEach(book => {
-                    if (book.subject_id == subject) {
-                        const option = document.createElement("option");
-                        option.value = book.id;
-                        option.textContent = book.name;
-                        bookSelect.appendChild(option);
-                    }
-                });
-            }
-            updateTopics();
-            updateAssessments();
-        }
-
-        function updateTopics() {
-            const book = document.getElementById("book").value;
-            const topicSelect = document.getElementById("topic");
-            topicSelect.innerHTML = '';
-            if (book && topics) {
-                topics.forEach(topic => {
-                    if (topic.book_id == book) {
-                        const option = document.createElement("option");
-                        option.value = topic.id;
-                        option.textContent = topic.name;
-                        topicSelect.appendChild(option);
-                    }
-                });
-            }
-        }
-
-        function updateAssessments() {
-            const book = document.getElementById("book").value;
-            const assessmentSelect = document.getElementById("assessment");
-            assessmentSelect.innerHTML = '';
-            if (book && assessments) {
-                assessments.forEach(assessment => {
-                    if (assessment.book_id == book) {
-                        const option = document.createElement("option");
-                        option.value = assessment.id;
-                        option.textContent = assessment.name;
-                        assessmentSelect.appendChild(option);
-                    }
-                });
-            }
-        }
-    </script>
+    {{-- @include('admin.questions.store-batch') --}}
 @endsection

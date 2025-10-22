@@ -25,6 +25,7 @@ class StoreAssessmentRequest extends FormRequest
             'name' => 'required',
             'standard_id' => 'required',
             'subject_id' => 'required',
+            'series_id' => 'required|exists:series,id',
             'book_id' => 'required',
             'type' => 'required|in:mcq,olympiad',
             'duration' => 'required',

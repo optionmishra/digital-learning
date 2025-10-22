@@ -138,13 +138,22 @@
                         Lock Account</a> --}}
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
+                        <a class="dropdown-item" href="{{ route('admin.configurations.index') }}">
+                            <svg class="icon me-2">
+                                <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-settings') }}">
+                                </use>
+                            </svg>
+                            Configurations
+                        </a>
+
                         <button type="submit" class="dropdown-item" href="{{ route('logout') }}">
                             <svg class="icon me-2">
                                 <use
                                     xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout') }}">
                                 </use>
                             </svg>
-                            Logout</button>
+                            Logout
+                        </button>
                     </form>
                 </div>
             </li>

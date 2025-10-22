@@ -15,13 +15,14 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         $token = $this->createToken('MyApp')->plainTextToken;
+
         return [
             'token' => $token,
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
             'mobile' => $this->profile->mobile,
-            'img' => asset('users/profile/img/' . $this->profile->img),
+            'img' => asset('users/profile/img/'.$this->profile->img),
             'role' => $this->roles()->first()->name,
             'dob' => $this->profile->dob,
             'school' => $this->profile->school,
