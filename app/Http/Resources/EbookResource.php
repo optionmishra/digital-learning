@@ -17,6 +17,8 @@ class EbookResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'topic_id' => $this->topic_id,
+            'topic_name' => $this->topic->name,
             'img' => $this->img_type === 'file' ? asset('contents/img/'.$this->img) : $this->img,
             'src' => $this->src_type === 'file' ? asset('contents/file/'.$this->src) : $this->src,
             'price' => $this->price,
