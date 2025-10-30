@@ -9,6 +9,7 @@ use App\Models\Assessment;
 use App\Models\Book;
 use App\Models\Option;
 use App\Models\Question;
+use App\Models\QuestionType;
 use App\Models\Series;
 use App\Models\Standard;
 use App\Models\Subject;
@@ -41,8 +42,9 @@ class QuestionController extends Controller
         $books = Book::all();
         $topics = Topic::all();
         $assessments = Assessment::all();
+        $questionTypes = QuestionType::all();
 
-        return view('admin.questions.index', compact('standards', 'subjects', 'series', 'books', 'topics', 'assessments'));
+        return view('admin.questions.index', compact('standards', 'subjects', 'series', 'books', 'topics', 'assessments', 'questionTypes'));
     }
 
     /**
@@ -304,7 +306,6 @@ class QuestionController extends Controller
             $questions[] = [
                 'question_text' => trim($rowData['question_text']),
                 'question_img' => $questionImage ?: null,
-                // 'question_type_id' => (int) $rowData['question_type_id'],
                 'options' => $options,
             ];
         }
@@ -321,11 +322,6 @@ class QuestionController extends Controller
         if (empty(trim($rowData['question_text']))) {
             throw new \Exception("Question text is required at row {$rowNumber}");
         }
-
-        // Validate question type ID
-        // if (empty($rowData['question_type_id']) || ! is_numeric($rowData['question_type_id'])) {
-        //     throw new \Exception("Valid question_type_id is required at row {$rowNumber}");
-        // }
 
         // Validate correct option
         $correctOption = (int) $rowData['correct_option'];
@@ -378,7 +374,7 @@ class QuestionController extends Controller
                 'subject_id' => $request->subject_id,
                 'book_id' => $request->book_id,
                 'topic_id' => $request->topic_id,
-                // 'question_type_id' => $questionData['question_type_id'],
+                'question_type_id' => $request->question_type_id,
             ]);
 
             $assessment = Assessment::find($request->assessment_id);

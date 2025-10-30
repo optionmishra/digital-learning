@@ -26,6 +26,7 @@ class StoreBatchQuestionsRequest extends FormRequest
             'book_id' => 'required|exists:books,id',
             'topic_id' => 'required|exists:topics,id',
             'assessment_id' => 'required|exists:assessments,id',
+            'question_type_id' => 'required|exists:question_types,id',
             'questions_file' => 'required|file',
             'images_file' => 'file|mimes:zip',
         ];

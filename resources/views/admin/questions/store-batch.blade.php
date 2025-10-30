@@ -60,6 +60,15 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="question_type_id">Question Type</label>
+                        <select class="form-control" name="question_type_id" id="question_type_id">
+                            <option value="">Select Question Type</option>
+                            @foreach ($questionTypes as $type)
+                                <option value="{{ $type->id }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="mb-5">
                         <p>The CSV file must contain the following columns in this exact order:</p>
                         @include('admin.questions.csv-file-template')

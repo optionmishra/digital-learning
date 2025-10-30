@@ -586,6 +586,8 @@ class AdminPanel {
     $("#create-question").on("click", function (e) {
       $(".batch-question").hide();
       $(".single-question").show();
+      // Remove required attribute from questions_file when in single mode
+      $("#questions_file").prop("required", false);
       const form = $(".question-store-form");
       const actionUrl = form.data("single-route");
       form.attr("action", actionUrl);
@@ -593,6 +595,8 @@ class AdminPanel {
     $("#create-multiple-question").on("click", function (e) {
       $(".single-question").hide();
       $(".batch-question").show();
+      // Add required attribute to questions_file when in batch mode
+      $("#questions_file").prop("required", true);
       const form = $(".question-store-form");
       const actionUrl = form.data("batch-route");
       form.attr("action", actionUrl);
@@ -622,6 +626,10 @@ class AdminPanel {
         self.handleFileTypeChange({ target: typeSelect[0] }, type);
       }
     });
+    // Set default question creation mode to single question
+    // $(".batch-question").hide();
+    // $(".single-question").show();
+    // $("#questions_file").prop("required", false);
   }
 
   /**

@@ -27,6 +27,7 @@ class StoreQuestionRequest extends FormRequest
             'book_id' => 'required|exists:books,id',
             'topic_id' => 'required|exists:topics,id',
             'assessment_id' => 'required|exists:assessments,id',
+            'question_type_id' => 'required|exists:question_types,id',
             'question_text' => 'string',
             'question_img' => 'file',
             'option_1' => 'string',
