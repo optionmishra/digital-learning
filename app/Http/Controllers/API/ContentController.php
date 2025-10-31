@@ -100,4 +100,38 @@ class ContentController extends Controller
 
         return $this->sendAPIError('Ebook not found.');
     }
+
+    public function practiceWorksheets(Request $request)
+    {
+
+        $pwContentType = ContentType::whereName('Practice Worksheets')->first();
+        $pwsQuery = $pwContentType ? $pwContentType->classContents() : null;
+
+        // Apply filters to Exercises query
+        if ($pwsQuery) {
+            if ($request->has('standard_ids')) {
+                $pwsQuery->whereIn('standard_id', (array) $request->input('standard_ids'));
+            }
+            if ($request->has('subject_ids')) {
+                $pwsQuery->whereIn('subject_id', (array) $request->input('subject_ids'));
+            }
+            // if ($request->has('series_ids')) {
+            //     $pwsQuery->whereIn('series_id', (array) $request->input('series_ids'));
+            // }
+            if ($request->has('book_ids')) {
+                $pwsQuery->whereIn('book_id', (array) $request->input('book_ids'));
+            }
+            if ($request->has('search')) {
+                $pwsQuery->where('title', 'like', '%'.$request->search.'%');
+            }
+        }
+
+        // Get results or empty collection if content type was not found
+        $pws = $pwsQuery ? $pwsQuery->get() : collect();
+
+        return $this->sendAPIResponse(
+            EbookResource::collection($pws),
+            'Practice Worksheets fetched successfully.'
+        );
+    }
 }
