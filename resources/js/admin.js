@@ -586,6 +586,7 @@ class AdminPanel {
     $("#create-question").on("click", function (e) {
       $(".batch-question").hide();
       $(".single-question").show();
+      $(".single-question input[name='correct_option']").prop("required", true);
       // Remove required attribute from questions_file when in single mode
       $("#questions_file").prop("required", false);
       const form = $(".question-store-form");
@@ -594,6 +595,10 @@ class AdminPanel {
     });
     $("#create-multiple-question").on("click", function (e) {
       $(".single-question").hide();
+      $(".single-question input[name='correct_option']").prop(
+        "required",
+        false,
+      );
       $(".batch-question").show();
       // Add required attribute to questions_file when in batch mode
       $("#questions_file").prop("required", true);

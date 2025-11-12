@@ -70,12 +70,25 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
             $question->assessment_name = $question->assessment[0]->name ?? null;
             $question->assessment_id = $question->assessment[0]->id ?? null;
             $question->question = $question->question_text;
-            $question->option_1 = $question->options[0]->option_text;
-            $question->option_2 = $question->options[1]->option_text;
-            $question->option_3 = $question->options[2]->option_text;
-            $question->option_4 = $question->options[3]->option_text;
-            $question->answer = $question->correctOption->option_text;
-            $question->correct_option = $question->options[0]->is_correct ? 1 : ($question->options[1]->is_correct ? 2 : ($question->options[2]->is_correct ? 3 : 4));
+
+            // Safely access options with null coalescing
+            $question->option_1 = $question->options[0]->option_text ?? null;
+            $question->option_2 = $question->options[1]->option_text ?? null;
+            $question->option_3 = $question->options[2]->option_text ?? null;
+            $question->option_4 = $question->options[3]->option_text ?? null;
+
+            $question->answer = $question->correctOption->option_text ?? null;
+
+            // Find correct option more safely
+            $correctOptionNumber = null;
+            foreach ($question->options as $index => $option) {
+                if ($option->is_correct) {
+                    $correctOptionNumber = $index + 1;
+                    break;
+                }
+            }
+            $question->correct_option = $correctOptionNumber;
+
             $question->actions = view('admin.questions.actions', compact('question'))->render();
             $question->setVisible($columns);
 
