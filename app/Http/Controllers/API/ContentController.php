@@ -11,6 +11,7 @@ use App\Http\Resources\VideoResource;
 use App\Http\Resources\VideosResource;
 use App\Models\ContentType;
 use App\Models\Subject;
+use Illuminate\Http\Request;
 
 class ContentController extends Controller
 {
