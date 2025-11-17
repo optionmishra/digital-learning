@@ -104,9 +104,9 @@ class ContentController extends Controller
 
     public function practiceWorksheets(Request $request)
     {
-
-        $pwContentType = ContentType::whereName('Practice Worksheets')->first();
-        $pwsQuery = $pwContentType ? $pwContentType->classContents() : null;
+        $contentType = $request->role == 'teacher' ? 'Practice Worksheets' : 'Practice Worksheet';
+        $pwContentType = ContentType::whereName($contentType)->first();
+        $pwsQuery = $pwContentType?->classContents();
 
         // Apply filters to Exercises query
         if ($pwsQuery) {
