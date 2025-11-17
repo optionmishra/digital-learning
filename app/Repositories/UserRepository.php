@@ -37,10 +37,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                 $q->where('name', 'LIKE', "%$searchValue%")
                     ->orWhere('email', 'LIKE', "%$searchValue%")
                     ->orWhere('mobile', 'LIKE', "%$searchValue%")
-                    ->orWhereHas('profile', function ($q2) use ($searchValue) {
-                        $q2->where('school_id', 'LIKE', "%$searchValue%");
-                    })
-                    ->orWhereHas('school_id', function ($q3) use ($searchValue) {
+                    // ->orWhereHas('profile', function ($q2) use ($searchValue) {
+                    //     $q2->where('school_id', 'LIKE', "%$searchValue%");
+                    // })
+                    ->orWhereHas('schoolCode', function ($q3) use ($searchValue) {
                         $q3->where('code_id', 'LIKE', "%$searchValue%");
                     });
             });
