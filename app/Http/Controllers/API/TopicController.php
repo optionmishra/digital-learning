@@ -20,6 +20,9 @@ class TopicController extends Controller
             'subject_id' => $subjectId
         ])->first();
 
+        if (!$book)
+            return $this->sendAPIError('No books found for current subject & class');
+
         $topics = $book->topics;
         return $this->sendAPIResponse(TopicResource::collection($topics), 'Topics fetched successfully.');
     }
