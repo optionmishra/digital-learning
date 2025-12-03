@@ -36,6 +36,7 @@ Route::get('books/subject/{subject}', [BookController::class, 'getBooksBySubject
 // TPG
 // Topics
 Route::get('topics/{book}', [TopicController::class, 'getTopicsByBookId']);
+Route::get('assessments/{book}', [AssessmentController::class, 'getAssessmentsByBookId']);
 Route::get('question-types', [TopicController::class, 'getQuestionTypesByTopicIds']);
 Route::get('questions', [QuestionController::class, 'index']);
 

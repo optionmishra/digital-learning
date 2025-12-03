@@ -119,6 +119,17 @@ class AssessmentController extends Controller
         return $this->sendAPIResponse(QuestionsResource::collection($Questions), 'Questions fetched successfully.');
     }
 
+    public function getAssessmentsByBookId($id)
+    {
+        $assessments = Assessment::where('book_id', $id)->latest()->get();
+
+        if ($assessments->count() == 0) {
+            return $this->sendAPIResponse([], 'Assessments not found.');
+        }
+
+        return $this->sendAPIResponse(AssessmentsResource::collection($assessments), 'Assessments fetched successfully.');
+    }
+
     public function attemptAssessment(AttemptAssessmentRequest $attemptAssessmentRequest)
     {
         $assessmentId = $attemptAssessmentRequest->assessment_id;

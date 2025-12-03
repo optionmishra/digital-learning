@@ -184,6 +184,7 @@ class AdminPanel {
 
       case "book_id":
         await this.updateTopics(value);
+        await this.updateAssessments(value);
         element.value = value;
         // If topic_id exists in rowData, set it after books are loaded
         if ("topic_id" in rowData) {
@@ -381,12 +382,14 @@ class AdminPanel {
       const updateBooksAndTopics = async () => {
         await this.updateBooks();
         await this.updateTopics();
+        await this.updateAssessments();
       };
 
       const updateSeriesAndBooks = async () => {
         await this.updateSeries();
         await this.updateBooks();
         await this.updateTopics();
+        await this.updateAssessments();
       };
 
       if (standardSelect) {
@@ -402,7 +405,10 @@ class AdminPanel {
       }
 
       if (bookSelect) {
-        bookSelect.addEventListener("change", () => this.updateTopics());
+        bookSelect.addEventListener("change", () => {
+          this.updateTopics();
+          this.updateAssessments();
+        });
       }
     });
   }
@@ -557,6 +563,48 @@ class AdminPanel {
     } catch (error) {
       console.error("Error fetching topics:", error);
       topicSelect.innerHTML = "<option value=''>Error loading topics</option>";
+    }
+  }
+
+  async updateAssessments(bookId) {
+    const bookSelect = document.getElementById("book");
+    const assessmentSelect = document.getElementById("assessment");
+
+    if (!assessmentSelect) return;
+
+    if (!bookId && bookSelect) bookId = bookSelect.value;
+    if (!bookId) {
+      assessmentSelect.disabled = true;
+      assessmentSelect.innerHTML =
+        "<option value=''>No Books Selected</option>";
+      return;
+    }
+
+    assessmentSelect.innerHTML = "<option value=''>Loading...</option>";
+
+    try {
+      const response = await fetch(`/api/assessments/${bookId}`);
+      const assessments = await response.json();
+
+      if (assessments.data.length == 0) {
+        assessmentSelect.disabled = true;
+        assessmentSelect.innerHTML =
+          "<option value=''>No Assessments Found</option>";
+        return;
+      }
+
+      assessmentSelect.innerHTML = "";
+      assessmentSelect.disabled = false;
+      assessments.data.forEach((assessment) => {
+        const option = document.createElement("option");
+        option.value = assessment.id;
+        option.textContent = assessment.name;
+        assessmentSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error fetching assessments:", error);
+      assessmentSelect.innerHTML =
+        "<option value=''>Error loading assessments</option>";
     }
   }
 
