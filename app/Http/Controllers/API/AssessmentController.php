@@ -121,7 +121,7 @@ class AssessmentController extends Controller
 
     public function getAssessmentsByBookId($id)
     {
-        $assessments = Assessment::where('book_id', $id)->latest()->get();
+        $assessments = Assessment::where('book_id', $id)->get();
 
         if ($assessments->count() == 0) {
             return $this->sendAPIResponse([], 'Assessments not found.');
