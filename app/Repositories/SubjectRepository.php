@@ -61,6 +61,7 @@ class SubjectRepository extends BaseRepository implements SubjectRepositoryInter
     {
         return $subjects->map(function ($subject, $key) use ($columns, $start) {
             $subject->serial = $start + 1 + $key;
+            $subject->status = $subject->status ? 'Active' : 'Inactive';
             $subject->actions = view('admin.subjects.actions', compact('subject'))->render();
             $subject->setVisible($columns);
 

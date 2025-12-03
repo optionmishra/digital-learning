@@ -26,6 +26,7 @@ class StoreStandardRequest extends FormRequest
         return [
             'name' => 'required',
             'order' => 'required',
+            'status' => 'required|in:0,1',
         ];
     }
 }

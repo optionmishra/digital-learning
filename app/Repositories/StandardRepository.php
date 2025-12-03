@@ -61,6 +61,7 @@ class StandardRepository extends BaseRepository implements StandardRepositoryInt
     {
         return $standards->map(function ($standard, $key) use ($columns, $start) {
             $standard->serial = $start + 1 + $key;
+            $standard->status = $standard->status ? 'Active' : 'Inactive';
             $standard->actions = view('admin.standards.actions', compact('standard'))->render();
             $standard->setVisible($columns);
 

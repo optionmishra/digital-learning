@@ -13,6 +13,13 @@
                         <label class="form-label" for="name">Name</label>
                         <input class="form-control " id="name" type="text" placeholder="Name" name="name">
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="status">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-coreui-dismiss="modal">Close</button>

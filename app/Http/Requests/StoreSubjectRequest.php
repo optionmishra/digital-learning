@@ -25,6 +25,7 @@ class StoreSubjectRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'status' => 'required|in:0,1',
         ];
     }
 }
