@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use App\Models\Role;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -90,7 +91,16 @@ class UserController extends Controller
         $searchValue = request()->get('search')['value'];
         $columns = array_map(fn ($column) => $column['data'], request()->get('columns'));
 
-        $count = $repository->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue, true);
+        $count = $repository->paginated(
+            $columns,
+            $role,
+            $start,
+            $length,
+            $sortColumn,
+            $sortDirection,
+            $searchValue,
+            true,
+        );
         $data = $repository->paginated($columns, $role, $start, $length, $sortColumn, $sortDirection, $searchValue);
 
         return $data = [
@@ -123,7 +133,18 @@ class UserController extends Controller
         ], [
             'books.required' => 'Please select at least one book',
         ]);
-        $user->assignBooks($request->books);
+        $bookIds = $request->books;
+        $user->assignBooks($bookIds);
+        $standardIdArr = Book::whereIn('id', $bookIds)
+            ->with('standard')
+            ->get()
+            ->pluck('standard')
+            ->flatten()
+            ->pluck('id')
+            ->unique()
+            ->values()
+            ->toArray();
+        $user->assignStandards($standardIdArr);
         $user->profile()->update(['status' => 'approved']);
 
         return response()->json(['message' => 'User Approved Successfully']);
